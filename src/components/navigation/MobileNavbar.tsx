@@ -3,13 +3,14 @@ import { Menu } from "lucide-react";
 export default function MobileNavbar() {
   return (
     <header
-      className="
-        sticky
-        top-0
-        z-50
-        lg:hidden
-      "
-    >
+  className="
+    absolute
+    inset-x-0
+    top-0
+    z-50
+    lg:hidden
+  "
+>
       <nav
         className="
           mx-4

@@ -4,11 +4,13 @@ export default function Hero() {
   return (
     <section
       className="
-      relative
-      h-[220px]
-      lg:h-[340px]
-      overflow-hidden
-      "
+relative
+h-[220px]
+overflow-hidden
+
+lg:h-[320px]
+xl:h-[360px]
+"
     >
       <img src={hero} className="absolute inset-0 h-full w-full object-cover" />
 

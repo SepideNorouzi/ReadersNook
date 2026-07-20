@@ -1,14 +1,12 @@
-import DashboardGrid from "../features/dashboard/DashboardGrid";
-import DashboardHeader from "../features/dashboard/DashboardHeader";
+import ResponsiveView from "../components/ResponsiveView";
+import DesktopDashboard from "../layouts/DesktopDashboard";
+import MobileDashboard from "../layouts/MobileDashboard";
 
-function Dashboard() {
+export default function Dashboard() {
   return (
-    <div className="px-6 py-8 lg:px-12 lg:py-10">
-      <DashboardHeader />
-
-      <DashboardGrid />
-    </div>
+    <ResponsiveView
+      mobile={<MobileDashboard />}
+      desktop={<DesktopDashboard />}
+    />
   );
 }
-
-export default Dashboard;
