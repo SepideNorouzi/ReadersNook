@@ -1,30 +1,14 @@
-import { BookOpen, House, Library, Search, Settings } from "lucide-react";
+import { BookOpen } from "lucide-react";
+import { NavLink, useLocation } from "react-router";
 
-const navItems = [
-  {
-    icon: House,
-    label: "Dashboard",
-    active: true,
-  },
-  {
-    icon: Library,
-    label: "Library",
-  },
-  {
-    icon: BookOpen,
-    label: "Collections",
-  },
-  {
-    icon: Search,
-    label: "Search",
-  },
-  {
-    icon: Settings,
-    label: "Settings",
-  },
-];
+import { navItems } from "./NavItem";
 
 export default function Sidebar() {
+  const location = useLocation();
+
+  const currentPage =
+    navItems.find((item) => item.path === location.pathname) ?? navItems[0];
+
   return (
     <aside className="sticky top-0 flex h-screen flex-col bg-[#FAF7F2] px-8 py-10">
       {/* ---------- Logo ---------- */}
@@ -40,7 +24,7 @@ export default function Sidebar() {
               Reader's Nook
             </h1>
 
-            <p className="text-sm text-[#8B7355]">Reading Dashboard</p>
+            <p className="text-sm text-[#8B7355]">{currentPage.subtitle}</p>
           </div>
         </div>
       </div>
@@ -48,32 +32,36 @@ export default function Sidebar() {
       {/* ---------- Navigation ---------- */}
 
       <nav className="mt-14 flex flex-1 flex-col gap-2">
-        {navItems.map(({ icon: Icon, label, active }) => (
-          <button
-            key={label}
-            className={`
-              flex
-              items-center
-              gap-4
-              rounded-2xl
-              px-4
-              py-3
-              text-left
-              transition-all
-              duration-200
+        {navItems.map(({ icon: Icon, label, path }) => {
+          const active = location.pathname === path;
 
-              ${
-                active
-                  ? "bg-[#2C1810] text-white"
-                  : "text-[#5C4B3A] hover:bg-[#EFE7DB]"
-              }
-            `}
-          >
-            <Icon size={20} />
+          return (
+            <NavLink
+              key={path}
+              to={path}
+              className={`
+                flex
+                items-center
+                gap-4
+                rounded-2xl
+                px-4
+                py-3
+                transition-all
+                duration-200
 
-            <span className="text-sm font-medium">{label}</span>
-          </button>
-        ))}
+                ${
+                  active
+                    ? "bg-[#2C1810] text-white shadow-sm"
+                    : "text-[#5C4B3A] hover:bg-[#EFE7DB]"
+                }
+              `}
+            >
+              <Icon size={20} />
+
+              <span className="text-sm font-medium">{label}</span>
+            </NavLink>
+          );
+        })}
       </nav>
 
       {/* ---------- Footer ---------- */}

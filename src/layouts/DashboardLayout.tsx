@@ -1,16 +1,22 @@
+import { Outlet } from "react-router";
+
 import ResponsiveView from "../components/ResponsiveView";
-import DesktopDashboard from "./DesktopDashboard";
-import MobileDashboard from "./MobileDashboard";
+import MobileLayout from "./MobileDashboard";
+import DesktopLayout from "./DesktopDashboard";
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout() {
   return (
     <ResponsiveView
-      mobile={<MobileDashboard>{children}</MobileDashboard>}
-      desktop={<DesktopDashboard>{children}</DesktopDashboard>}
+      mobile={
+        <MobileLayout>
+          <Outlet />
+        </MobileLayout>
+      }
+      desktop={
+        <DesktopLayout>
+          <Outlet />
+        </DesktopLayout>
+      }
     />
   );
 }

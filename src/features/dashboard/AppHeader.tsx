@@ -17,44 +17,59 @@ export default function AppHeader() {
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      <div className="absolute inset-0 bg-black/35" />
-
       <div
         className="
-          absolute
-          bottom-6
-          left-6
+absolute
+inset-0
 
-          lg:bottom-8
-          lg:left-8
+bg-gradient-to-r
 
-          text-white
-        "
+from-black/45
+via-black/10
+to-black/50
+"
+      />
+      <div
+        className="
+        hidden 
+        lg:block
+absolute
+
+top-8
+right-6
+
+max-w-[320px]
+
+text-right
+text-white
+
+lg:top-12
+lg:right-12
+lg:max-w-md
+"
       >
         <h2
           className="
-            text-2xl
-            font-bold
-            leading-tight
+text-2xl
+font-bold
 
-            sm:text-3xl
-            lg:text-4xl
-          "
+sm:text-3xl
+lg:text-5xl
+"
         >
           Escape Into Stories
         </h2>
 
         <p
           className="
-            mt-1
-            max-w-xs
-            text-sm
+mt-2
+text-sm
 
-            sm:text-base
-            lg:mt-2
-            lg:max-w-md
-            lg:text-lg
-          "
+sm:text-base
+lg:text-lg
+
+text-white/90
+"
         >
           Build your own cozy digital library.
         </p>

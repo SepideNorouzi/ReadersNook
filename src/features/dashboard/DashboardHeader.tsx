@@ -1,30 +1,42 @@
 export default function DashboardHeader() {
   return (
-    <header className="mb-6 lg:mb-8">
+    <header className="mb-10">
       <h1
         className="
+          mt-4
+          mb-4
+
           text-2xl
           font-bold
+
           text-[#2C1810]
 
-          sm:text-3xl
           lg:text-4xl
         "
       >
         The Reader's Nook
       </h1>
-
-      <p
+      <span
         className="
-          mt-1
-          text-sm
-          text-[#8B7355]
+          inline-flex
+          rounded-full
 
-          sm:text-base
+          bg-[#EDE5D8]
+
+          px-3
+          py-1
+
+          text-xs
+          uppercase
+          tracking-[0.2em]
+
+          text-[#8B7355]
         "
       >
-        Your personal reading dashboard
-      </p>
+        Digital Reading Journal
+      </span>
+
+      <div className="mt-8 h-px bg-[#DDD2C3]" />
     </header>
   );
 }

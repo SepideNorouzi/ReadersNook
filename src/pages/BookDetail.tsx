@@ -1,9 +1,5 @@
-
-
 function BookDetail() {
-  return (
-    <div>BookDetail</div>
-  )
+  return <div>BookDetail</div>;
 }
 
-export default BookDetail
+export default BookDetail;
