@@ -1,7 +1,7 @@
 import MobileNavbar from "../components/navigation/MobileNavbar";
 import DashboardGrid from "../features/dashboard/DashboardGrid";
 import DashboardHeader from "../features/dashboard/DashboardHeader";
-import Hero from "../features/dashboard/Hero";
+import Hero from "../features/dashboard/AppHeader";
 
 export default function MobileDashboard() {
   return (

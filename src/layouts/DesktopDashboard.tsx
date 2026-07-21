@@ -1,7 +1,7 @@
 import Sidebar from "../components/navigation/Sidebar";
 import DashboardGrid from "../features/dashboard/DashboardGrid";
 import DashboardHeader from "../features/dashboard/DashboardHeader";
-import Hero from "../features/dashboard/Hero";
+import Hero from "../features/dashboard/AppHeader";
 
 export default function DesktopDashboard() {
   return (
