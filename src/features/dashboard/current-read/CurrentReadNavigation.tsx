@@ -1,3 +1,5 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 interface CurrentReadingNavigationProps {
   total: number;
   currentIndex: number;
@@ -13,11 +15,8 @@ export default function CurrentReadNavigation({
 }: CurrentReadingNavigationProps) {
   return (
     <div className="flex items-center justify-center gap-4">
-      <button
-        onClick={onPrevious}
-        className="text-xl text-[#8B7355] hover:text-[#2C1810]"
-      >
-        ‹
+      <button onClick={onPrevious}>
+        <ChevronLeft size={18} />
       </button>
 
       <div className="flex gap-1">
@@ -31,11 +30,8 @@ export default function CurrentReadNavigation({
         ))}
       </div>
 
-      <button
-        onClick={onNext}
-        className="text-xl text-[#8B7355] hover:text-[#2C1810]"
-      >
-        ›
+      <button onClick={onNext}>
+        <ChevronRight size={18} />
       </button>
     </div>
   );

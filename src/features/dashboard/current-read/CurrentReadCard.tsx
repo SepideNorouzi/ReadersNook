@@ -31,6 +31,9 @@ export default function CurrentReadingCard() {
 
   return (
     <Card className="space-y-5">
+      <h3 className="text-lg font-semibold text-[#2C1810]">
+        📖 Currently Reading
+      </h3>
       <CurrentReadCarousel
         coverUrl={currentBook.coverUrl}
         title={currentBook.title}
