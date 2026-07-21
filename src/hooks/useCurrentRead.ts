@@ -1,6 +1,6 @@
 import { useBooks } from "./useBooks";
 
-export function useCurrentReading() {
+export function useCurrentRead() {
   const { data: books = [], ...query } = useBooks();
 
   return {
