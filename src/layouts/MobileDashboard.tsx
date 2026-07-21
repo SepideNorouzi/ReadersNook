@@ -1,22 +1,17 @@
 import MobileNavbar from "../components/navigation/MobileNavbar";
-import DashboardGrid from "../features/dashboard/DashboardGrid";
-import DashboardHeader from "../features/dashboard/DashboardHeader";
-import Hero from "../features/dashboard/AppHeader";
 
-export default function MobileDashboard() {
+interface MobileLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function MobileLayout({ children }: MobileLayoutProps) {
   return (
     <main className="min-h-screen bg-[#F5F0E8]">
       <div className="relative">
         <MobileNavbar />
 
-        <Hero />
+        {children}
       </div>
-
-      <section className="px-6 py-6">
-        <DashboardHeader />
-
-        <DashboardGrid />
-      </section>
     </main>
   );
 }

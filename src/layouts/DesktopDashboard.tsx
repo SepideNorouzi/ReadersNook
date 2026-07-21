@@ -1,9 +1,10 @@
 import Sidebar from "../components/navigation/Sidebar";
-import DashboardGrid from "../features/dashboard/DashboardGrid";
-import DashboardHeader from "../features/dashboard/DashboardHeader";
-import Hero from "../features/dashboard/AppHeader";
 
-export default function DesktopDashboard() {
+interface DesktopLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function DesktopLayout({ children }: DesktopLayoutProps) {
   return (
     <main className="min-h-screen bg-[#F5F0E8]">
       <div className="mx-auto flex min-h-screen max-w-[1700px]">
@@ -11,15 +12,7 @@ export default function DesktopDashboard() {
           <Sidebar />
         </aside>
 
-        <section className="flex-1">
-          <Hero />
-
-          <div className="px-10 py-8">
-            <DashboardHeader />
-
-            <DashboardGrid />
-          </div>
-        </section>
+        <section className="flex-1">{children}</section>
       </div>
     </main>
   );
