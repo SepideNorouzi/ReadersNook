@@ -35,8 +35,8 @@ export default function CurrentReadingCard() {
         📖 Currently Reading
       </h3>
       <CurrentReadCarousel
-        coverUrl={currentBook.coverUrl}
-        title={currentBook.title}
+                book={currentBook}
+
       />
 
       <CurrentReadNavigation
@@ -47,16 +47,10 @@ export default function CurrentReadingCard() {
       />
 
       <CurrentReadProgress
-        currentPage={currentBook.currentPage}
-        totalPages={currentBook.totalPages}
+        book={currentBook}
       />
 
-      <CurrentReadDetails
-        title={currentBook.title}
-        author={currentBook.author}
-        currentPage={currentBook.currentPage}
-        totalPages={currentBook.totalPages}
-      />
+      <CurrentReadDetails book={currentBook} />
     </Card>
   );
 }

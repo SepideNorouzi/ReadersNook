@@ -60,7 +60,7 @@ export const books: Book[] = [
     currentPage: 288,
     totalPages: 288,
 
-    status: "read",
+    status: "current",
     rating: 3,
   },
 

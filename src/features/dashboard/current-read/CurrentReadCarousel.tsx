@@ -1,25 +1,37 @@
-interface CurrentReadingCarouselProps {
-  coverUrl: string;
-  title: string;
+import type { Book } from "../../../types/book";
+
+interface CurrentReadCarouselProps {
+  book: Book;
 }
 
 export default function CurrentReadCarousel({
-  coverUrl,
-  title,
-}: CurrentReadingCarouselProps) {
+  book,
+}: CurrentReadCarouselProps) {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center py-2">
       <img
-        src={coverUrl}
-        alt={title}
+        src={book.coverUrl}
+        alt={book.title}
         className="
-          w-full
-          max-w-[180px]
-          aspect-[3/4]
-          rounded-xl
-          object-cover
-          shadow-md
-        "
+w-36
+sm:w-40
+lg:w-44
+xl:w-48
+
+aspect-[3/4]
+
+rounded-2xl
+object-cover
+
+border
+border-[#E6DDD0]
+
+shadow-lg
+transition-all
+duration-300
+hover:-translate-y-1
+hover:shadow-xl
+"
       />
     </div>
   );
