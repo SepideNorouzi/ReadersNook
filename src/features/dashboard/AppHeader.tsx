@@ -51,10 +51,10 @@ lg:max-w-md
         <h2
           className="
 text-2xl
-font-bold
+font-heading
 
-sm:text-3xl
-lg:text-5xl
+sm:text-2xl
+lg:text-4xl
 "
         >
           Escape Into Stories

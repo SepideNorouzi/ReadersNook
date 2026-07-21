@@ -20,7 +20,7 @@ export default function Sidebar() {
           </div>
 
           <div>
-            <h1 className="text-lg font-semibold text-[#2C1810]">
+            <h1 className="text-lg font-heading font-semibold text-[#2C1810]">
               Reader's Nook
             </h1>
 

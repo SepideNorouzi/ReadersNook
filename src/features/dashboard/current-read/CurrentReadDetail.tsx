@@ -7,7 +7,7 @@ interface Props {
 export default function CurrentReadDetails({ book }: Props) {
   return (
     <div className="space-y-1">
-      <h4 className="line-clamp-1 text-base font-semibold text-[#2C1810] lg:text-lg">
+      <h4 className="line-clamp-1 text-base font-heading text-[#2C1810] lg:text-lg">
         {book.title}
       </h4>
 

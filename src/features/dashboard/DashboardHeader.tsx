@@ -7,7 +7,7 @@ export default function DashboardHeader() {
           mb-4
 
           text-2xl
-          font-bold
+          font-heading font-semibold
 
           text-[#2C1810]
 
@@ -33,7 +33,7 @@ export default function DashboardHeader() {
           text-[#8B7355]
         "
       >
-        Digital Reading Journal
+      Reading Journal
       </span>
 
       <div className="mt-8 h-px bg-[#DDD2C3]" />

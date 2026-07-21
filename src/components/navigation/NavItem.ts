@@ -5,7 +5,7 @@ export const navItems = [
     icon: House,
     label: "Dashboard",
     path: "/",
-    subtitle: "Reading Dashboard",
+    subtitle: "Dashboard",
   },
   {
     icon: Library,
@@ -17,7 +17,7 @@ export const navItems = [
     icon: BookOpen,
     label: "Collections",
     path: "/collections",
-    subtitle: "Reading Collections",
+    subtitle: "Collections",
   },
   {
     icon: Search,
