@@ -8,26 +8,15 @@ export default function Dashboard() {
       <AppHeader />
 
       <div
-       className="
-relative
-z-10
--mt-6
-lg:-mt-10
-rounded-t-[2.5rem]
-
-bg-gradient-to-b
-from-[var(--surface)]
-to-[var(--bg-secondary)]
-
-px-6
-pt-8
-pb-10
-
-shadow-[var(--shadow-lg)]
-
-lg:px-10
-lg:pt-10
-"
+        className="
+    relative z-10
+    -mt-10
+    rounded-t-[2.5rem]
+    bg-gradient-to-b from-[var(--surface)] to-[var(--bg-secondary)]
+    px-6 pt-8 pb-10
+    shadow-[var(--shadow-lg)]
+    lg:px-10 lg:pt-10
+  "
       >
         <DashboardHeader />
         <DashboardGrid />

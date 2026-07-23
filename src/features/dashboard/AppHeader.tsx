@@ -1,15 +1,13 @@
 import hero from "../../assets/hero.jpg";
+import useScrollFade from "../../hooks/useScrollFade";
 
 export default function AppHeader() {
+  const fadeRef = useScrollFade();
+
   return (
     <section
-      className="
-        relative
-        h-[220px]
-        overflow-hidden
-        lg:h-[320px]
-        xl:h-[360px]
-      "
+      ref={fadeRef}
+      className="sticky top-0 z-0 h-[220px] overflow-hidden lg:h-[320px] xl:h-[360px]"
     >
       <img
         src={hero}
