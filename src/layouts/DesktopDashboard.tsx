@@ -6,9 +6,9 @@ interface DesktopLayoutProps {
 
 export default function DesktopLayout({ children }: DesktopLayoutProps) {
   return (
-    <main className="min-h-screen bg-[#F5F0E8]">
+    <main className="min-h-screen bg-[var(--bg)]">
       <div className="mx-auto flex min-h-screen max-w-[1700px]">
-        <aside className="w-72 border-r border-[#E7DED0] bg-[#FAF7F2]">
+        <aside className="w-72 border-r border-[var(--border)] bg-[var(--bg)]">
           <Sidebar />
         </aside>
 
