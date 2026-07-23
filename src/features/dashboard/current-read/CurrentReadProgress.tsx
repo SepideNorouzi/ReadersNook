@@ -5,18 +5,24 @@ interface Props {
 }
 
 export default function CurrentReadProgress({ book }: Props) {
-  const percentage = Math.round(
-    (book.currentPage / book.totalPages) * 100
-  );
+  const percentage = Math.round((book.currentPage / book.totalPages) * 100);
 
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-sm">
-        <span className="text-[#8B7355]">Progress</span>
+        <span
+          className="
+            text-[10px]
+            uppercase
+            tracking-[0.18em]
 
-        <span className="font-semibold text-[#2C1810]">
-          {percentage}%
+            text-[var(--text-muted)]
+          "
+        >
+          Progress
         </span>
+
+        <span className="font-semibold text-[12px] text-[var(--text-muted)]">{percentage}%</span>
       </div>
 
       <div className="h-2 overflow-hidden rounded-full bg-[#ECE3D8]">

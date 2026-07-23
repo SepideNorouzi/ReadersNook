@@ -28,15 +28,31 @@ export default function CurrentReadNavigation({
         <ChevronLeft size={16} />
       </button>
 
-      <div className="flex gap-2">
+       <div className="flex items-center gap-2">
         {Array.from({ length: total }).map((_, index) => (
           <span
             key={index}
             className={`
-              h-2 rounded-full transition-all duration-300
+              rounded-full
+              transition-all
+              duration-300
 
               ${
-                currentIndex === index ? "w-5 bg-[#2C1810]" : "w-2 bg-[#D7CCBB]"
+                currentIndex === index
+                  ? `
+                    h-2
+                    w-6
+
+                    bg-gradient-to-r
+                    from-[var(--brown-700)]
+                    to-[var(--brown-500)]
+                  `
+                  : `
+                    h-2
+                    w-2
+
+                    bg-[var(--stone-300)]
+                  `
               }
             `}
           />

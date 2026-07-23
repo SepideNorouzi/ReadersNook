@@ -6,23 +6,68 @@ interface Props {
 
 export default function CurrentReadDetails({ book }: Props) {
   return (
-    <div className="space-y-0.5">
-      <h4 className="line-clamp-1 text-sm xl:text-base font-heading text-[#2C1810]">
-        {book.title}
-      </h4>
+    <div className="space-y-4">
+      {/* Book Info */}
+      <div>
+        <h4
+          className="
+            line-clamp-2
 
-      <p className="text-sm text-[#8B7355]">
-        {book.author}
-      </p>
+            font-heading
+            text-base
+            font-semibold
+            leading-snug
 
-      <div className="flex items-center justify-between pt-2 text-xs text-[#8B7355]">
-        <span>
-          {book.currentPage} / {book.totalPages} pages
-        </span>
+            text-[var(--text)]
+          "
+        >
+          {book.title}
+        </h4>
 
-        <span>
-          {book.totalPages - book.currentPage} left
-        </span>
+        <p
+          className="
+            mt-1
+
+            line-clamp-1
+
+            text-sm
+
+            text-[var(--text-secondary)]
+          "
+        >
+          {book.author}
+        </p>
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-[var(--border)]" />
+
+      {/* Current Reading */}
+      <div className="flex items-end justify-between gap-1">
+        <p
+          className="
+            text-[10px]
+            uppercase
+            tracking-[0.18em]
+
+            text-[var(--text-muted)]
+          "
+        >
+          Current
+        </p>
+
+        <p
+          className="
+            shrink-0
+
+            text-sm
+            font-medium
+
+            text-[var(--text)]
+          "
+        >
+          {book.currentPage} / {book.totalPages}
+        </p>
       </div>
     </div>
   );

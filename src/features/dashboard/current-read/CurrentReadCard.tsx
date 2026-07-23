@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { Bookmark } from "lucide-react";
+
 import Card from "../../../components/ui/Card";
 import { useCurrentRead } from "../../../hooks/useCurrentRead";
+
 import CurrentReadCarousel from "./CurrentReadCarousel";
 import CurrentReadNavigation from "./CurrentReadNavigation";
 import CurrentReadProgress from "./CurrentReadProgress";
@@ -34,30 +37,86 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
   const currentBook = books[currentIndex];
 
   return (
-    <Card className={`
-    flex
-    h-full
-    flex-col
-    gap-4
-    overflow-hidden
-    p-6
-    ${className ?? ""}
-  `}>
-      <h3 className="text-lg font-semibold text-[#2C1810]">
-        📖 Currently Reading
-      </h3>
+    <Card
+      className={`
+        flex
+        h-full
+        flex-col
+
+        rounded-[28px]
+
+        bg-gradient-to-b
+        from-white
+        to-[var(--surface-hover)]
+
+        border
+        border-[var(--border)]
+
+        p-6
+
+        transition-all
+        duration-300
+
+        hover:-translate-y-1
+        hover:shadow-[var(--shadow-lg)]
+
+        ${className ?? ""}
+      `}
+    >
+      {/* Header */}
+      <header className="mb-5 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <Bookmark
+            size={16}
+            strokeWidth={2.2}
+            className="text-[var(--brown-500)]"
+          />
+
+          <h3 className="font-heading text-lg font-semibold text-[var(--text)]">
+            Currently Reading
+          </h3>
+        </div>
+
+        <span
+          className="
+            rounded-full
+            bg-[var(--stone-100)]
+            px-2.5
+            py-1
+
+            text-[11px]
+            font-medium
+            uppercase
+            tracking-wider
+
+            text-[var(--text-secondary)]
+          "
+        >
+          {books.length}
+        </span>
+      </header>
+
+      {/* Book Cover */}
       <CurrentReadCarousel book={currentBook} />
 
-      <CurrentReadNavigation
-        total={books.length}
-        currentIndex={currentIndex}
-        onNext={handleNext}
-        onPrevious={handlePrevious}
-      />
+      {/* Navigation */}
+      <div className="mt-4">
+        <CurrentReadNavigation
+          total={books.length}
+          currentIndex={currentIndex}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+        />
+      </div>
 
-      <CurrentReadProgress book={currentBook} />
+      {/* Push remaining content toward bottom */}
+      <div className="mt-auto space-y-3 pt-1">
+        <CurrentReadProgress book={currentBook} />
 
-      <CurrentReadDetails book={currentBook} />
+        <div>
+          <CurrentReadDetails book={currentBook} />
+        </div>
+      </div>
     </Card>
   );
 }
