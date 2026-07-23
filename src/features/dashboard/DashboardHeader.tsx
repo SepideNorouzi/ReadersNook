@@ -3,7 +3,7 @@ export default function DashboardHeader() {
     <header className="mb-10">
       <h1
         className="
-          mt-4 mb-4
+           mb-4
           text-2xl font-heading font-semibold
           text-[var(--text)]
           lg:text-4xl
