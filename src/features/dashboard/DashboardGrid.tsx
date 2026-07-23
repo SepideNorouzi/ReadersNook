@@ -3,24 +3,33 @@ import ProgressCard from "./progress-card/ProgressCard";
 import Card from "../../components/ui/Card";
 import TBRCard from "./tbr/TbrCard";
 import QuoteCard from "./quotes/QuoteCard";
+import WidgetCard from "./widget/WidgetCard";
 
 export default function DashboardGrid() {
   return (
     <>
       {/* ---------------- Mobile ---------------- */}
-      <div className="flex flex-col gap-4 xl:hidden">
-        <CurrentReadingCard />
+      <div
+        className="
+    grid
+    grid-cols-2
+    auto-rows-[90px]
+    gap-4
 
-        <ProgressCard />
+    xl:hidden
+  "
+      >
+        <CurrentReadingCard className="col-start-1 row-start-1 row-span-4" />
 
-        <Card className="h-[120px]" />
+        <ProgressCard className="col-start-2 row-start-1 row-span-3" />
 
-        <Card className="h-[250px]" />
+        <WidgetCard className="col-start-2 row-start-4 row-span-1" />
 
-        <TBRCard className="col-start-3 row-start-3 row-span-4" /> {/* TBR */}
+        <QuoteCard className="col-start-1 row-start-5 row-span-3" />
 
+        <TBRCard className="col-start-2 row-start-5 row-span-4" />
 
-        <Card className="h-[250px]" />
+        <Card className="col-start-1 row-start-8 row-span-2" />
       </div>
 
       {/* ---------------- Desktop ---------------- */}
@@ -35,9 +44,11 @@ export default function DashboardGrid() {
       >
         <CurrentReadingCard className="col-start-1 row-start-1 row-span-4" />
         <ProgressCard className="col-start-2 row-start-1 row-span-3" />
-        <Card className="col-start-2 row-start-4 row-span-1" /> {/* Widget */}
+        <WidgetCard className="col-start-2 row-start-4 row-span-1" />{" "}
+        {/* Widget */}
         <Card className="col-start-2 row-start-5 row-span-2" /> {/* quotes */}
-        <QuoteCard className="col-start-3 row-start-1 row-span-3" /> {/* Finished */}
+        <QuoteCard className="col-start-3 row-start-1 row-span-3" />{" "}
+        {/* Finished */}
         <TBRCard className="col-start-3 row-start-4 row-span-3" /> {/* TBR */}
         <Card className="col-start-1 row-start-5 row-span-2" />
         {/* Continue Reading */}
