@@ -2,6 +2,7 @@ import CurrentReadingCard from "./current-read/CurrentReadCard";
 import ProgressCard from "./progress-card/ProgressCard";
 import Card from "../../components/ui/Card";
 import TBRCard from "./tbr/TbrCard";
+import QuoteCard from "./quotes/QuoteCard";
 
 export default function DashboardGrid() {
   return (
@@ -36,8 +37,8 @@ export default function DashboardGrid() {
         <ProgressCard className="col-start-2 row-start-1 row-span-3" />
         <Card className="col-start-2 row-start-4 row-span-1" /> {/* Widget */}
         <Card className="col-start-2 row-start-5 row-span-2" /> {/* quotes */}
-        <Card className="col-start-3 row-start-1 row-span-2" /> {/* Finished */}
-        <TBRCard className="col-start-3 row-start-3 row-span-4" /> {/* TBR */}
+        <QuoteCard className="col-start-3 row-start-1 row-span-3" /> {/* Finished */}
+        <TBRCard className="col-start-3 row-start-4 row-span-3" /> {/* TBR */}
         <Card className="col-start-1 row-start-5 row-span-2" />
         {/* Continue Reading */}
       </div>
