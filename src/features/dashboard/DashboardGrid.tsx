@@ -1,5 +1,6 @@
 import Card from "../../components/ui/Card";
 import CurrentReadingCard from "./current-read/CurrentReadCard";
+import ProgressCard from "./progress-card/ProgressCard";
 
 export default function DashboardGrid() {
   return (
@@ -8,7 +9,7 @@ export default function DashboardGrid() {
       <div className="flex flex-col gap-4 xl:hidden">
         <CurrentReadingCard />
 
-        <Card className="h-[220px]" />
+        <ProgressCard />
 
         <Card className="h-[90px]" />
 
@@ -27,7 +28,8 @@ export default function DashboardGrid() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <Card className="h-[260px]" />
+          <ProgressCard />
+
           <Card className="h-[120px]" />
           <Card className="h-[280px]" />
         </div>

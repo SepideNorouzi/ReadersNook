@@ -1,5 +1,3 @@
-// data/books.ts
-
 import type { Book } from "../types/book";
 import img1 from "../assets/hero.jpg";
 
@@ -91,6 +89,64 @@ export const books: Book[] = [
     totalPages: 320,
 
     status: "tbr",
+    rating: 4,
+  },
+  {
+    id: "4",
+    title: "Piranesi",
+    author: "Susanna Clarke",
+    summary:
+      "A mysterious man lives in an endless house filled with statues and flooded halls. As he records the beauty around him, strange discoveries begin to unravel the truth about his identity and the world he inhabits.",
+
+    quotes: [
+      {
+        id: "1",
+        text: "Every action...",
+      },
+
+      {
+        id: "2",
+        text: "Success...",
+      },
+    ],
+
+    aestheticImages: [img1, img1, img1],
+
+    coverUrl: img1,
+
+    currentPage: 88,
+    totalPages: 245,
+
+    status: "read",
+    rating: 5,
+  },
+  {
+    id: "5",
+    title: "Atomic Habits",
+    author: "James Clear",
+    summary:
+      "A practical guide to building good habits, breaking bad ones, and making tiny improvements that compound into remarkable long-term results.",
+
+    quotes: [
+      {
+        id: "1",
+        text: "Every action...",
+      },
+
+      {
+        id: "2",
+        text: "Success...",
+      },
+    ],
+
+    aestheticImages: [img1, img1, img1],
+
+    coverUrl: img1,
+
+    currentPage: 0,
+    totalPages: 320,
+
+    status: "read",
     rating: 4,
   },
 ];
