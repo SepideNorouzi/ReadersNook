@@ -6,7 +6,11 @@ import CurrentReadNavigation from "./CurrentReadNavigation";
 import CurrentReadProgress from "./CurrentReadProgress";
 import CurrentReadDetails from "./CurrentReadDetail";
 
-export default function CurrentReadingCard() {
+interface CurrentReadProps {
+  className?: string;
+}
+
+export default function CurrentReadingCard({ className }: CurrentReadProps) {
   const { books, isLoading } = useCurrentRead();
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -30,14 +34,19 @@ export default function CurrentReadingCard() {
   const currentBook = books[currentIndex];
 
   return (
-    <Card className="space-y-5">
+    <Card className={`
+    flex
+    h-full
+    flex-col
+    gap-4
+    overflow-hidden
+    p-6
+    ${className ?? ""}
+  `}>
       <h3 className="text-lg font-semibold text-[#2C1810]">
         📖 Currently Reading
       </h3>
-      <CurrentReadCarousel
-                book={currentBook}
-
-      />
+      <CurrentReadCarousel book={currentBook} />
 
       <CurrentReadNavigation
         total={books.length}
@@ -46,9 +55,7 @@ export default function CurrentReadingCard() {
         onPrevious={handlePrevious}
       />
 
-      <CurrentReadProgress
-        book={currentBook}
-      />
+      <CurrentReadProgress book={currentBook} />
 
       <CurrentReadDetails book={currentBook} />
     </Card>

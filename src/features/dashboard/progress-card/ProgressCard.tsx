@@ -3,7 +3,11 @@ import Card from "../../../components/ui/Card";
 import ProgressBar from "../../../components/ui/Progressbar";
 import { useReadingGoal } from "../../../hooks/useReadingGoal";
 
-export default function ProgressCard() {
+interface ProgressCardProps {
+  className?: string;
+}
+
+export default function ProgressCard({ className }: ProgressCardProps) {
   const { booksRead, yearlyGoal, progress, isLoading } = useReadingGoal();
 
   if (isLoading) {
@@ -17,17 +21,15 @@ export default function ProgressCard() {
   const remaining = Math.max(yearlyGoal - booksRead, 0);
 
   return (
-    <Card className="flex h-full flex-col justify-between p-6">
+    <Card className={className}>
       {/* Header */}
       <div>
         <div className="flex items-center gap-2">
           <Target size={18} className="text-[#2C1810]" />
           <h2 className="text-base font-semibold text-[#2C1810]">
-            Reading Goal
+            Yearly Reading Goal
           </h2>
         </div>
-
-        <p className="mt-1 text-sm text-[#8B7355]">Your progress this year</p>
       </div>
 
       {/* Percentage */}

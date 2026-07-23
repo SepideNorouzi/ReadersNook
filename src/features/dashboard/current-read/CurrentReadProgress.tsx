@@ -10,7 +10,7 @@ export default function CurrentReadProgress({ book }: Props) {
   );
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="flex items-center justify-between text-sm">
         <span className="text-[#8B7355]">Progress</span>
 
