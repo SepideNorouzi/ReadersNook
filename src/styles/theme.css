@@ -1,0 +1,43 @@
+:root {
+  /* Backgrounds */
+  --bg: #f7f3ed;
+  --bg-secondary: #f2ece3;
+  --surface: #ffffff;
+  --surface-hover: #fbf9f5;
+
+  /* Browns */
+  --brown-900: #2c1810;
+  --brown-800: #40241a;
+  --brown-700: #5c4033;
+  --brown-600: #7b5e49;
+  --brown-500: #a0785a;
+
+  /* Neutrals */
+  --stone-100: #f5f0e8;
+  --stone-200: #ede4d7;
+  --stone-300: #ddd0bc;
+  --stone-400: #c7b39a;
+
+  /* Accent */
+  --green: #5f7a61;
+  --green-light: #dde9de;
+
+  --orange: #b76e4c;
+  --orange-light: #f2ddd3;
+
+  --gold: #c89b3c;
+  --gold-light: #f6ebc8;
+
+  /* Text */
+  --text: #2c1810;
+  --text-secondary: #75604d;
+  --text-muted: #9d8873;
+
+  /* Borders */
+  --border: #e5d7c7;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 6px rgba(44, 24, 16, 0.06);
+  --shadow: 0 8px 24px rgba(44, 24, 16, 0.08);
+  --shadow-lg: 0 18px 40px rgba(44, 24, 16, 0.12);
+}
