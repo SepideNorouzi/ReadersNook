@@ -41,9 +41,7 @@ export default function ProgressCard({
   return (
     <Card
       className={`
-        flex
         h-full
-        flex-col
 
         rounded-[28px]
 
@@ -54,8 +52,6 @@ export default function ProgressCard({
         from-white
         to-[var(--surface-hover)]
 
-        p-6
-
         transition-all
         duration-300
 
@@ -65,100 +61,163 @@ export default function ProgressCard({
         ${className ?? ""}
       `}
     >
-      {/* Header */}
-      <header className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
+      {/* ======================= MOBILE ======================= */}
+
+      <div className="flex h-full flex-col lg:hidden">
+        <div className="flex items-center gap-2">
           <Target
-            size={16}
-            strokeWidth={2.2}
+            size={13}
             className="text-[var(--gold)]"
           />
 
-          <h2 className="font-heading text-lg font-semibold text-[var(--text)]">
+          <h2 className="font-heading text-[12px] font-semibold text-[var(--text)]">
             Reading Goal
           </h2>
         </div>
 
-        <span
-          className="
-            rounded-full
-
-            bg-[var(--gold-light)]
-
-            px-2.5
-            py-1
-
-            text-[11px]
-            font-medium
-            uppercase
-            tracking-[0.15em]
-
-            text-[var(--gold)]
-          "
-        >
-          2026
-        </span>
-      </header>
-
-      {/* Progress Circle */}
-      <div className="flex flex-1 items-center justify-center">
-        <CircularProgress value={progress} />
-      </div>
-
-      {/* Stats */}
-      <div className="mt-5 border-t border-[var(--border)] pt-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <p
-              className="
-                text-[10px]
-                uppercase
-                tracking-[0.18em]
-
-                text-[var(--text-muted)]
-              "
-            >
-              Progress
-            </p>
-
-            <p className="mt-1 text-sm text-[var(--text)]">
-              {booksRead} / {yearlyGoal} books
-            </p>
-          </div>
-
-          <div className="text-right">
-            <p
-              className="
-                text-[10px]
-                uppercase
-                tracking-[0.18em]
-
-                text-[var(--text-muted)]
-              "
-            >
-              Remaining
-            </p>
-
-            <p className="mt-1 text-sm font-medium text-[var(--text)]">
-              {remaining}
-            </p>
-          </div>
+        <div className="flex flex-1 items-center justify-center">
+          <CircularProgress
+            value={progress}
+            size={70}
+            strokeWidth={5}
+          />
         </div>
 
+        <div className="space-y-2">
+          <div className="h-2 overflow-hidden rounded-full bg-[var(--stone-200)]">
+            <div
+              className="h-full rounded-full bg-[var(--brown-900)] transition-all duration-700"
+              style={{
+                width: `${progress}%`,
+              }}
+            />
+          </div>
+
+          <p className="text-center text-xs font-medium text-[var(--text-secondary)]">
+            <span className="text-[var(--text)]">
+              {booksRead}
+            </span>{" "}
+            / {yearlyGoal} books
+          </p>
+        </div>
         <div className="mt-5">
-          {remaining > 0 ? (
-            <p className="text-center text-sm text-[var(--text-secondary)]">
-              Only{" "}
-              <span className="font-semibold text-[var(--gold)]">
+            {remaining > 0 ? (
+              <p className="text-center text-sm text-[var(--text-secondary)]">
+                <span className="font-semibold text-[var(--gold)]">
+                  {remaining}
+                </span>{" "}
+                books left.
+              </p>
+            ) : (
+              <p className="text-center text-sm font-medium text-[var(--green)]">
+                🎉 Congratulations! Goal achieved.
+              </p>
+            )}
+          </div>
+      </div>
+      
+
+      {/* ======================= DESKTOP ======================= */}
+
+      <div className="hidden h-full flex-col lg:flex">
+        {/* Header */}
+
+        <header className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <Target
+              size={16}
+              strokeWidth={2.2}
+              className="text-[var(--gold)]"
+            />
+
+            <h2 className="font-heading text-lg font-semibold text-[var(--text)]">
+              Reading Goal
+            </h2>
+          </div>
+
+          <span
+            className="
+              rounded-full
+
+              bg-[var(--gold-light)]
+
+              px-2.5
+              py-1
+
+              text-[11px]
+              font-medium
+              uppercase
+              tracking-[0.15em]
+
+              text-[var(--gold)]
+            "
+          >
+            2026
+          </span>
+        </header>
+
+        {/* Circle */}
+
+        <div className="flex flex-1 items-center justify-center">
+          <CircularProgress value={progress} />
+        </div>
+
+        {/* Footer */}
+
+        <div className="mt-5 border-t border-[var(--border)] pt-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p
+                className="
+                  text-[10px]
+                  uppercase
+                  tracking-[0.18em]
+
+                  text-[var(--text-muted)]
+                "
+              >
+                Progress
+              </p>
+
+              <p className="mt-1 text-sm text-[var(--text)]">
+                {booksRead} / {yearlyGoal} books
+              </p>
+            </div>
+
+            <div className="text-right">
+              <p
+                className="
+                  text-[10px]
+                  uppercase
+                  tracking-[0.18em]
+
+                  text-[var(--text-muted)]
+                "
+              >
+                Remaining
+              </p>
+
+              <p className="mt-1 text-sm font-medium text-[var(--text)]">
                 {remaining}
-              </span>{" "}
-              books left this year.
-            </p>
-          ) : (
-            <p className="text-center text-sm font-medium text-[var(--green)]">
-              🎉 Congratulations! Goal achieved.
-            </p>
-          )}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5">
+            {remaining > 0 ? (
+              <p className="text-center text-sm text-[var(--text-secondary)]">
+                Only{" "}
+                <span className="font-semibold text-[var(--gold)]">
+                  {remaining}
+                </span>{" "}
+                books left this year.
+              </p>
+            ) : (
+              <p className="text-center text-sm font-medium text-[var(--green)]">
+                🎉 Congratulations! Goal achieved.
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </Card>
