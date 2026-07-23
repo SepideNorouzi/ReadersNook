@@ -45,11 +45,11 @@ export default function CircularProgress({
 
       {/* Center text */}
       <div className="absolute flex flex-col items-center">
-        <span className="text-3xl font-bold text-[#2C1810]">
+        <span className="text-3xl font-bold  text-[var(--text)]">
           {Math.round(value)}%
         </span>
 
-        <span className="text-xs text-[#8B7355]">completed</span>
+        <span className="text-xs text-[var(--text-muted)]">completed</span>
       </div>
     </div>
   );

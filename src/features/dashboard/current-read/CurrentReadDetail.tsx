@@ -43,7 +43,7 @@ export default function CurrentReadDetails({ book }: Props) {
       <div className="h-px bg-[var(--border)]" />
 
       {/* Current Reading */}
-      <div className="flex items-end justify-between gap-1">
+      <div className="flex items-end justify-between">
         <p
           className="
             text-[10px]
