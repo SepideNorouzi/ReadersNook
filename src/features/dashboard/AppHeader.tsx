@@ -24,9 +24,9 @@ inset-0
 
 bg-gradient-to-r
 
-from-black/45
+from-black/35
 via-black/10
-to-black/50
+to-black/40
 "
       />
       <div

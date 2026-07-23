@@ -6,7 +6,17 @@ interface DesktopLayoutProps {
 
 export default function DesktopLayout({ children }: DesktopLayoutProps) {
   return (
-    <main className="min-h-screen bg-[var(--bg)]">
+    <main
+className="
+min-h-screen
+
+bg-gradient-to-br
+
+from-[var(--bg)]
+via-[var(--stone-100)]
+to-[var(--bg)]
+"
+>
       <div className="mx-auto flex min-h-screen max-w-[1700px]">
         <aside className="w-72 border-r border-[var(--border)] bg-[var(--bg)]">
           <Sidebar />
