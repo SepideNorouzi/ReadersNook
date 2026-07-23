@@ -149,4 +149,91 @@ export const books: Book[] = [
     status: "read",
     rating: 4,
   },
+    {
+    id: "6",
+    title: "Atomic Habits",
+    author: "James Clear",
+    summary:
+      "A practical guide to building good habits, breaking bad ones, and making tiny improvements that compound into remarkable long-term results.",
+
+    quotes: [
+      {
+        id: "1",
+        text: "Every action...",
+      },
+
+      {
+        id: "2",
+        text: "Success...",
+      },
+    ],
+
+    aestheticImages: [img1, img1, img1],
+
+    coverUrl: img1,
+
+    currentPage: 0,
+    totalPages: 320,
+
+    status: "tbr",
+    rating: 4,
+  },
+    {
+    id: "7",
+    title: "Atomic Habits",
+    author: "James Clear",
+    summary:
+      "A practical guide to building good habits, breaking bad ones, and making tiny improvements that compound into remarkable long-term results.",
+
+    quotes: [
+      {
+        id: "1",
+        text: "Every action...",
+      },
+
+      {
+        id: "2",
+        text: "Success...",
+      },
+    ],
+
+    aestheticImages: [img1, img1, img1],
+
+    coverUrl: img1,
+
+    currentPage: 0,
+    totalPages: 320,
+
+    status: "tbr",
+    rating: 4,
+  },
+    {
+    id: "8",
+    title: "Atomic Habits",
+    author: "James Clear",
+    summary:
+      "A practical guide to building good habits, breaking bad ones, and making tiny improvements that compound into remarkable long-term results.",
+
+    quotes: [
+      {
+        id: "1",
+        text: "Every action...",
+      },
+
+      {
+        id: "2",
+        text: "Success...",
+      },
+    ],
+
+    aestheticImages: [img1, img1, img1],
+
+    coverUrl: img1,
+
+    currentPage: 0,
+    totalPages: 320,
+
+    status: "tbr",
+    rating: 4,
+  },
 ];
