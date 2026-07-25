@@ -30,7 +30,7 @@ font-bold text-[var(--text-muted)]"
         </span>
       </div>
 
-      <div className="h-2.5 overflow-hidden rounded-full bg-[#ECE3D8]">
+      <div className="h-2.5 mb-4 overflow-hidden rounded-full bg-[#ECE3D8]">
         <div
           className="h-full rounded-full bg-[#2C1810] transition-all duration-500"
           style={{

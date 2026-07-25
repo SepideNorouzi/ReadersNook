@@ -5,6 +5,7 @@ import TBRCard from "./tbr/TbrCard";
 import QuoteCard from "./quotes/QuoteCard";
 import WidgetCard from "./widget/WidgetCard";
 import AchievementCard from "./achievements/AchievementCard";
+import CollectionsCard from "./collection/CollectionsCard";
 
 export default function DashboardGrid() {
   return (
@@ -39,7 +40,7 @@ export default function DashboardGrid() {
           hidden
           xl:grid
           xl:grid-cols-3
-          xl:auto-rows-[100px]
+          xl:auto-rows-[110px]
           xl:gap-6
         "
       >
@@ -52,7 +53,7 @@ export default function DashboardGrid() {
         {/* quotes */}
         {/* Finished */}
         <TBRCard className="col-start-3 row-start-4 row-span-3" /> {/* TBR */}
-        <Card className="col-start-1 row-start-5 row-span-2" />
+        <CollectionsCard className="col-start-1 row-start-5 row-span-2" />
         {/* Continue Reading */}
       </div>
     </>

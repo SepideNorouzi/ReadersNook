@@ -94,7 +94,7 @@ export default function CurrentReadEmbla({
       </div>
 
       {/* Dots */}
-      <div className="mt-3 flex justify-center gap-2 lg:mt-4">
+      <div className="mt-3 flex justify-center gap-2 lg:mt-6">
         {books.map((_, index) => (
           <button
             key={index}
