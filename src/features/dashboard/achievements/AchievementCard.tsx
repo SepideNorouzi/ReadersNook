@@ -73,7 +73,7 @@ export default function AchievementCard({ className }: AchievementCardProps) {
               h-full
               overflow-y-auto
 
-              pr-1
+              p-2
             "
           >
             <div className="grid grid-cols-3 gap-3">

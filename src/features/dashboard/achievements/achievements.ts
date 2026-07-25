@@ -2,6 +2,17 @@ import { quotes } from "../../../data/quotes";
 import type { Achievement } from "../../../types/achievement";
 import type { Book } from "../../../types/book";
 
+import book from "../../../assets/badge/book.svg";
+import bookss from "../../../assets/badge/books.svg";
+import bookShelf from "../../../assets/badge/book-shelf.svg";
+import compass from "../../../assets/badge/compass.svg";
+import crown from "../../../assets/badge/crown.svg";
+import dragon from "../../../assets/badge/dragon.svg";
+import library from "../../../assets/badge/library.svg";
+import pen from "../../../assets/badge/pen.svg";
+import target from "../../../assets/badge/target.svg";
+import worm from "../../../assets/badge/worm.svg";
+
 export function getAchievements(books: Book[]): Achievement[] {
   const readBooks = books.filter((book) => book.status === "read").length;
 
@@ -28,23 +39,23 @@ export function getAchievements(books: Book[]): Achievement[] {
       id: "bookworm",
       title: "Bookworm",
       description: "Read 10 books.",
-      icon: "🌸",
-      unlocked: readBooks >= 10,
+      icon: worm,
+      unlocked: readBooks >= 2,
     },
 
     {
       id: "book-dragon",
       title: "Book Dragon",
       description: "Read 25 books.",
-      icon: "🐉",
-      unlocked: readBooks >= 25,
+      icon: dragon,
+      unlocked: readBooks >= 3,
     },
 
     {
       id: "library",
       title: "Mini Library",
       description: "Read 50 books.",
-      icon: "🏛️",
+      icon: library,
       unlocked: readBooks >= 50,
     },
 
@@ -52,8 +63,8 @@ export function getAchievements(books: Book[]): Achievement[] {
       id: "legend",
       title: "Library Legend",
       description: "Read 100 books.",
-      icon: "👑",
-      unlocked: readBooks >= 100,
+      icon: crown,
+      unlocked: readBooks >= 3,
     },
 
     // --------------------------------------------------
@@ -64,7 +75,7 @@ export function getAchievements(books: Book[]): Achievement[] {
       id: "quote-collector",
       title: "Quote Collector",
       description: "Save 3 favorite quotes.",
-      icon: "✒️",
+      icon: pen,
       unlocked: quotesCount >= 3,
     },
 
@@ -76,7 +87,7 @@ export function getAchievements(books: Book[]): Achievement[] {
       id: "future-reader",
       title: "Future Reader",
       description: "Add 5 books to your TBR shelf.",
-      icon: "📚",
+      icon: bookss,
       unlocked: tbrBooks >= 5,
     },
 
@@ -84,7 +95,7 @@ export function getAchievements(books: Book[]): Achievement[] {
       id: "adventure-awaits",
       title: "Adventure Awaits",
       description: "Add 20 books to your TBR shelf.",
-      icon: "🧭",
+      icon: compass,
       unlocked: tbrBooks >= 20,
     },
 
@@ -96,7 +107,7 @@ export function getAchievements(books: Book[]): Achievement[] {
       id: "halfway-there",
       title: "Halfway There",
       description: "Reach 50% of your yearly reading goal.",
-      icon: "🎯",
+      icon: target,
       unlocked: yearlyGoalProgress >= 50,
     },
 
@@ -108,7 +119,7 @@ export function getAchievements(books: Book[]): Achievement[] {
       id: "first-chapters",
       title: "First Chapters",
       description: "Read 50% of your current book.",
-      icon: "📖",
+      icon: book,
       unlocked: currentBookProgress >= 50,
     },
 
@@ -120,7 +131,7 @@ export function getAchievements(books: Book[]): Achievement[] {
       id: "collector",
       title: "Collector",
       description: "Create your first collection.",
-      icon: "🗂️",
+      icon: bookShelf,
       unlocked: collectionsCount >= 1,
     },
   ];
