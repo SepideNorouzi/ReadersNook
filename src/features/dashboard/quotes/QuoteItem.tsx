@@ -13,20 +13,6 @@ export default function QuoteItem({ quote }: Props) {
 
       <div className="flex h-full flex-col justify-between lg:hidden">
         <div>
-          <span
-            className="
-              mb-1
-              block
-
-              font-heading
-              text-4xl
-              leading-none
-
-              text-[var(--stone-300)]
-            "
-          >
-            ❝
-          </span>
 
           <blockquote
             className="
@@ -35,7 +21,7 @@ export default function QuoteItem({ quote }: Props) {
               text-left
 
               font-heading
-              text-sm
+              text-[12px]
               italic
               leading-relaxed
 
@@ -49,23 +35,23 @@ export default function QuoteItem({ quote }: Props) {
         <div className="mt-4 flex justify-end">
           <span
             className="
-              rounded-full
+              rounded-xl
 
               border
               border-[var(--border)]
 
               bg-[var(--stone-100)]
 
-              px-3
+              px-2
               py-1
 
-              text-[11px]
+              text-[8px]
               font-medium
 
               text-[var(--brown-700)]
             "
           >
-            📖 {quote.bookTitle}
+            ✨ {quote.bookTitle}
           </span>
         </div>
       </div>

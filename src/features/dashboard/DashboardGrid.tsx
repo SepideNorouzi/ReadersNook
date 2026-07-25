@@ -25,11 +25,11 @@ export default function DashboardGrid() {
 
         <WidgetCard className="col-start-2 row-start-4 row-span-1" />
 
-        <QuoteCard className="col-start-1 row-start-5 row-span-3" />
+        <QuoteCard className="col-start-1 row-start-5 row-span-2" />
 
         <TBRCard className="col-start-2 row-start-5 row-span-4" />
 
-        <Card className="col-start-1 row-start-8 row-span-2" />
+        <Card className="col-start-1 row-start-7 row-span-2" />
       </div>
 
       {/* ---------------- Desktop ---------------- */}
@@ -46,8 +46,9 @@ export default function DashboardGrid() {
         <ProgressCard className="col-start-2 row-start-1 row-span-3" />
         <WidgetCard className="col-start-2 row-start-4 row-span-1" />{" "}
         {/* Widget */}
-        <Card className="col-start-2 row-start-5 row-span-2" /> {/* quotes */}
+        <Card className="col-start-2 row-start-5 row-span-2" />
         <QuoteCard className="col-start-3 row-start-1 row-span-3" />{" "}
+        {/* quotes */}
         {/* Finished */}
         <TBRCard className="col-start-3 row-start-4 row-span-3" /> {/* TBR */}
         <Card className="col-start-1 row-start-5 row-span-2" />
