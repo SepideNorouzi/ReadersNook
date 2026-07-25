@@ -8,7 +8,7 @@ export default function CurrentReadProgress({ book }: Props) {
   const percentage = Math.round((book.currentPage / book.totalPages) * 100);
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
         <span
           className="
@@ -22,10 +22,15 @@ export default function CurrentReadProgress({ book }: Props) {
           Progress
         </span>
 
-        <span className="font-semibold text-[12px] text-[var(--text-muted)]">{percentage}%</span>
+        <span
+          className="text-[11px]
+font-bold text-[var(--text-muted)]"
+        >
+          {percentage}%
+        </span>
       </div>
 
-      <div className="h-2 overflow-hidden rounded-full bg-[#ECE3D8]">
+      <div className="h-2.5 overflow-hidden rounded-full bg-[#ECE3D8]">
         <div
           className="h-full rounded-full bg-[#2C1810] transition-all duration-500"
           style={{

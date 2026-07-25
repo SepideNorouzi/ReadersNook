@@ -53,24 +53,24 @@ export default function CurrentReadCarousel({
             src={book.coverUrl}
             alt={book.title}
             className="
-              aspect-[3/4]
+  aspect-[3/4]
 
-              w-28
-              sm:w-32
-              lg:w-32
-              xl:w-36
+  w-32
+  sm:w-36
+  lg:w-32
+  xl:w-36
 
-              rounded-[18px]
+  rounded-[18px]
 
-              object-cover
+  object-cover
 
-              shadow-[0_8px_18px_rgba(0,0,0,.18)]
+  shadow-[0_8px_18px_rgba(0,0,0,.18)]
 
-              transition-transform
-              duration-300
+  transition-transform
+  duration-300
 
-              group-hover:scale-[1.02]
-            "
+  group-hover:scale-[1.02]
+"
           />
         </div>
       </div>
