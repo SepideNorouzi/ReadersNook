@@ -3,9 +3,13 @@ import type { CollectionWithBooks } from "../../../types/collection";
 
 export interface CollectionCardProps {
   collection: CollectionWithBooks;
+  onClick?: (collection: CollectionWithBooks) => void;
 }
 
-export default function CollectionItem({ collection }: CollectionCardProps) {
+export default function CollectionItem({
+  collection,
+  onClick,
+}: CollectionCardProps) {
   const { name, books } = collection;
   const count = books.length;
 
@@ -25,7 +29,7 @@ export default function CollectionItem({ collection }: CollectionCardProps) {
         hover:-translate-y-0.5
       "
     >
-      <CollectionStack books={books} />
+      <CollectionStack books={books} onClick={() => onClick?.(collection)} />
 
       <div className="text-center">
         <h3 className="font-heading text-sm font-semibold text-[var(--text)]">

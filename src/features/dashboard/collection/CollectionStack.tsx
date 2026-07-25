@@ -4,6 +4,7 @@ import type { Book } from "../../../types/book";
 export interface CollectionStackProps {
   books: Book[];
   maxVisible?: number;
+  onClick?: () => void;
 }
 
 type StackLayerStyle = CSSProperties & Record<`--${string}`, string>;
@@ -11,18 +12,17 @@ type StackLayerStyle = CSSProperties & Record<`--${string}`, string>;
 export default function CollectionStack({
   books,
   maxVisible = 3,
+  onClick,
 }: CollectionStackProps) {
   const visibleBooks = books.slice(0, maxVisible);
   const stack = [...visibleBooks].reverse();
 
   if (stack.length === 0) {
-    return (
-      <div className="h-24 w-16 rounded-lg bg-[var(--stone-100)]" />
-    );
+    return <div className="h-24 w-16 rounded-lg bg-[var(--stone-100)]" />;
   }
 
   return (
-    <div className="group relative h-24 w-16 shrink-0">
+    <div onClick={onClick} className="group relative h-24 w-16 shrink-0">
       {stack.map((book, i) => {
         const depth = stack.length - 1 - i;
         const isFront = depth === 0;
@@ -67,7 +67,6 @@ export default function CollectionStack({
               h-full w-full
               rounded-md
               object-cover
-
               [z-index:var(--z)]
               [box-shadow:var(--shadow)]
 

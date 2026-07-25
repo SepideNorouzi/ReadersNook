@@ -49,10 +49,9 @@ export default function DashboardGrid() {
         <WidgetCard className="col-start-2 row-start-4 row-span-1" />{" "}
         {/* Widget */}
         <AchievementCard className="col-start-2 row-start-5 row-span-2" />
-        <QuoteCard className="col-start-3 row-start-1 row-span-3" />{" "}
+        <TBRCard className="col-start-3 row-start-1 row-span-3" /> {/* TBR */}
         {/* quotes */}
-        {/* Finished */}
-        <TBRCard className="col-start-3 row-start-4 row-span-3" /> {/* TBR */}
+        <QuoteCard className="col-start-3 row-start-4 row-span-3" />{" "}
         <CollectionsCard className="col-start-1 row-start-5 row-span-2" />
         {/* Continue Reading */}
       </div>

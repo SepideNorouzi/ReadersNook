@@ -69,7 +69,7 @@ export default function QuoteItem({ quote }: Props) {
               text-5xl
               leading-none
 
-              text-[var(--stone-300)]
+              text-[var(--brown-700)]
             "
           >
             ❝

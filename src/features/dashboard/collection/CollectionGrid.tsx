@@ -3,9 +3,13 @@ import CollectionsItem from "./CollectionItem";
 
 export interface CollectionGridProps {
   collections: CollectionWithBooks[];
+  onCollectionClick?: (collection: CollectionWithBooks) => void;
 }
 
-function CollectionGrid({ collections }: CollectionGridProps) {
+function CollectionGrid({
+  collections,
+  onCollectionClick,
+}: CollectionGridProps) {
   return (
     <div
       className="
@@ -17,7 +21,11 @@ function CollectionGrid({ collections }: CollectionGridProps) {
       "
     >
       {collections.map((collection) => (
-        <CollectionsItem key={collection.id} collection={collection} />
+        <CollectionsItem
+          key={collection.id}
+          collection={collection}
+          onClick={onCollectionClick}
+        />
       ))}
     </div>
   );

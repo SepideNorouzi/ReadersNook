@@ -130,7 +130,7 @@ export default function TBRCard({ className }: Props) {
               className="
                 h-full
                 overflow-y-auto
-                pr-2
+                p-1
                 scrollbar-hidden
                 scrollbar-thin
                 scrollbar-thumb-[var(--stone-300)]
