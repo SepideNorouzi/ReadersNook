@@ -7,17 +7,7 @@ interface Props {
 
 export default function TBRBookGrid({ books }: Props) {
   return (
-    <div
-      className="
-        grid
-
-        grid-cols-3
-        sm:grid-cols-4
-        xl:grid-cols-3
-
-        gap-4
-      "
-    >
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
       {books.map((book) => (
         <TBRBookItem key={book.id} book={book} />
       ))}

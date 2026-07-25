@@ -22,8 +22,8 @@ export default function TBRBookItem({ book }: Props) {
       <div
         className="
           overflow-hidden
-
-          rounded-2xl
+          rounded-xl
+          lg:rounded-2xl
 
           border
           border-[var(--border)]
@@ -43,16 +43,10 @@ export default function TBRBookItem({ book }: Props) {
           src={book.coverUrl}
           alt={book.title}
           className="
-            aspect-[2/3]
-            w-full
-
-            object-cover
-
-            transition-transform
-            duration-300
-
-            group-hover:scale-105
-          "
+w-full
+aspect-[3/4]
+object-cover
+"
         />
       </div>
 
@@ -64,8 +58,8 @@ export default function TBRBookItem({ book }: Props) {
           line-clamp-2
 
           text-center
-
-          text-xs
+          text-[10px]
+          lg:text-xs
           font-medium
           font-heading
 

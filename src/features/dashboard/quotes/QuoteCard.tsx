@@ -37,12 +37,20 @@ export default function QuoteCard({ className }: Props) {
           items-center
           justify-center
 
+          p-4
+          lg:p-6
+
           ${className ?? ""}
         `}
       >
-        <Quote size={30} className="mb-3 text-[var(--stone-300)]" />
+        <Quote
+          size={26}
+          className="mb-2 text-[var(--stone-300)] lg:mb-3 lg:size-[30px]"
+        />
 
-        <p className="text-sm text-[var(--text-secondary)]">No saved quotes</p>
+        <p className="text-center text-xs text-[var(--text-secondary)] lg:text-sm">
+          No saved quotes
+        </p>
       </Card>
     );
   }
@@ -67,14 +75,25 @@ export default function QuoteCard({ className }: Props) {
         via-[var(--surface)]
         to-[var(--surface-hover)]
 
-        p-6
+        p-4
+        lg:p-6
 
         ${className ?? ""}
       `}
     >
-      {/* Header */}
+      {/* Mobile Header */}
 
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-3 flex items-center gap-2 lg:hidden">
+        <Quote size={13} className="text-[var(--brown-600)]" />
+
+        <h2 className="font-heading text-[12px] font-semibold text-[var(--text)]">
+          Quote
+        </h2>
+      </div>
+
+      {/* Desktop Header */}
+
+      <div className="hidden items-center justify-between lg:mb-6 lg:flex">
         <div className="flex items-center gap-2">
           <Quote size={16} className="text-[var(--brown-600)]" />
 
@@ -102,7 +121,9 @@ export default function QuoteCard({ className }: Props) {
         </span>
       </div>
 
-      <QuoteItem quote={quote} />
+      <div className="flex-1">
+        <QuoteItem quote={quote} />
+      </div>
     </Card>
   );
 }

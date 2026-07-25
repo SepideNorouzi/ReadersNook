@@ -36,13 +36,44 @@ export default function TBRCard({ className }: Props) {
         from-white
         to-[var(--surface-hover)]
 
-        p-6
+        p-4
+        lg:p-6
 
         ${className ?? ""}
       `}
     >
-      {/* Header */}
-      <div className="mb-5 flex items-center justify-between">
+      {/* Mobile Header */}
+
+      <div className="mb-3 flex items-center justify-between lg:hidden">
+        <div className="flex items-center gap-2">
+          <SquarePen size={13} className="text-[var(--brown-700)]" />
+
+          <h2 className="font-heading text-[12px] font-semibold text-[var(--text)]">
+            To Read
+          </h2>
+        </div>
+
+        <span
+          className="
+            rounded-full
+            bg-[var(--stone-200)]
+
+            px-2
+            py-0.5
+
+            text-[10px]
+            font-medium
+
+            text-[var(--text-secondary)]
+          "
+        >
+          {books.length}
+        </span>
+      </div>
+
+      {/* Desktop Header */}
+
+      <div className="hidden items-center justify-between lg:mb-5 lg:flex">
         <div className="flex items-center gap-2">
           <SquarePen size={16} className="text-[var(--brown-700)]" />
 
@@ -55,6 +86,7 @@ export default function TBRCard({ className }: Props) {
           className="
             rounded-full
             bg-[var(--stone-200)]
+
             px-2.5
             py-1
 
@@ -68,53 +100,64 @@ export default function TBRCard({ className }: Props) {
         </span>
       </div>
 
-      {/* Shelf */}
       {books.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center">
-          <BookOpen size={34} className="mb-3 text-[var(--stone-300)]" />
+          <BookOpen
+            size={26}
+            className="mb-2 text-[var(--stone-300)] lg:mb-3 lg:size-[34px]"
+          />
 
-          <p className="text-sm text-[var(--text-secondary)]">
+          <p className="text-center text-xs text-[var(--text-secondary)] lg:text-sm">
             Your shelf is empty.
           </p>
 
-          <p className="mt-1 text-xs text-[var(--text-muted)]">
+          <p className="mt-1 text-center text-[11px] text-[var(--text-muted)] lg:text-xs">
             Add a few books you'd love to read.
           </p>
         </div>
       ) : (
-        <div className="relative flex-1 overflow-hidden">
-          <div
-            className="
-              h-full
-              overflow-y-auto
-              pr-2
+        <>
+          {/* Mobile */}
 
-              scrollbar-thin
-              scrollbar-thumb-[var(--stone-300)]
-              scrollbar-track-transparent
-            "
-          >
+          <div className="flex-1 lg:hidden">
             <TbrBookGrid books={books} />
           </div>
 
-          {/* Bottom fade */}
-          <div
-            className="
-              pointer-events-none
+          {/* Desktop */}
 
-              absolute
-              bottom-0
-              left-0
-              right-0
+          <div className="relative hidden flex-1 overflow-hidden lg:block">
+            <div
+              className="
+                h-full
+                overflow-y-auto
+                pr-2
 
-              h-8
+                scrollbar-thin
+                scrollbar-thumb-[var(--stone-300)]
+                scrollbar-track-transparent
+              "
+            >
+              <TbrBookGrid books={books} />
+            </div>
 
-              bg-gradient-to-t
-              from-[var(--surface)]
-              to-transparent
-            "
-          />
-        </div>
+            <div
+              className="
+                pointer-events-none
+
+                absolute
+                bottom-0
+                left-0
+                right-0
+
+                h-8
+
+                bg-gradient-to-t
+                from-[var(--surface)]
+                to-transparent
+              "
+            />
+          </div>
+        </>
       )}
     </Card>
   );
