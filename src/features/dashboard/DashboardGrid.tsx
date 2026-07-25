@@ -4,6 +4,7 @@ import Card from "../../components/ui/Card";
 import TBRCard from "./tbr/TbrCard";
 import QuoteCard from "./quotes/QuoteCard";
 import WidgetCard from "./widget/WidgetCard";
+import AchievementCard from "./achievements/AchievementCard";
 
 export default function DashboardGrid() {
   return (
@@ -46,7 +47,7 @@ export default function DashboardGrid() {
         <ProgressCard className="col-start-2 row-start-1 row-span-3" />
         <WidgetCard className="col-start-2 row-start-4 row-span-1" />{" "}
         {/* Widget */}
-        <Card className="col-start-2 row-start-5 row-span-2" />
+        <AchievementCard className="col-start-2 row-start-5 row-span-2" />
         <QuoteCard className="col-start-3 row-start-1 row-span-3" />{" "}
         {/* quotes */}
         {/* Finished */}
