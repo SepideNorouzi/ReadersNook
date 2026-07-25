@@ -42,8 +42,8 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
         from-white
         to-[var(--surface-hover)]
 
-        p-4
-        sm:p-5
+        p-3
+        sm:p-3
         lg:p-6
 
         transition-all
@@ -100,7 +100,7 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
       />
 
       {/* Bottom */}
-      <div className="mt-auto space-y-2 pt-2">
+      <div className="mt-auto space-y-3 pt-1 lg:space-y-2 lg:pt-2">
         <CurrentReadProgress book={currentBook} />
 
         <CurrentReadDetails book={currentBook} />

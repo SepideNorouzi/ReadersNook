@@ -40,6 +40,49 @@ export default function CurrentReadDetails({ book }: Props) {
             {book.author}
           </p>
         </div>
+
+        {/* Compact Current Section */}
+        <div
+          className="
+    flex
+    items-center
+    justify-between
+
+    rounded-xl
+    border
+    border-[var(--border)]
+
+    bg-[var(--stone-100)]
+
+    px-2
+    py-2
+  "
+        >
+          <p
+            className="
+      text-[8px]
+      uppercase
+      tracking-[0.18em]
+
+      text-[var(--text-muted)]
+    "
+          >
+            Current
+          </p>
+
+          <p
+            className="
+      shrink-0
+
+      text-[8px]
+      font-medium
+
+      text-[var(--text)]
+    "
+          >
+            {book.currentPage} / {book.totalPages}
+          </p>
+        </div>
       </div>
 
       {/* ======================= DESKTOP ======================= */}
@@ -84,7 +127,22 @@ export default function CurrentReadDetails({ book }: Props) {
 
         {/* Current Reading */}
 
-        <div className="flex items-end justify-between">
+        <div
+          className="
+    flex
+    items-center
+    justify-between
+
+    rounded-xl
+    border
+    border-[var(--border)]
+
+    bg-[var(--stone-100)]
+
+    px-2
+    py-2
+  "
+        >
           <p
             className="
               text-[10px]
@@ -101,7 +159,7 @@ export default function CurrentReadDetails({ book }: Props) {
             className="
               shrink-0
 
-              text-sm
+              text-[11px]
               font-medium
 
               text-[var(--text)]
