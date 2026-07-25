@@ -1,11 +1,16 @@
+import type { Achievement } from "../../../types/achievement";
+
 interface Props {
-  title: string;
-  icon: string;
+  achievement: Achievement;
+  onClick: () => void;
 }
 
-export default function AchievementItem({ title, icon }: Props) {
+export default function AchievementItem({ achievement, onClick }: Props) {
+  const { icon, title } = achievement;
+  
   return (
     <div
+      onClick={onClick}
       className="
         flex
         flex-col

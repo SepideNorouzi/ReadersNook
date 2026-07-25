@@ -10,7 +10,7 @@ export default function Card({ children, className }: Props) {
   return (
     <div
       className={clsx(
-        "rounded-3xl bg-white p-6 shadow-sm border border-[#E6DDCF] transition-all hover:-translate-y-1 hover:shadow-lg",
+        "rounded-3xl bg-white p-6 shadow-sm border border-[#E6DDCF] transition-all hover:shadow-lg",
         className,
       )}
     >

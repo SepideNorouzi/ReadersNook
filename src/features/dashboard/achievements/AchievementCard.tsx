@@ -1,6 +1,9 @@
+import { useState } from "react";
 import Card from "../../../components/ui/Card";
 import { useAchievements } from "../../../hooks/useAchievements";
 import AchievementItem from "./AchievementItem";
+import type { Achievement } from "../../../types/achievement";
+import AchievementModal from "../../../modals/AchievementModal";
 
 interface AchievementCardProps {
   className?: string;
@@ -8,6 +11,9 @@ interface AchievementCardProps {
 
 export default function AchievementCard({ className }: AchievementCardProps) {
   const achievements = useAchievements();
+
+  const [selectedAchievement, setSelectedAchievement] =
+    useState<Achievement | null>(null);
 
   const unlocked = achievements.filter((achievement) => achievement.unlocked);
 
@@ -32,13 +38,17 @@ export default function AchievementCard({ className }: AchievementCardProps) {
         >
           {unlocked.map((achievement) => (
             <AchievementItem
-              key={achievement.id}
-              title={achievement.title}
-              icon={achievement.icon}
+              achievement={achievement}
+              onClick={() => setSelectedAchievement(achievement)}
             />
           ))}
         </div>
       )}
+      <AchievementModal
+        achievement={selectedAchievement}
+        isOpen={selectedAchievement !== null}
+        onClose={() => setSelectedAchievement(null)}
+      />
     </Card>
   );
 }

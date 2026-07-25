@@ -74,7 +74,7 @@ export default function QuoteCard({ className }: Props) {
         from-white
         via-[var(--surface)]
         to-[var(--surface-hover)]
-
+        hover:-translate-y-1
         p-4
         lg:p-6
 
