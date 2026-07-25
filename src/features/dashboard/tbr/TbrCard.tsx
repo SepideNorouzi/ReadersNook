@@ -119,7 +119,7 @@ export default function TBRCard({ className }: Props) {
         <>
           {/* Mobile */}
 
-          <div className="flex-1 lg:hidden">
+          <div className="flex-1 lg:hidden scrollbar-hidden">
             <TbrBookGrid books={books} />
           </div>
 
@@ -131,7 +131,7 @@ export default function TBRCard({ className }: Props) {
                 h-full
                 overflow-y-auto
                 pr-2
-
+                scrollbar-hidden
                 scrollbar-thin
                 scrollbar-thumb-[var(--stone-300)]
                 scrollbar-track-transparent

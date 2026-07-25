@@ -1,6 +1,8 @@
 import { X } from "lucide-react";
 import type { Achievement } from "../types/achievement";
 
+import "../styles/achievement.css";
+
 interface Props {
   achievement: Achievement | null;
   isOpen: boolean;
@@ -20,12 +22,14 @@ export default function AchievementModal({
       <div
         onClick={onClose}
         className="
+          achievement-modal__backdrop
+
           fixed
           inset-0
           z-40
 
           bg-black/40
-          backdrop-blur-sm
+          backdrop-blur-md
 
           animate-in
           fade-in
@@ -36,18 +40,23 @@ export default function AchievementModal({
       {/* Modal */}
       <div
         className="
+          achievement-modal
+
           fixed
           left-1/2
           top-1/2
           z-50
 
-          w-[360px]
+          w-[390px]
           max-w-[92vw]
 
           -translate-x-1/2
           -translate-y-1/2
 
-          rounded-3xl
+          overflow-hidden
+
+          rounded-[30px]
+
           border
           border-[var(--border)]
 
@@ -60,186 +69,74 @@ export default function AchievementModal({
           duration-200
         "
       >
-        {/* Close Button */}
+        {/* Close */}
         <button
           onClick={onClose}
           className="
+            achievement-modal__close
+
             absolute
             right-5
             top-5
 
             rounded-full
-            p-2
 
-            text-[var(--muted)]
+            p-2
 
             transition-all
             duration-200
 
             hover:bg-[var(--stone-100)]
-            hover:text-[var(--text)]
           "
         >
-          <X size={18} />
+          <X size={18} className="text-[var(--text-secondary)]" />
         </button>
 
-        <div className="p-8">
+        <div className="achievement-modal__content p-8">
           {/* Badge */}
-          <div className="flex justify-center">
+
+          <div className="achievement-modal__badge-wrapper">
             <div
-              className="
-                flex
-                h-28
-                w-28
-                items-center
-                justify-center
-
-                rounded-[28px]
-
-                border
-                border-[var(--border)]
-
-                bg-gradient-to-br
-                from-amber-50
-                via-white
-                to-stone-100
-
-                shadow-lg
-              "
+              className={`
+                achievement-badge
+                achievement-modal__badge
+                badge-${achievement.id}
+              `}
             >
-              <img
-                src={achievement.icon}
-                alt={achievement.title}
-                className="h-16 w-16 object-contain"
-              />
+              <div className="achievement-badge__icon-wrapper">
+                <img
+                  src={achievement.icon}
+                  alt={achievement.title}
+                  className="achievement-badge__image achievement-modal__image"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Title */}
-          <h2
-            className="
-              mt-6
+          {/* title */}
 
-              text-center
-
-              font-heading
-              text-2xl
-              font-semibold
-
-              text-[var(--text)]
-            "
-          >
+          <p className="achievement-badge__title achievement-modal__title pt-5">
             {achievement.title}
-          </h2>
-
-          {/* Status */}
-          <div className="mt-4 flex justify-center">
-            {achievement.unlocked ? (
-              <span
-                className="
-                  rounded-full
-
-                  bg-emerald-100
-
-                  px-4
-                  py-1.5
-
-                  text-xs
-                  font-semibold
-                  tracking-wide
-
-                  text-emerald-700
-                "
-              >
-                ✓ UNLOCKED
-              </span>
-            ) : (
-              <span
-                className="
-                  rounded-full
-
-                  bg-stone-100
-
-                  px-4
-                  py-1.5
-
-                  text-xs
-                  font-semibold
-                  tracking-wide
-
-                  text-stone-600
-                "
-              >
-                🔒 LOCKED
-              </span>
-            )}
-          </div>
+          </p>
 
           {/* Divider */}
-          <div
-            className="
-              my-7
-              h-px
-              bg-gradient-to-r
-              from-transparent
-              via-[var(--border)]
-              to-transparent
-            "
-          />
+
+          <div className="achievement-modal__divider" />
 
           {/* Description */}
-          <div className="space-y-2 text-center">
-            <p
-              className="
-                text-xs
 
-                uppercase
+          <div className="achievement-modal__body">
+            <p className="achievement-modal__label">Achievement</p>
 
-                tracking-[0.2em]
-
-                text-[var(--muted)]
-              "
-            >
-              Achievement
-            </p>
-
-            <p
-              className="
-                leading-7
-
-                text-sm
-
-                text-[var(--text)]
-              "
-            >
+            <p className="achievement-modal__description">
               {achievement.description}
             </p>
           </div>
 
           {/* Footer */}
-          <div
-            className="
-              mt-8
 
-              rounded-2xl
-
-              border
-              border-[var(--border)]
-
-              bg-[var(--stone-50)]
-
-              p-4
-            "
-          >
-            <p
-              className="
-                text-center
-
-                text-xs
-
-                text-[var(--muted)]
-              "
-            >
+          <div className="achievement-modal__footer">
+            <p className="achievement-modal__footer-text">
               Every achievement marks another milestone in your reading journey.
               Keep exploring your library to discover more.
             </p>

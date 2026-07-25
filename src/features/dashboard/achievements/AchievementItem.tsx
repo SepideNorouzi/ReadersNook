@@ -1,4 +1,5 @@
 import type { Achievement } from "../../../types/achievement";
+import "../../../styles/achievement.css";
 
 interface Props {
   achievement: Achievement;
@@ -6,49 +7,23 @@ interface Props {
 }
 
 export default function AchievementItem({ achievement, onClick }: Props) {
-  const { icon, title } = achievement;
-  
+  const { icon, title, id, unlocked } = achievement;
+
   return (
-    <div
+    <button
       onClick={onClick}
-      className="
-        flex
-        flex-col
-        items-center
-
-        gap-2
-
-        rounded-xl
-        border
-        border-[var(--border)]
-
-        bg-[var(--card)]
-
-        p-3
-
-        transition-all
-        duration-300
-
-        hover:-translate-y-1
-        hover:shadow-lg
-      "
+      className={`
+        achievement-badge
+        badge-${id}
+        ${!unlocked ? "achievement-badge--locked" : ""}
+      `}
     >
-      <div className="text-3xl">{icon}</div>
 
-      <p
-        className="
-          text-[10px]
-          lg:text-xs
+      {/* Icon */}
+      <div className="achievement-badge__icon-wrapper">
+        <img src={icon} alt={title} className="achievement-badge__image" />
+      </div>
 
-          font-heading
-          font-medium
-
-          text-center
-          leading-snug
-        "
-      >
-        {title}
-      </p>
-    </div>
+    </button>
   );
 }

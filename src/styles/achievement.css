@@ -1,0 +1,401 @@
+.badge-bookworm {
+  --badge-start: #fff7d6;
+  --badge-middle: #f7d774;
+  --badge-end: #d4a72c;
+
+  --badge-shadow: rgba(212, 167, 44, 0.35);
+  --badge-glow: rgba(255, 248, 214, 0.55);
+  --badge-text: #5b3b00;
+}
+
+.badge-book-dragon {
+  --badge-start: #ece3ff;
+  --badge-middle: #ab84ff;
+  --badge-end: #6d4aff;
+
+  --badge-shadow: rgba(109, 74, 255, 0.35);
+  --badge-glow: rgba(236, 227, 255, 0.65);
+  --badge-text: #34186e;
+}
+
+.badge-library {
+  --badge-start: #e2faee;
+  --badge-middle: #79d6a8;
+  --badge-end: #217a57;
+
+  --badge-shadow: rgba(33, 122, 87, 0.35);
+  --badge-glow: rgba(226, 250, 238, 0.6);
+  --badge-text: #174937;
+}
+
+.badge-legend {
+  --badge-start: #fff9e8;
+  --badge-middle: #ffe17b;
+  --badge-end: #b67a00;
+
+  --badge-shadow: rgba(182, 122, 0, 0.45);
+  --badge-glow: rgba(255, 245, 200, 0.75);
+  --badge-text: #4b3200;
+}
+
+.badge-quote-collector {
+  --badge-start: #e8fbff;
+  --badge-middle: #8edbea;
+  --badge-end: #2b8aa0;
+
+  --badge-shadow: rgba(43, 138, 160, 0.35);
+  --badge-glow: rgba(232, 251, 255, 0.6);
+  --badge-text: #144857;
+}
+
+.badge-future-reader {
+  --badge-start: #dfe6ff;
+  --badge-middle: #5f73de;
+  --badge-end: #1b245d;
+
+  --badge-shadow: rgba(27, 36, 93, 0.4);
+  --badge-glow: rgba(223, 230, 255, 0.65);
+  --badge-text: #edf1ff;
+}
+
+.badge-adventure-awaits {
+  --badge-start: #ffe8cf;
+  --badge-middle: #ffb870;
+  --badge-end: #ff7a43;
+
+  --badge-shadow: rgba(255, 122, 67, 0.35);
+  --badge-glow: rgba(255, 236, 212, 0.6);
+  --badge-text: #5f2f13;
+}
+
+.badge-halfway-there {
+  --badge-start: #ffe7ea;
+  --badge-middle: #e86b82;
+  --badge-end: #a62d48;
+
+  --badge-shadow: rgba(166, 45, 72, 0.35);
+  --badge-glow: rgba(255, 231, 234, 0.65);
+  --badge-text: #5d0f22;
+}
+
+.badge-first-chapters {
+  --badge-start: #f5efff;
+  --badge-middle: #c5a8ff;
+  --badge-end: #8260d8;
+
+  --badge-shadow: rgba(130, 96, 216, 0.35);
+  --badge-glow: rgba(245, 239, 255, 0.65);
+  --badge-text: #42246d;
+}
+
+.badge-collector {
+  --badge-start: #fff0ec;
+  --badge-middle: #f7b4a5;
+  --badge-end: #cb7868;
+
+  --badge-shadow: rgba(203, 120, 104, 0.35);
+  --badge-glow: rgba(255, 240, 236, 0.65);
+  --badge-text: #6b3328;
+}
+
+/* =========================================================
+   BADGE
+   ========================================================= */
+
+.achievement-badge {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  width: 100%;
+  aspect-ratio: 1;
+
+  padding: 0.85rem;
+
+  overflow: hidden;
+
+  border: none;
+  border-radius: 22px;
+
+  cursor: pointer;
+
+  background:
+    radial-gradient(
+      circle at 25% 20%,
+      rgba(255, 255, 255, 0.35),
+      transparent 40%
+    ),
+    linear-gradient(
+      135deg,
+      var(--badge-start),
+      var(--badge-middle),
+      var(--badge-end)
+    );
+
+  box-shadow:
+    0 10px 24px var(--badge-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.achievement-badge:hover {
+  transform: translateY(-5px) scale(1.03);
+
+  box-shadow:
+    0 18px 42px var(--badge-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* =========================================================
+   SHINE
+   ========================================================= */
+
+.achievement-badge::before {
+  content: "";
+
+  position: absolute;
+
+  top: -60%;
+  left: -120%;
+
+  width: 70%;
+  height: 220%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--badge-glow),
+    transparent
+  );
+
+  transform: rotate(25deg);
+
+  transition: left 0.9s ease;
+}
+
+.achievement-badge:hover::before {
+  left: 20%;
+}
+
+/* =========================================================
+   INNER GLOW
+   ========================================================= */
+
+.achievement-badge::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  pointer-events: none;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.achievement-badge__icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.achievement-badge__image {
+  width: 46px;
+  height: 46px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 8px 14px var(--badge-shadow))
+    drop-shadow(0 2px 2px rgba(255, 255, 255, 0.3));
+
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.achievement-badge:hover .achievement-badge__image {
+  transform: scale(1) rotate(-2deg);
+}
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.achievement-badge__title {
+  margin: 0;
+
+  font-family: var(--font-heading);
+
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  line-height: 1.15;
+
+  letter-spacing: 0.02em;
+
+  text-align: center;
+
+  color: var(--badge-text);
+
+  transition: color 0.3s ease;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.achievement-modal__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.achievement-modal__badge-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.achievement-modal__badge {
+  width: 120px;
+  aspect-ratio: 1;
+
+  cursor: default;
+
+  transform: none !important;
+}
+
+.achievement-modal__badge:hover {
+  transform: none !important;
+}
+
+.achievement-modal__badge:hover::before {
+  left: -20%;
+}
+
+.achievement-modal__image {
+  width: 76px;
+  height: 76px;
+}
+
+.achievement-modal__title {
+  font-size: 1rem;
+}
+
+.achievement-modal__divider {
+  height: 1px;
+
+  margin: 2rem 0;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--border),
+    transparent
+  );
+}
+
+.achievement-modal__body {
+  text-align: center;
+}
+
+.achievement-modal__label {
+  margin-bottom: 0.75rem;
+
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+
+  color: var(--text-muted);
+}
+
+.achievement-modal__description {
+  line-height: 1.8;
+
+  font-size: 0.95rem;
+
+  color: var(--text);
+}
+
+.achievement-modal__footer {
+  margin-top: 2rem;
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  background: var(--surface-hover);
+
+  padding: 1rem;
+}
+
+.achievement-modal__footer-text {
+  text-align: center;
+
+  font-size: 0.8rem;
+
+  line-height: 1.7;
+
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   LOCKED BADGES
+   ========================================================= */
+
+.achievement-badge--locked {
+  filter: grayscale(1) saturate(.15);
+
+  opacity: .6;
+}
+
+.achievement-badge--locked:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.achievement-badge--locked::before {
+  display: none;
+}
+
+.achievement-badge--locked .achievement-badge__image {
+  opacity: .8;
+}
+
+.achievement-badge__lock {
+  position: absolute;
+
+  top: 8px;
+  right: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, .9);
+
+  backdrop-filter: blur(10px);
+
+  font-size: .7rem;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .12);
+}
