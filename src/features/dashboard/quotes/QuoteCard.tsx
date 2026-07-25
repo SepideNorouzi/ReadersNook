@@ -97,8 +97,14 @@ export default function QuoteCard({ className }: Props) {
         <div className="flex items-center gap-2">
           <Quote size={16} className="text-[var(--brown-600)]" />
 
-          <h2 className="font-heading text-lg font-semibold text-[var(--text)]">
+          {/* Mobile */}
+          <h2 className="font-heading text-[12px] font-semibold text-[var(--text)] lg:hidden">
             Quote
+          </h2>
+
+          {/* Desktop */}
+          <h2 className="hidden font-heading text-lg font-semibold text-[var(--text)] lg:block">
+            Daily Quote
           </h2>
         </div>
 
@@ -121,7 +127,7 @@ export default function QuoteCard({ className }: Props) {
         </span>
       </div>
 
-      <div className="flex-1">
+      <div className="flex flex-1">
         <QuoteItem quote={quote} />
       </div>
     </Card>
