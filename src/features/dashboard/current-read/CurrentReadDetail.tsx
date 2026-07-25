@@ -16,7 +16,7 @@ export default function CurrentReadDetails({ book }: Props) {
               line-clamp-2
 
               font-heading
-              text-[15px]
+              text-[12px]
               font-semibold
               leading-snug
 
