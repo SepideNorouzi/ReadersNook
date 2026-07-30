@@ -1,4 +1,5 @@
 import { X, Library } from "lucide-react";
+import { useNavigate } from "react-router";
 import type { CollectionWithBooks } from "../types/collection";
 import Card from "../components/ui/Card";
 
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export default function CollectionModal({ collection, onClose }: Props) {
+  const navigate = useNavigate();
+
   return (
     /*
       Full-screen backdrop.
@@ -124,6 +127,10 @@ export default function CollectionModal({ collection, onClose }: Props) {
             {collection.books.map((book) => (
               <button
                 key={book.id}
+                onClick={() => {
+                  onClose(); // close the modal
+                  navigate(`/books/${book.id}`); // go to the detail page
+                }}
                 className="
                   group
 
