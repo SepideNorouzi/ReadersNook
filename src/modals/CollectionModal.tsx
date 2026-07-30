@@ -129,7 +129,7 @@ export default function CollectionModal({ collection, onClose }: Props) {
                 key={book.id}
                 onClick={() => {
                   onClose(); // close the modal
-                  navigate(`/books/${book.id}`); // go to the detail page
+                  navigate(`/book/${book.id}`); // go to the detail page
                 }}
                 className="
                   group

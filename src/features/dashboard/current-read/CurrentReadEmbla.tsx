@@ -1,6 +1,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect } from "react";
 import type { Book } from "../../../types/book";
+import { useNavigate } from "react-router";
 
 interface Props {
   books: Book[];
@@ -13,6 +14,8 @@ export default function CurrentReadEmbla({
   currentIndex,
   onSelect,
 }: Props) {
+  const navigate = useNavigate();
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "center",
@@ -74,6 +77,9 @@ export default function CurrentReadEmbla({
                   <img
                     src={book.coverUrl}
                     alt={book.title}
+                    onClick={() => {
+                      navigate(`/book/${book.id}`);
+                    }}
                     className="
                       aspect-[3/4]
                       w-32
