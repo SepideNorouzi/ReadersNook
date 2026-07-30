@@ -13,4 +13,9 @@ export const collections: Collection[] = [
     name: "Book Club Picks",
     bookIds: ["3", "6", "7"],
   },
+  {
+    id: "c3",
+    name: "Book Club Picks",
+    bookIds: ["11", "10", "9"],
+  },
 ];

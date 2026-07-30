@@ -122,8 +122,7 @@ ${className ?? ""}
         <span
           className="
             rounded-full
-            bg-[var(--stone-200)]
-
+            bg-[var(--stone-300)]
             px-2.5
             py-1
 
@@ -131,7 +130,7 @@ ${className ?? ""}
             uppercase
             tracking-[0.15em]
 
-            text-[var(--text-secondary)]
+            text-[var(--text)]
           "
         >
           Today

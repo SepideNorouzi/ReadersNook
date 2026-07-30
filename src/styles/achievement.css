@@ -60,8 +60,8 @@
 
 .badge-library {
   --badge-start: #fff0d7;
-  --badge-middle: #ff9800;
-  --badge-end: #ef6c00;
+  --badge-middle: #e2b36c;
+  --badge-end: #f0e1d4;
 
   --badge-shadow: rgba(239, 108, 0, 0.42);
   --badge-glow: rgba(255, 221, 180, 0.7);
