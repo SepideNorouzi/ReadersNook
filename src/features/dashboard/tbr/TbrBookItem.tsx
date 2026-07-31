@@ -8,7 +8,7 @@ interface Props {
 export default function TBRBookItem({ book }: Props) {
   return (
     <Link
-      to={`/books/${book.id}`}
+      to={`/book/${book.id}`}
       className="
         group
 

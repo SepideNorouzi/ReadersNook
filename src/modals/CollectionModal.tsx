@@ -30,6 +30,7 @@ export default function CollectionModal({ collection, onClose }: Props) {
     >
       {/* Prevent clicks inside the modal from closing it */}
       <Card
+        onClick={(e) => e.stopPropagation()}
         className="
           flex
           h-[80vh]
@@ -41,7 +42,7 @@ export default function CollectionModal({ collection, onClose }: Props) {
 
           flex-col
 
-          rounded-5xl
+          rounded-[2.5rem]
 
           border
           border-[var(--border)]

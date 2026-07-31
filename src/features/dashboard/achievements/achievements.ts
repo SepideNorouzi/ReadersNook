@@ -1,4 +1,4 @@
-import { quotes } from "../../../data/quotes";
+import { collections } from "../../../data/collection";
 import type { Achievement } from "../../../types/achievement";
 import type { Book } from "../../../types/book";
 
@@ -13,44 +13,50 @@ import pen from "../../../assets/badge/pen.svg";
 import target from "../../../assets/badge/target.svg";
 import worm from "../../../assets/badge/worm.svg";
 
+/** Keep in sync with useReadingGoal yearly goal. */
+const YEARLY_GOAL = 10;
+
 export function getAchievements(books: Book[]): Achievement[] {
-  const readBooks = books.filter((book) => book.status === "read").length;
+  const readBooks = books.filter((b) => b.status === "read").length;
+  const tbrBooks = books.filter((b) => b.status === "tbr").length;
 
-  const tbrBooks = books.filter((book) => book.status === "tbr").length;
+  const favoriteQuotesCount = books.reduce(
+    (count, b) => count + b.quotes.filter((q) => q.favorite).length,
+    0,
+  );
 
-  // TODO
-  const quotesCount = quotes.length;
+  const collectionsCount = collections.length;
 
-  // TODO
-  const collectionsCount = 0;
+  const yearlyGoalProgress = Math.min((readBooks / YEARLY_GOAL) * 100, 100);
 
-  // TODO
-  const yearlyGoalProgress = 0;
-
-  // TODO
-  const currentBookProgress = 0;
+  const currentBooks = books.filter((b) => b.status === "current");
+  const currentBookProgress =
+    currentBooks.length === 0
+      ? 0
+      : Math.max(
+          ...currentBooks.map((b) =>
+            b.totalPages > 0 ? (b.currentPage / b.totalPages) * 100 : 0,
+          ),
+        );
 
   return [
     // --------------------------------------------------
     // Reading
     // --------------------------------------------------
-
     {
       id: "bookworm",
       title: "Bookworm",
       description: "Read 10 books.",
       icon: worm,
-      unlocked: readBooks >= 2,
+      unlocked: readBooks >= 10,
     },
-
     {
       id: "book-dragon",
       title: "Book Dragon",
       description: "Read 25 books.",
       icon: dragon,
-      unlocked: readBooks >= 3,
+      unlocked: readBooks >= 25,
     },
-
     {
       id: "library",
       title: "Mini Library",
@@ -58,31 +64,28 @@ export function getAchievements(books: Book[]): Achievement[] {
       icon: library,
       unlocked: readBooks >= 50,
     },
-
     {
       id: "legend",
       title: "Library Legend",
       description: "Read 100 books.",
       icon: crown,
-      unlocked: readBooks >= 3,
+      unlocked: readBooks >= 100,
     },
 
     // --------------------------------------------------
     // Quotes
     // --------------------------------------------------
-
     {
       id: "quote-collector",
       title: "Quote Collector",
       description: "Save 3 favorite quotes.",
       icon: pen,
-      unlocked: quotesCount >= 3,
+      unlocked: favoriteQuotesCount >= 3,
     },
 
     // --------------------------------------------------
     // TBR
     // --------------------------------------------------
-
     {
       id: "future-reader",
       title: "Future Reader",
@@ -90,7 +93,6 @@ export function getAchievements(books: Book[]): Achievement[] {
       icon: bookss,
       unlocked: tbrBooks >= 5,
     },
-
     {
       id: "adventure-awaits",
       title: "Adventure Awaits",
@@ -102,7 +104,6 @@ export function getAchievements(books: Book[]): Achievement[] {
     // --------------------------------------------------
     // Yearly Goal
     // --------------------------------------------------
-
     {
       id: "halfway-there",
       title: "Halfway There",
@@ -114,7 +115,6 @@ export function getAchievements(books: Book[]): Achievement[] {
     // --------------------------------------------------
     // Current Reading
     // --------------------------------------------------
-
     {
       id: "first-chapters",
       title: "First Chapters",
@@ -126,7 +126,6 @@ export function getAchievements(books: Book[]): Achievement[] {
     // --------------------------------------------------
     // Collections
     // --------------------------------------------------
-
     {
       id: "collector",
       title: "Collector",

@@ -61,36 +61,33 @@ export default function QuoteCard({ className }: Props) {
   return (
     <Card
       className={`
-flex
-h-full
-flex-col
+        relative
+        flex
+        h-full
+        flex-col
+        overflow-hidden
 
-rounded-[28px]
+        rounded-[28px]
 
-className="
-relative
-overflow-hidden
+        border
+        border-[var(--brown-200)]
 
-bg-gradient-to-br
-from-[var(--brown-200)]
-via-[var(--brown-100)]
-to-[var(--brown-300)]
+        bg-gradient-to-br
+        from-[var(--brown-200)]
+        via-[var(--brown-100)]
+        to-[var(--brown-300)]
 
-border
-border-[var(--brown-200)]
+        p-4
+        lg:p-6
 
-shadow-[var(--shadow)]
-"
+        shadow-[var(--shadow)]
 
-hover:-translate-y-1
-transition-all
-duration-300
+        transition-all
+        duration-300
+        hover:-translate-y-1
 
-p-4
-lg:p-6
-
-${className ?? ""}
-`}
+        ${className ?? ""}
+      `}
     >
       {/* Mobile Header */}
 
