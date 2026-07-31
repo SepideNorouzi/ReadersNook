@@ -1,35 +1,50 @@
 import type { Book } from "../../types/book";
-import HeroBackground from "./HeroBackground";
-import HeroContent from "./HeroContent";
-import HeroCover from "./HeroCover";
+import { useBookPalette } from "../../hooks/useBookPalette";
 
+import HeroBackground from "./HeroBackground";
+import HeroCover from "./HeroCover";
+import HeroContent from "./HeroContent";
 
 interface Props {
   book: Book;
 }
 
 export default function BookHero({ book }: Props) {
+  const palette = useBookPalette(book.coverUrl);
+
   return (
     <section
       className="
-      sticky
-      top-0
-      z-30
-
-      lg:h-screen
-
-      flex
-      flex-col
+      w-full
 
       lg:grid
-      lg:grid-cols-[360px_1fr]
+      lg:grid-cols-[340px_minmax(0,1fr)]
       "
     >
-      <HeroBackground image={book.coverUrl} />
+      {/* Sticky hero */}
+      <div
+        className="
+        sticky
+        top-0
+        z-30
 
-      <HeroContent book={book}>
-        <HeroCover cover={book.coverUrl} title={book.title} />
-      </HeroContent>
+        relative
+
+        h-[240px]
+
+        lg:h-screen
+        "
+      >
+        <HeroBackground image={book.coverUrl} gradient={palette.gradient} />
+
+        <HeroCover
+          cover={book.coverUrl}
+          title={book.title}
+          shadow={palette.shadow}
+        />
+      </div>
+
+      <HeroContent book={book} />
     </section>
   );
 }

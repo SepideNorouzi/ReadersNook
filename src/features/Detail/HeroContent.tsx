@@ -1,56 +1,33 @@
-import type { ReactNode } from "react";
 import type { Book } from "../../types/book";
 
-interface Props {
+interface HeroContentProps {
   book: Book;
-  children: ReactNode;
 }
 
-export default function HeroContent({ book, children }: Props) {
+export default function HeroContent({ book }: HeroContentProps) {
   return (
     <div
       className="
-      relative
-      z-20
-
-      flex
-
-      flex-col
-
-      lg:flex-row
-
-      gap-10
-
+      pt-28
       px-6
+      pb-10
 
-      lg:px-12
+      lg:pt-14
+      lg:pl-40
+      lg:pr-14
 
-      py-8
-
-      lg:items-center
-
-      bg-transparent
+      relative
+      z-10
       "
     >
-      {children}
 
-      <div
-        className="
-        text-white
+      <h1 className="mt-4 text-4xl lg:text-6xl font-serif text-brown-900">
+        {book.title}
+      </h1>
 
-        lg:text-brown-900
-
-        space-y-4
-        "
-      >
-        <h1 className="text-5xl font-serif">{book.title}</h1>
-
-        <h2 className="text-xl opacity-70">{book.author}</h2>
-
-        {/* progress */}
-
-        {/* actions */}
-      </div>
+      <p className="mt-2 text-lg text-stone-600">
+        {book.author}
+      </p>
     </div>
   );
 }

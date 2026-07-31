@@ -1,42 +1,46 @@
+import type { CSSProperties } from "react";
+
 interface Props {
   cover: string;
   title: string;
+  shadow: string;
 }
 
-export default function HeroCover({ cover, title }: Props) {
+export default function HeroCover({ cover, title, shadow }: Props) {
   return (
     <div
       className="
-      relative
-      z-20
+      absolute
+      z-30
 
-      mx-auto
+      w-[180px]
+      aspect-[2/3]
 
-      lg:mx-0
+      overflow-hidden
 
-      -mt-10
+      rounded-[22px]
 
-      lg:mt-0
+      border
+      border-white/30
+
+      left-6
+      bottom-[-70px]
+
+      lg:w-[260px]
+
+      lg:left-[210px]
+      lg:top-1/2
+      lg:bottom-auto
+      lg:-translate-y-1/2
       "
+      style={
+        {
+          "--cover-shadow": shadow,
+          boxShadow: "0 40px 80px var(--cover-shadow)",
+        } as CSSProperties
+      }
     >
-      <img
-        src={cover}
-        alt={title}
-        className="
-        w-52
-
-        lg:w-72
-
-        rounded-2xl
-
-        shadow-[0_25px_60px_rgba(0,0,0,.45)]
-
-        transition
-        duration-500
-
-        hover:-translate-y-2
-        "
-      />
+      <img src={cover} alt={title} className="h-full w-full object-cover" />
     </div>
   );
 }

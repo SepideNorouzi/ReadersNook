@@ -20,19 +20,21 @@ export function useBookPalette(image: string) {
   useEffect(() => {
     if (!image) return;
 
+    let cancelled = false;
+
     async function getPalette() {
       try {
         const colors = await extractColors(image);
 
+        // bail if a newer run has already superseded this one
+        if (cancelled) return;
         if (!colors.length) return;
 
         const dominant = colors[0];
 
         setPalette({
           color: dominant.hex,
-
           shadow: `${dominant.hex}55`,
-
           gradient: `
             linear-gradient(
               145deg,
@@ -43,11 +45,16 @@ export function useBookPalette(image: string) {
           `,
         });
       } catch (err) {
-        console.error(err);
+        if (!cancelled) console.error(err);
       }
     }
 
     getPalette();
+
+    // mark this run stale on cleanup (image change or unmount)
+    return () => {
+      cancelled = true;
+    };
   }, [image]);
 
   return palette;
