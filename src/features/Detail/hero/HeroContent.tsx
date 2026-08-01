@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import type { Book, BookStatus } from "../../types/book";
+import type { Book, BookStatus } from "../../../types/book";
 
-import StatusBadge from "./StatusBadge";
+import StatusBadge from "../StatusBadge";
 
 interface Props {
   book: Book;
@@ -20,7 +20,7 @@ export default function HeroContent({ book }: Props) {
       className="
         px-6
         pt-28
-        pb-20
+        pb-10
         lg:px-10
         lg:pt-20
       "

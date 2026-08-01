@@ -4,7 +4,7 @@ import { ChevronLeft } from "lucide-react";
 
 import { useBook } from "../hooks/useBook";
 
-import BookHero from "../features/Detail/BookHero";
+import BookHero from "../features/Detail/hero/BookHero";
 import DetailContent from "../features/Detail/DetailContent";
 
 export default function BookDetail() {

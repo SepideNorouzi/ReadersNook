@@ -1,7 +1,8 @@
 import type { Book } from "../../types/book";
 
-import HeroContent from "./HeroContent";
+import HeroContent from "./hero/HeroContent";
 import BookSummary from "./BookSummary";
+import QuoteSec from "./quote/QuoteSec";
 
 interface Props {
   book: Book;
@@ -21,6 +22,7 @@ export default function DetailContent({ book }: Props) {
       <HeroContent book={book} />
 
       <BookSummary book={book} />
+      <QuoteSec book={book} />
 
       {/* Quotes Section */}
 

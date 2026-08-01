@@ -1,5 +1,5 @@
-import type { Book } from "../../types/book";
-import { useBookPalette } from "../../hooks/useBookPalette";
+import type { Book } from "../../../types/book";
+import { useBookPalette } from "../../../hooks/useBookPalette";
 
 import HeroBackground from "./HeroBackground";
 import HeroCover from "./HeroCover";
