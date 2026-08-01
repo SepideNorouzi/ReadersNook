@@ -1,11 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useBooks } from "./useBooks";
 
-import { getBook } from "../services/books";
+/**
+ * Derive a single book from the shared books cache.
+ * Avoids a second network/query path for the same static dataset.
+ */
+export function useBook(id: string | undefined) {
+  const { data: books, ...query } = useBooks();
 
-export function useBook(id: string) {
-  return useQuery({
-    queryKey: ["book", id],
+  const book = useMemo(() => {
+    if (!id || !books) return undefined;
+    return books.find((b) => b.id === id);
+  }, [books, id]);
 
-    queryFn: () => getBook(id),
-  });
+  return {
+    data: book,
+    ...query,
+  };
 }

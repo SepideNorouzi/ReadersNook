@@ -1,4 +1,3 @@
-// src/services/collectionService.ts
 import { collections } from "../data/collection";
 import { getBooks } from "./books";
 import type { Collection, CollectionWithBooks } from "../types/collection";
@@ -12,11 +11,15 @@ export async function getCollectionsWithBooks(): Promise<
   CollectionWithBooks[]
 > {
   const allBooks = await getBooks();
+  // O(1) lookups instead of repeated .find() per bookId
+  const bookById = new Map<string, Book>(
+    allBooks.map((book) => [book.id, book]),
+  );
 
   return collections.map(({ bookIds, ...rest }) => ({
     ...rest,
     books: bookIds
-      .map((id) => allBooks.find((b) => b.id === id))
+      .map((id) => bookById.get(id))
       .filter((b): b is Book => Boolean(b)),
   }));
 }

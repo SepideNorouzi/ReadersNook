@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
-import type { CollectionWithBooks } from "../types/collection";
+import { useQuery } from "@tanstack/react-query";
 import { getCollectionsWithBooks } from "../services/collection";
 
 export function useCollections() {
-  const [collections, setCollections] = useState<CollectionWithBooks[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const query = useQuery({
+    queryKey: ["collections"],
+    queryFn: getCollectionsWithBooks,
+  });
 
-  useEffect(() => {
-    getCollectionsWithBooks().then((data) => {
-      setCollections(data);
-      setIsLoading(false);
-    });
-  }, []);
-
-  return { collections, isLoading };
+  return {
+    collections: query.data ?? [],
+    isLoading: query.isLoading,
+    error: query.error,
+    ...query,
+  };
 }

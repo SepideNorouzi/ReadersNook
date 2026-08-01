@@ -3,7 +3,8 @@ import { useBookPalette } from "../../hooks/useBookPalette";
 
 import HeroBackground from "./HeroBackground";
 import HeroCover from "./HeroCover";
-import HeroContent from "./HeroContent";
+import { ChevronLeft } from "lucide-react";
+import { useNavigate } from "react-router";
 
 interface Props {
   book: Book;
@@ -11,40 +12,61 @@ interface Props {
 
 export default function BookHero({ book }: Props) {
   const palette = useBookPalette(book.coverUrl);
+  const navigate = useNavigate();
 
   return (
-    <section
+    <div
       className="
-      w-full
+      sticky
+      top-0
 
-      lg:grid
-      lg:grid-cols-[340px_minmax(0,1fr)]
+      h-[240px]
+      lg:h-screen
+
+      relative
       "
     >
-      {/* Sticky hero */}
-      <div
+      <HeroBackground image={book.coverUrl} gradient={palette.gradient} />
+
+      <HeroCover
+        cover={book.coverUrl}
+        title={book.title}
+        shadow={palette.shadow}
+      />
+      <button
+        onClick={() => navigate(-1)}
         className="
-        sticky
-        top-0
-        z-30
+    pointer-events-auto
 
-        relative
+    ml-6
+    lg:ml-10
 
-        h-[240px]
+    flex
+    items-center
+    justify-center
 
-        lg:h-screen
-        "
+    h-11
+    w-11
+
+    rounded-full
+
+    border
+    border-white/40
+
+    bg-red/80
+
+    backdrop-blur-xl
+
+    shadow-lg
+
+    transition-all
+
+    hover:scale-105
+    hover:bg-white
+    "
       >
-        <HeroBackground image={book.coverUrl} gradient={palette.gradient} />
-
-        <HeroCover
-          cover={book.coverUrl}
-          title={book.title}
-          shadow={palette.shadow}
-        />
-      </div>
-
-      <HeroContent book={book} />
-    </section>
+        <ChevronLeft className="h-5 w-5 text-stone-700" />
+      </button>
+    </div>
   );
 }

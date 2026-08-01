@@ -1,16 +1,20 @@
+import type { ReactNode } from "react";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+
 interface ResponsiveViewProps {
-  mobile: React.ReactNode;
-  desktop: React.ReactNode;
+  mobile: ReactNode;
+  desktop: ReactNode;
 }
 
+/**
+ * Mounts exactly one layout tree.
+ * Previously both mobile and desktop were always mounted (CSS-hidden),
+ * which doubled Embla carousels, scroll listeners, and React Query subscribers.
+ */
 export default function ResponsiveView({
   mobile,
   desktop,
 }: ResponsiveViewProps) {
-  return (
-    <>
-      <div className="lg:hidden">{mobile}</div>
-      <div className="hidden lg:block">{desktop}</div>
-    </>
-  );
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  return isDesktop ? desktop : mobile;
 }

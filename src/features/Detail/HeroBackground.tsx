@@ -1,3 +1,5 @@
+
+
 interface Props {
   image: string;
   gradient: string;
