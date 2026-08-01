@@ -3,8 +3,6 @@ import { useBookPalette } from "../../hooks/useBookPalette";
 
 import HeroBackground from "./HeroBackground";
 import HeroCover from "./HeroCover";
-import { ChevronLeft } from "lucide-react";
-import { useNavigate } from "react-router";
 
 interface Props {
   book: Book;
@@ -12,7 +10,6 @@ interface Props {
 
 export default function BookHero({ book }: Props) {
   const palette = useBookPalette(book.coverUrl);
-  const navigate = useNavigate();
 
   return (
     <div
@@ -33,40 +30,6 @@ export default function BookHero({ book }: Props) {
         title={book.title}
         shadow={palette.shadow}
       />
-      <button
-        onClick={() => navigate(-1)}
-        className="
-    pointer-events-auto
-
-    ml-6
-    lg:ml-10
-
-    flex
-    items-center
-    justify-center
-
-    h-11
-    w-11
-
-    rounded-full
-
-    border
-    border-white/40
-
-    bg-red/80
-
-    backdrop-blur-xl
-
-    shadow-lg
-
-    transition-all
-
-    hover:scale-105
-    hover:bg-white
-    "
-      >
-        <ChevronLeft className="h-5 w-5 text-stone-700" />
-      </button>
     </div>
   );
 }
