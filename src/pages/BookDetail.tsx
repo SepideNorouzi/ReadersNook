@@ -38,7 +38,8 @@ export default function BookDetail() {
         className="
         fixed
         top-6
-        left-95
+        left-80
+        lg:left-95
         z-[100]
         flex
         items-center

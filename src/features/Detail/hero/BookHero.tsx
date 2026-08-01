@@ -13,16 +13,17 @@ export default function BookHero({ book }: Props) {
 
   return (
     <div
-      className="
-      sticky
-      top-0
+  className="
+    sticky
+    top-0
 
-      h-[240px]
-      lg:h-screen
+    relative
+    z-40
 
-      relative
-      "
-    >
+    h-[240px]
+    lg:h-screen
+  "
+>
       <HeroBackground image={book.coverUrl} gradient={palette.gradient} />
 
       <HeroCover

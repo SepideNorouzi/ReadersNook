@@ -36,7 +36,12 @@ export default function HeroCover({ cover, title, shadow }: Props) {
       style={
         {
           "--cover-shadow": shadow,
-          boxShadow: "0 40px 80px var(--cover-shadow)",
+          boxShadow: `
+      0 10px 20px rgba(0,0,0,.35),
+      0 30px 70px rgba(0,0,0,.28),
+      0 55px 110px rgba(0,0,0,.18),
+      0 45px 90px var(--cover-shadow)
+    `,
         } as CSSProperties
       }
     >

@@ -9,37 +9,27 @@ export default function BookSummary({ book }: Props) {
     <section
       className="
       px-6
-
-      lg:px-6
-
+      lg:pt-10
       pb-20
       "
     >
       <div
         className="
         max-w-3xl
-
         rounded-[30px]
-
         border
-
-        border-stone-200
-
+        border-stone-300
         bg-white
-
-        p-10
-
+        p-8
+        lg:p-10
         shadow-sm
         "
       >
         <p
           className="
           text-xs
-
           uppercase
-
           tracking-[0.3em]
-
           text-stone-500
           "
         >
@@ -49,11 +39,8 @@ export default function BookSummary({ book }: Props) {
         <h2
           className="
           mt-3
-
           font-serif
-
           text-4xl
-
           text-brown-900
           "
         >
@@ -63,13 +50,9 @@ export default function BookSummary({ book }: Props) {
         <div
           className="
           mt-8
-
           space-y-6
-
           text-lg
-
           leading-9
-
           text-stone-600
           "
         >

@@ -19,8 +19,7 @@ export default function HeroContent({ book }: Props) {
     <section
       className="
         px-6
-        pt-28
-        pb-10
+        pt-24
         lg:px-10
         lg:pt-20
       "
@@ -28,9 +27,9 @@ export default function HeroContent({ book }: Props) {
       <div className="max-w-3xl">
         <h1
           className="
-            mt-4
+            lg:mt-4
             font-serif
-            text-5xl
+            text-4xl
             lg:text-7xl
             text-brown-900
           "
@@ -40,8 +39,8 @@ export default function HeroContent({ book }: Props) {
 
         <div
           className="
-            mt-5
-
+            lg:mt-5
+            mt-3
             flex
             items-center
             justify-between
@@ -51,7 +50,7 @@ export default function HeroContent({ book }: Props) {
         >
           <p
             className="
-              text-xl
+              lg:text-xl
               lg:text-2xl
               text-stone-600
             "
