@@ -168,7 +168,7 @@ export default function BookStats({ book }: Props) {
 
                       transition
 
-                      hover:bg-stone-100
+                      hover:bg-stone-200
                     "
                   >
                     <Pencil
