@@ -19,7 +19,7 @@ export default function HeroContent({ book }: Props) {
     <section
       className="
         px-6
-        pt-24
+        pt-27
         lg:px-10
         lg:pt-20
       "
