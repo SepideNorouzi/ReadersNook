@@ -9,7 +9,7 @@ export default function BookSummary({ book }: Props) {
     <section
       className="
       px-6
-      lg:pt-10
+      lg:pt-5
       pb-20
       "
     >
