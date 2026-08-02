@@ -1,7 +1,7 @@
 import type { Book } from "../../types/book";
 
 import HeroContent from "./hero/HeroContent";
-import BookSummary from "./BookSummary";
+import BookSummary from "./summary/BookSummary";
 import QuoteSec from "./quote/QuoteSec";
 
 interface Props {

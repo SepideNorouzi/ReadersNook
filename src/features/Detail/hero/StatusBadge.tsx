@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-import type { BookStatus } from "../../types/book";
+import type { BookStatus } from "../../../types/book";
 
 interface Props {
   value: BookStatus;

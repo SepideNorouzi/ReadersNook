@@ -1,19 +1,13 @@
-import { useEffect, useState } from "react";
-
-import type { Book, BookStatus } from "../../../types/book";
-
-import StatusBadge from "../StatusBadge";
+import { useUpdateBook } from "../../../hooks/useUpdateBook";
+import type { Book } from "../../../types/book";
+import StatusBadge from "./StatusBadge";
 
 interface Props {
   book: Book;
 }
 
 export default function HeroContent({ book }: Props) {
-  const [status, setStatus] = useState<BookStatus>(book.status);
-
-  useEffect(() => {
-    setStatus(book.status);
-  }, [book]);
+  const updateBook = useUpdateBook();
 
   return (
     <section
@@ -58,7 +52,17 @@ export default function HeroContent({ book }: Props) {
             {book.author}
           </p>
 
-          <StatusBadge value={status} onChange={setStatus} />
+          <StatusBadge
+            value={book.status}
+            onChange={(status) =>
+              updateBook.mutate({
+                id: book.id,
+                changes: {
+                  status,
+                },
+              })
+            }
+          />
         </div>
 
         <div
