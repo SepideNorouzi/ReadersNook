@@ -4,6 +4,7 @@ import HeroContent from "./hero/HeroContent";
 import BookSummary from "./summary/BookSummary";
 import QuoteSec from "./quote/QuoteSec";
 import BookStats from "./stats/BookStats";
+import Aesthetic from "./aesthetic/Aesthetic";
 
 interface Props {
   book: Book;
@@ -24,10 +25,7 @@ export default function DetailContent({ book }: Props) {
       <BookStats book={book} />
       <BookSummary book={book} />
       <QuoteSec book={book} />
-
-      {/* Quotes Section */}
-
-      {/* Gallery Section */}
+      <Aesthetic bookId={book.id} />
     </div>
   );
 }

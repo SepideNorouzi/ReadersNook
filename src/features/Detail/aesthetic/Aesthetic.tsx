@@ -1,6 +1,6 @@
 // features/Detail/aesthetic/Aesthetic.tsx
-import { useEffect, useRef, useState } from "react";
-import { Plus, X } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { Plus, Trash2 } from "lucide-react";
 import { aestheticPhotos } from "../../../data/aesthetic";
 
 interface LocalPhoto {
@@ -12,15 +12,19 @@ interface Props {
   bookId: string;
 }
 
+// Deterministic alternating tilt values — not random, so the layout
+// doesn't jitter between renders/re-mounts.
+const TILTS = [-3, 2, -2, 3, -1.5, 2.5];
+
 export default function Aesthetic({ bookId }: Props) {
   const [localPhotos, setLocalPhotos] = useState<LocalPhoto[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Photos that belong to this specific book, sourced from mock/server data
   const bookPhotos = aestheticPhotos.filter((photo) => photo.bookId === bookId);
 
-  // Clean up object URLs on unmount to avoid memory leaks
+  const totalCount = localPhotos.length + bookPhotos.length;
+
   useEffect(() => {
     return () => {
       localPhotos.forEach((photo) => URL.revokeObjectURL(photo.url));
@@ -36,7 +40,6 @@ export default function Aesthetic({ bookId }: Props) {
 
     setLocalPhotos((prev) => [...prev, { id: crypto.randomUUID(), url }]);
 
-    // reset the input so selecting the same file again still fires onChange
     event.target.value = "";
   }
 
@@ -54,142 +57,276 @@ export default function Aesthetic({ bookId }: Props) {
     <section
       className="
         px-6
-        py-10
-        lg:px-10
+        lg:pt-5
+        pb-5
       "
     >
-      <h2
-        className="
-          font-serif
-          text-2xl
-          text-brown-900
-        "
-      >
-        Aesthetic
-      </h2>
-
       <div
         className="
-          mt-6
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          lg:grid-cols-3
-          gap-4
+          max-w-3xl
+          rounded-[30px]
+          border
+          border-[var(--brown-300)]/40
+          bg-gradient-to-br
+          from-[var(--brown-200)]
+          via-[var(--brown-100)]
+          to-[var(--brown-300)]
+          p-8
+          lg:p-10
+          shadow-[0_18px_40px_rgba(35,23,17,0.12)]
         "
       >
-        {/* Add Photo card — always first */}
-        <button
-          onClick={() => fileInputRef.current?.click()}
+        <div className="flex items-end justify-between">
+          <div>
+            <h2
+              className="
+                font-serif
+                text-3xl
+                text-brown-900
+              "
+            >
+              Aesthetic
+            </h2>
+            <p
+              className="
+              mt-2
+                text-[11px]
+                font-semibold
+                uppercase
+                tracking-[0.2em]
+                text-[var(--gold)]
+              "
+            >
+              The colors, places and moments this book reminds you of.
+            </p>
+          </div>
+
+          <p
+            className="
+              text-sm
+              font-medium
+              text-[var(--text-secondary)]
+            "
+          >
+            {totalCount} {totalCount === 1 ? "photo" : "photos"}
+          </p>
+        </div>
+
+        <div
           className="
-            group
-            flex
-            aspect-square
-            flex-col
-            items-center
-            justify-center
-            gap-2
-            rounded-2xl
-            border-2
-            border-dashed
-            border-stone-300
-            bg-stone-50
-            transition
-            hover:border-brown-400
-            hover:bg-stone-100
+            mt-10
+            grid
+            grid-cols-1
+            sm:grid-cols-2
+            lg:grid-cols-3
+            gap-x-6
+            gap-y-10
           "
         >
-          <span
-            className="
-              flex
-              h-10
-              w-10
-              items-center
-              justify-center
-              rounded-full
-              bg-white
-              shadow-sm
-              transition
-              group-hover:scale-105
-            "
-          >
-            <Plus className="h-5 w-5 text-brown-700" />
-          </span>
-
-          <span className="text-sm font-medium text-stone-600">Add Photo</span>
-        </button>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-
-        {/* User's locally-added photos */}
-        {localPhotos.map((photo) => (
-          <div
-            key={photo.id}
+          {/* Add Photo card */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
             className="
               group
-              relative
+              flex
               aspect-square
-              overflow-hidden
-              rounded-2xl
-              border
-              border-stone-200
+              flex-col
+              items-center
+              justify-center
+              gap-3
+              rounded-[18px]
+              border-2
+              border-dashed
+              border-[var(--brown-300)]
+              bg-white/50
+              backdrop-blur-sm
+              transition-all
+              duration-300
+              hover:border-[var(--gold)]
+              hover:bg-white/80
             "
           >
-            <img
-              src={photo.url}
-              alt=""
-              className="h-full w-full object-cover"
-            />
-
-            <button
-              onClick={() => handleRemoveLocalPhoto(photo.id)}
+            <span
               className="
-                absolute
-                top-2
-                right-2
                 flex
-                h-7
-                w-7
+                h-11
+                w-11
                 items-center
                 justify-center
                 rounded-full
-                bg-black/50
-                opacity-0
-                transition
-                group-hover:opacity-100
-                hover:bg-black/70
+                bg-white
+                shadow-md
+                transition-transform
+                duration-300
+                group-hover:scale-110
               "
             >
-              <X className="h-3.5 w-3.5 text-white" />
-            </button>
-          </div>
-        ))}
+              <Plus className="h-5 w-5 text-[var(--gold)]" />
+            </span>
 
-        {/* Photos from mock/server data, filtered by this book */}
-        {bookPhotos.map((photo) => (
-          <div
-            key={photo.id}
-            className="
-              aspect-square
-              overflow-hidden
-              rounded-2xl
-              border
-              border-stone-200
-            "
-          >
-            <img
-              src={photo.imageUrl}
-              alt={photo.caption ?? ""}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        ))}
+            <span
+              className="
+                text-sm
+                font-medium
+                text-[var(--text-secondary)]
+              "
+            >
+              Add Photo
+            </span>
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+
+          {/* User's locally-added photos */}
+          {localPhotos.map((photo, index) => (
+            <div
+              key={photo.id}
+              style={
+                {
+                  "--tilt": `${TILTS[index % TILTS.length]}deg`,
+                } as CSSProperties
+              }
+              className="
+                group
+                relative
+                aspect-square
+                origin-center
+                rotate-[var(--tilt)]
+                overflow-hidden
+                rounded-[18px]
+                border-[6px]
+                border-white
+                bg-white
+                shadow-[0_10px_24px_rgba(35,23,17,0.16)]
+                transition-all
+                duration-500
+                ease-out
+                hover:z-10
+                hover:rotate-0
+                hover:scale-[1.06]
+                hover:shadow-[0_20px_45px_rgba(35,23,17,0.24)]
+              "
+            >
+              <img
+                src={photo.url}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+
+              <button
+                onClick={() => handleRemoveLocalPhoto(photo.id)}
+                className="
+    absolute
+
+    left-1/2
+    top-1/2
+
+    -translate-x-1/2
+    -translate-y-1/2
+
+    flex
+    h-9
+    w-9
+    items-center
+    justify-center
+
+    rounded-full
+
+    bg-white/90
+    backdrop-blur-md
+
+    shadow-lg
+
+    text-stone-700
+
+    opacity-100
+    scale-100
+
+    transition-all
+    duration-300
+
+
+    hover:bg-red-500
+    hover:text-white
+  "
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+
+          {/* Photos from mock/server data, filtered by this book */}
+          {bookPhotos.map((photo, index) => (
+            <div
+              key={photo.id}
+              style={
+                {
+                  "--tilt": `${TILTS[(index + localPhotos.length) % TILTS.length]}deg`,
+                } as CSSProperties
+              }
+              className="
+                group
+                relative
+                aspect-square
+                origin-center
+                rotate-[var(--tilt)]
+                overflow-hidden
+                rounded-[18px]
+                bg-white
+                shadow-[0_10px_24px_rgba(35,23,17,0.16)]
+                transition-all
+                duration-500
+                ease-out
+                hover:z-10
+                hover:rotate-0
+                hover:scale-[1.06]
+                hover:shadow-[0_20px_45px_rgba(35,23,17,0.24)]
+              "
+            >
+              <img
+                src={photo.imageUrl}
+                alt={photo.caption ?? ""}
+                className="h-full w-full object-cover"
+              />
+              <button
+                onClick={() => handleRemoveLocalPhoto(photo.id)}
+                className="
+    absolute
+    left-46
+    top-47
+    flex
+    h-7
+    w-7
+    items-center
+    justify-center
+    rounded-full
+    bg-white/90
+    backdrop-blur-md
+    text-stone-700
+    shadow-lg
+    opacity-0
+    scale-90
+    -translate-x-1/2
+    -translate-y-1/2
+    transition-all
+    duration-300
+    group-hover:opacity-100
+    group-hover:scale-100
+    hover:bg-red-500
+    hover:text-white
+  "
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
