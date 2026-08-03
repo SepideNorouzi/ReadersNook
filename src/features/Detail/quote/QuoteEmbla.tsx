@@ -3,6 +3,8 @@ import useEmblaCarousel from "embla-carousel-react";
 import type { Book } from "../../../types/book";
 import QuoteCard from "./QuoteCard";
 import AddQuoteCard from "./AddQuoteCard";
+import type { Quote } from "../../../types/quote";
+import AddQuoteModal from "../../../modals/AddQuoteModal";
 
 interface Props {
   book: Book;
@@ -11,6 +13,8 @@ interface Props {
 export default function QuoteEmbla({ book }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
+
+  const [localQuotes, setLocalQuotes] = useState<Quote[]>([]);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
@@ -34,14 +38,32 @@ export default function QuoteEmbla({ book }: Props) {
     };
   }, [emblaApi]);
 
-  const totalSlides = book.quotes.length + 1;
+  const allQuotes = [...book.quotes, ...localQuotes];
+  const totalSlides = allQuotes.length + 1;
+
+  function handleAddQuote(newQuote: Quote) {
+    const quote: Quote = {
+      id: crypto.randomUUID(),
+      text: newQuote.text,
+      page: newQuote.page ?? 0,
+      favorite: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    setLocalQuotes((prev) => [...prev, quote]);
+    setOpenModal(false);
+
+    requestAnimationFrame(() => {
+      emblaApi?.scrollTo(allQuotes.length);
+    });
+  }
 
   return (
     <>
       {/* Carousel */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {book.quotes.map((quote) => (
+          {allQuotes.map((quote) => (
             <div
               key={quote.id}
               className="
@@ -59,17 +81,16 @@ export default function QuoteEmbla({ book }: Props) {
           ))}
 
           {/* Add Quote Card */}
-
           <div
             className="
-    min-w-0
-    flex-[0_0_90%]
-    pr-6
-    pt-1
-    md:flex-[0_0_50%]
-    lg:flex-[0_0_38%]
-    xl:flex-[0_0_33.333%]
-  "
+              min-w-0
+              flex-[0_0_90%]
+              pr-6
+              pt-1
+              md:flex-[0_0_50%]
+              lg:flex-[0_0_38%]
+              xl:flex-[0_0_33.333%]
+            "
           >
             <AddQuoteCard onClick={() => setOpenModal(true)} />
           </div>
@@ -77,7 +98,6 @@ export default function QuoteEmbla({ book }: Props) {
       </div>
 
       {/* Dots */}
-
       <div className="mt-8 flex justify-center gap-2">
         {Array.from({ length: totalSlides }).map((_, index) => (
           <button
@@ -97,48 +117,12 @@ export default function QuoteEmbla({ book }: Props) {
           />
         ))}
       </div>
-      {openModal && (
-        <div
-          className="
-      fixed
-      inset-0
-      z-50
-      flex
-      items-center
-      justify-center
-      bg-black/40
-      backdrop-blur-sm
-    "
-        >
-          <div
-            className="
-        rounded-3xl
-        bg-white
-        p-8
-        shadow-2xl
-      "
-          >
-            <p className="text-lg font-semibold text-[var(--brown-900)]">
-              Add Quote Modal
-            </p>
 
-            <button
-              onClick={() => setOpenModal(false)}
-              className="
-          mt-4
-          rounded-full
-          bg-[var(--brown-100)]
-          px-4
-          py-2
-          text-sm
-          text-[var(--brown-700)]
-          hover:bg-[var(--brown-200)]
-        "
-            >
-              Close
-            </button>
-          </div>
-        </div>
+      {openModal && (
+        <AddQuoteModal
+          onClose={() => setOpenModal(false)}
+          onSubmit={handleAddQuote}
+        />
       )}
     </>
   );
