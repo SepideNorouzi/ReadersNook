@@ -1,5 +1,5 @@
 // features/Detail/aesthetic/Aesthetic.tsx
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { aestheticPhotos } from "../../../data/aesthetic";
 import useScrollFade from "../../../hooks/useScrollFade";
@@ -67,7 +67,7 @@ export default function Aesthetic({ bookId }: Props) {
           bg-white
           p-8
           lg:p-10
-          shadow-[0_18px_40px_rgba(35,23,17,0.12)]
+          shadow-[18px_18px_40px_rgba(35,23,17,0.12)]
         "
       >
         <div className="flex items-end justify-between">
@@ -114,6 +114,10 @@ grid
 grid-cols-1
 sm:grid-cols-2
 lg:grid-cols-3
+
+content-start
+items-start
+auto-rows-min
 
 gap-x-6
 gap-y-10
@@ -225,8 +229,8 @@ pr-3
                   onClick={() => handleRemoveLocalPhoto(photo.id)}
                   className="
     absolute
-    right-[1/2]
-    top-[1/2]
+    right-2
+    top-2
     flex
     h-7
     w-7
@@ -239,8 +243,6 @@ pr-3
     shadow-lg
     opacity-0
     scale-90
-    -translate-x-1/2
-    -translate-y-1/2
     transition-all
     duration-300
     group-hover:opacity-100
@@ -286,8 +288,8 @@ pr-3
                   onClick={() => handleRemoveLocalPhoto(photo.id)}
                   className="
     absolute
-    left-46
-    top-46
+    right-2
+    top-2
     flex
     h-7
     w-7
@@ -300,8 +302,6 @@ pr-3
     shadow-lg
     opacity-0
     scale-90
-    -translate-x-1/2
-    -translate-y-1/2
     transition-all
     duration-300
     group-hover:opacity-100
