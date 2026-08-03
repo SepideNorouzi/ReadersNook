@@ -324,7 +324,7 @@ pr-3
         right-5
         h-10
         bg-gradient-to-t
-        from-[var(--brown-200)]/90
+        from-[var(--white-200)]/90
         via-[var(--brown-200)]/40
         to-transparent
     "
