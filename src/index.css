@@ -22,3 +22,51 @@ body {
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
 }
+
+/* ===== Cinnamon Latte Scrollbar ===== */
+
+.aesthetic-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--brown-400) transparent;
+}
+
+/* Chrome / Edge / Safari */
+
+.aesthetic-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.aesthetic-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 14px;
+}
+
+.aesthetic-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background: linear-gradient(
+    to bottom,
+    var(--gold-light),
+    var(--brown-300),
+    var(--brown-500)
+  );
+
+  border: 2px solid transparent;
+  background-clip: padding-box;
+
+  transition: all .3s ease;
+
+}
+
+.aesthetic-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    var(--gold),
+    var(--brown-500),
+    var(--brown-700)
+  );
+}
+
+.aesthetic-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}

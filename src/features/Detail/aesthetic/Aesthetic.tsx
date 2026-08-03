@@ -62,8 +62,6 @@ export default function Aesthetic({ bookId }: Props) {
         className="
           max-w-3xl
           rounded-[30px]
-          border
-          border-[var(--brown-300)]/40
           bg-white
           p-8
           lg:p-10
@@ -110,6 +108,7 @@ export default function Aesthetic({ bookId }: Props) {
           <div
             ref={scrollRef}
             className="
+            aesthetic-scrollbar
 grid
 grid-cols-1
 sm:grid-cols-2
@@ -317,17 +316,27 @@ pr-3
           </div>
           <div
             className="
-        pointer-events-none
-        absolute
-        bottom-0
-        left-2
-        right-5
-        h-10
-        bg-gradient-to-t
-        from-[var(--white-200)]/90
-        via-[var(--brown-200)]/40
-        to-transparent
-    "
+    pointer-events-none
+    absolute
+    inset-x-2
+    bottom-0
+    h-24
+    transition-opacity
+    duration-300
+  "
+            style={{
+              opacity: "var(--fade-opacity)",
+              background: `
+      linear-gradient(
+        to top,
+        rgba(248,244,239,1) 0%,
+        rgba(248,244,239,.94) 18%,
+        rgba(248,244,239,.75) 40%,
+        rgba(248,244,239,.35) 72%,
+        transparent 100%
+      )
+    `,
+            }}
           />
         </div>
       </div>
