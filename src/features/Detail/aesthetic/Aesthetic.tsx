@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { aestheticPhotos } from "../../../data/aesthetic";
+import useScrollFade from "../../../hooks/useScrollFade";
 
 interface LocalPhoto {
   id: string;
@@ -12,14 +13,11 @@ interface Props {
   bookId: string;
 }
 
-// Deterministic alternating tilt values — not random, so the layout
-// doesn't jitter between renders/re-mounts.
-const TILTS = [-3, 2, -2, 3, -1.5, 2.5];
-
 export default function Aesthetic({ bookId }: Props) {
   const [localPhotos, setLocalPhotos] = useState<LocalPhoto[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useScrollFade();
 
   const bookPhotos = aestheticPhotos.filter((photo) => photo.bookId === bookId);
 
@@ -66,10 +64,7 @@ export default function Aesthetic({ bookId }: Props) {
           rounded-[30px]
           border
           border-[var(--brown-300)]/40
-          bg-gradient-to-br
-          from-[var(--brown-200)]
-          via-[var(--brown-100)]
-          to-[var(--brown-300)]
+          bg-white
           p-8
           lg:p-10
           shadow-[0_18px_40px_rgba(35,23,17,0.12)]
@@ -113,20 +108,28 @@ export default function Aesthetic({ bookId }: Props) {
 
         <div className="relative mt-5">
           <div
+            ref={scrollRef}
             className="
-      grid
-      grid-cols-1
-      sm:grid-cols-2
-      lg:grid-cols-3
-      gap-x-4
+grid
+grid-cols-1
+sm:grid-cols-2
+lg:grid-cols-3
 
-      h-[420px]
-      sm:h-[500px]
-      lg:h-[560px]
+gap-x-6
+gap-y-10
 
-      overflow-y-auto
-      p-5
-    "
+h-[420px]
+sm:h-[500px]
+lg:h-[560px]
+
+overflow-y-auto
+overscroll-contain
+
+px-2
+pt-4
+pb-20
+pr-3
+"
           >
             {/* Add Photo card */}
             <button
@@ -189,14 +192,9 @@ export default function Aesthetic({ bookId }: Props) {
             />
 
             {/* User's locally-added photos */}
-            {localPhotos.map((photo, index) => (
+            {localPhotos.map((photo) => (
               <div
                 key={photo.id}
-                style={
-                  {
-                    "--tilt": `${TILTS[index % TILTS.length]}deg`,
-                  } as CSSProperties
-                }
                 className="
                 group
                 relative
@@ -205,8 +203,7 @@ export default function Aesthetic({ bookId }: Props) {
                 rotate-[var(--tilt)]
                 overflow-hidden
                 rounded-[18px]
-                border-[6px]
-                border-white
+
                 bg-white
                 shadow-[0_10px_24px_rgba(35,23,17,0.16)]
                 transition-all
@@ -228,8 +225,8 @@ export default function Aesthetic({ bookId }: Props) {
                   onClick={() => handleRemoveLocalPhoto(photo.id)}
                   className="
     absolute
-    left-46
-    top-47
+    right-[1/2]
+    top-[1/2]
     flex
     h-7
     w-7
@@ -258,14 +255,9 @@ export default function Aesthetic({ bookId }: Props) {
             ))}
 
             {/* Photos from mock/server data, filtered by this book */}
-            {bookPhotos.map((photo, index) => (
+            {bookPhotos.map((photo) => (
               <div
                 key={photo.id}
-                style={
-                  {
-                    "--tilt": `${TILTS[(index + localPhotos.length) % TILTS.length]}deg`,
-                  } as CSSProperties
-                }
                 className="
                 group
                 relative
@@ -295,7 +287,7 @@ export default function Aesthetic({ bookId }: Props) {
                   className="
     absolute
     left-46
-    top-47
+    top-46
     flex
     h-7
     w-7
@@ -323,6 +315,20 @@ export default function Aesthetic({ bookId }: Props) {
               </div>
             ))}
           </div>
+          <div
+            className="
+        pointer-events-none
+        absolute
+        bottom-0
+        left-2
+        right-5
+        h-10
+        bg-gradient-to-t
+        from-[var(--brown-200)]/90
+        via-[var(--brown-200)]/40
+        to-transparent
+    "
+          />
         </div>
       </div>
     </section>

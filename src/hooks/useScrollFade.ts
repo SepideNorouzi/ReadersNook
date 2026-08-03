@@ -1,43 +1,36 @@
 // hooks/useScrollFade.ts
+
 import { useEffect, useRef } from "react";
 
 export default function useScrollFade() {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
 
-    const getScrollParent = (el: HTMLElement): HTMLElement | Window => {
-      let parent = el.parentElement;
-      while (parent) {
-        const style = getComputedStyle(parent);
-        const scrollableY =
-          style.overflowY === "auto" || style.overflowY === "scroll";
-        if (scrollableY && parent.scrollHeight > parent.clientHeight) {
-          return parent;
-        }
-        parent = parent.parentElement;
-      }
-      return window;
-    };
-
-    const scrollTarget = getScrollParent(node);
-
     const handleScroll = () => {
-      const scrolled =
-        scrollTarget === window
-          ? window.scrollY
-          : (scrollTarget as HTMLElement).scrollTop;
+      const maxScroll = node.scrollHeight - node.clientHeight;
 
-      const fadeDistance = node.offsetHeight; // measured live, matches H at whatever breakpoint is active
-      const opacity = Math.max(0, 1 - scrolled / fadeDistance);
-      node.style.opacity = String(opacity);
+      if (maxScroll <= 0) {
+        node.style.setProperty("--fade-opacity", "0");
+        return;
+      }
+
+      const distanceFromBottom = maxScroll - node.scrollTop;
+
+      const opacity = Math.min(1, distanceFromBottom / 80);
+
+      node.style.setProperty("--fade-opacity", opacity.toString());
     };
 
-    scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => scrollTarget.removeEventListener("scroll", handleScroll);
+
+    node.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => node.removeEventListener("scroll", handleScroll);
   }, []);
 
   return ref;
