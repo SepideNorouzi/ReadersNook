@@ -42,8 +42,10 @@ export default function ProgressCard({
     <Card
       className={`
         h-full
+        min-h-0
 
-        rounded-[28px]
+        rounded-[22px]
+        sm:rounded-[28px]
 
         border
         border-[var(--border)]
@@ -51,6 +53,10 @@ export default function ProgressCard({
         bg-gradient-to-b
         from-white
         to-[var(--surface-hover)]
+
+        p-3
+        sm:p-4
+        lg:p-6
 
         transition-all
         duration-300
@@ -63,28 +69,28 @@ export default function ProgressCard({
     >
       {/* ======================= MOBILE ======================= */}
 
-      <div className="flex h-full flex-col lg:hidden">
-        <div className="flex items-center gap-2">
+      <div className="flex h-full min-h-0 flex-col lg:hidden">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <Target
             size={13}
-            className="text-[var(--gold)]"
+            className="shrink-0 text-[var(--gold)]"
           />
 
-          <h2 className="font-heading text-[12px] font-semibold text-[var(--text)]">
+          <h2 className="font-heading text-[11px] font-semibold leading-tight text-[var(--text)] sm:text-[12px]">
             Reading Goal
           </h2>
         </div>
 
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center py-2">
           <CircularProgress
             value={progress}
-            size={70}
+            size={64}
             strokeWidth={5}
           />
         </div>
 
-        <div className="space-y-2">
-          <div className="h-2 overflow-hidden rounded-full bg-[var(--stone-200)]">
+        <div className="shrink-0 space-y-1.5">
+          <div className="h-1.5 overflow-hidden rounded-full bg-[var(--stone-200)] sm:h-2">
             <div
               className="h-full rounded-full bg-[var(--brown-900)] transition-all duration-700"
               style={{
@@ -93,27 +99,26 @@ export default function ProgressCard({
             />
           </div>
 
-          <p className="text-center text-xs font-medium text-[var(--text-secondary)]">
+          <p className="text-center text-[10px] font-medium text-[var(--text-secondary)] sm:text-xs">
             <span className="text-[var(--text)]">
               {booksRead}
             </span>{" "}
             / {yearlyGoal} books
           </p>
+
+          {remaining > 0 ? (
+            <p className="text-center text-[10px] text-[var(--text-secondary)] sm:text-xs">
+              <span className="font-semibold text-[var(--gold)]">
+                {remaining}
+              </span>{" "}
+              left
+            </p>
+          ) : (
+            <p className="text-center text-[10px] font-medium text-[var(--green)] sm:text-xs">
+              🎉 Goal achieved
+            </p>
+          )}
         </div>
-        <div className="mt-5">
-            {remaining > 0 ? (
-              <p className="text-center text-sm text-[var(--text-secondary)]">
-                <span className="font-semibold text-[var(--gold)]">
-                  {remaining}
-                </span>{" "}
-                books left.
-              </p>
-            ) : (
-              <p className="text-center text-sm font-medium text-[var(--green)]">
-                🎉 Congratulations! Goal achieved.
-              </p>
-            )}
-          </div>
       </div>
       
 

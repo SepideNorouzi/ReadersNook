@@ -8,9 +8,10 @@ import CollectionsCard from "./collection/CollectionsCard";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 export default function DashboardGrid() {
-  // xl breakpoint — only one grid tree mounts (was dual CSS-hidden trees before)
   const isXl = useMediaQuery("(min-width: 1280px)");
+  const isMd = useMediaQuery("(min-width: 768px)");
 
+  // Desktop — 3-column bento
   if (isXl) {
     return (
       <div
@@ -32,23 +33,42 @@ export default function DashboardGrid() {
     );
   }
 
+  // Tablet — 2-column with room for TBR / achievements / collections
+  if (isMd) {
+    return (
+      <div
+        className="
+          grid
+          grid-cols-2
+          auto-rows-[100px]
+          gap-4
+        "
+      >
+        <CurrentReadingCard className="col-start-1 row-start-1 row-span-4" />
+        <ProgressCard className="col-start-2 row-start-1 row-span-3" />
+        <WidgetCard className="col-start-2 row-start-4 row-span-1" />
+        <TBRCard className="col-start-1 row-start-5 row-span-3 col-span-2" />
+        <AchievementCard className="col-start-1 row-start-8 row-span-2" />
+        <QuoteCard className="col-start-2 row-start-8 row-span-2" />
+        <CollectionsCard className="col-start-1 row-start-10 row-span-3 col-span-2" />
+      </div>
+    );
+  }
+
+  // Mobile — stacked layout; full-width cards for TBR, achievements, collections
   return (
-    <div
-      className="
-        grid
-        grid-cols-2
-        auto-rows-[90px]
-        gap-4
-      "
-    >
-      <CurrentReadingCard className="col-start-1 row-start-1 row-span-4" />
-      <ProgressCard className="col-start-2 row-start-1 row-span-3" />
-      <WidgetCard className="col-start-2 row-start-4 row-span-1" />
-      <QuoteCard className="col-start-1 row-start-5 row-span-2" />
-      <TBRCard className="col-start-2 row-start-5 row-span-4" />
-      {/* Mobile previously had an empty Card slot — surface achievements here */}
-      <AchievementCard className="col-start-1 row-start-7 row-span-2" />
-      <CollectionsCard className="col-start-1 row-start-9 row-span-2 col-span-2" />
+    <div className="flex flex-col gap-3.5 sm:gap-4">
+      <CurrentReadingCard className="min-h-[300px] sm:min-h-[320px]" />
+
+      <div className="grid grid-cols-2 gap-3">
+        <ProgressCard className="min-h-[200px]" />
+        <WidgetCard className="min-h-[200px]" />
+      </div>
+
+      <TBRCard className="min-h-[280px] sm:min-h-[300px]" />
+      <AchievementCard className="min-h-[260px] sm:min-h-[280px]" />
+      <QuoteCard className="min-h-[160px]" />
+      <CollectionsCard className="min-h-[220px] sm:min-h-[240px]" />
     </div>
   );
 }

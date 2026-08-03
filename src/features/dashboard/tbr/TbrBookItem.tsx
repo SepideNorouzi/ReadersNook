@@ -11,10 +11,9 @@ export default function TBRBookItem({ book }: Props) {
       to={`/book/${book.id}`}
       className="
         group
-
         flex
+        min-w-0
         flex-col
-
         text-left
       "
     >
@@ -22,7 +21,8 @@ export default function TBRBookItem({ book }: Props) {
       <div
         className="
           overflow-hidden
-          rounded-xl
+          rounded-lg
+          sm:rounded-xl
           lg:rounded-2xl
 
           border
@@ -43,26 +43,28 @@ export default function TBRBookItem({ book }: Props) {
           src={book.coverUrl}
           alt={book.title}
           className="
-w-full
-aspect-[3/4]
-object-cover
-"
+            aspect-[3/4]
+            w-full
+            object-cover
+          "
         />
       </div>
 
       {/* Title */}
       <p
         className="
-          mt-2
+          mt-1.5
+          sm:mt-2
 
           line-clamp-2
 
           text-center
-          text-[10px]
+          text-[9px]
+          sm:text-[10px]
           lg:text-xs
+
           font-medium
           font-heading
-
           leading-snug
 
           text-[var(--text)]

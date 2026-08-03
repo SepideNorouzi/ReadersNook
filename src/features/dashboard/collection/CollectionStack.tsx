@@ -5,24 +5,38 @@ export interface CollectionStackProps {
   books: Book[];
   maxVisible?: number;
   onClick?: () => void;
+  size?: "sm" | "md";
 }
 
 type StackLayerStyle = CSSProperties & Record<`--${string}`, string>;
+
+const SIZE = {
+  sm: "h-20 w-14",
+  md: "h-24 w-16 sm:h-24 sm:w-16",
+} as const;
 
 export default function CollectionStack({
   books,
   maxVisible = 3,
   onClick,
+  size = "md",
 }: CollectionStackProps) {
   const visibleBooks = books.slice(0, maxVisible);
   const stack = [...visibleBooks].reverse();
+  const box = SIZE[size];
 
   if (stack.length === 0) {
-    return <div className="h-24 w-16 rounded-lg bg-[var(--stone-100)]" />;
+    return (
+      <div className={`${box} rounded-lg bg-[var(--stone-100)]`} />
+    );
   }
 
   return (
-    <div onClick={onClick} className="group relative h-24 w-16 shrink-0">
+    <div
+      onClick={onClick}
+      className={`group relative shrink-0 ${box}`}
+      role={onClick ? "button" : undefined}
+    >
       {stack.map((book, i) => {
         const depth = stack.length - 1 - i;
         const isFront = depth === 0;
@@ -31,7 +45,6 @@ export default function CollectionStack({
         const restY = depth * -3;
         const restR = depth * 4;
 
-        // Slightly more separated on hover
         const hoverX = depth * 9;
         const hoverY = depth * -5;
         const hoverR = depth * 7;
@@ -76,20 +89,11 @@ export default function CollectionStack({
 
               ${
                 isFront
-                  ? `
-              hover:z-50
-              hover:scale-[1.03]
-              `
-                  : `
-              group-has-[img:hover]:[transform:translate(var(--hover-tx),var(--hover-ty))_rotate(var(--hover-tr))]
-              `
+                  ? "hover:z-50 hover:scale-[1.03]"
+                  : "group-has-[img:hover]:[transform:translate(var(--hover-tx),var(--hover-ty))_rotate(var(--hover-tr))]"
               }
 
-              ${
-                isFront
-                  ? "[transform:translate(var(--tx),var(--ty))_rotate(var(--tr))]"
-                  : "[transform:translate(var(--tx),var(--ty))_rotate(var(--tr))]"
-              }
+              [transform:translate(var(--tx),var(--ty))_rotate(var(--tr))]
             `}
           />
         );

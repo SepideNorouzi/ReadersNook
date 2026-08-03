@@ -24,6 +24,8 @@ export default function AchievementCard({ className }: AchievementCardProps) {
     (a, b) => Number(b.unlocked) - Number(a.unlocked),
   );
 
+  const unlockedCount = achievements.filter((a) => a.unlocked).length;
+
   return (
     <>
       <Card
@@ -33,50 +35,67 @@ export default function AchievementCard({ className }: AchievementCardProps) {
           flex
           flex-col
 
+          rounded-[22px]
+          sm:rounded-[28px]
+
+          p-3.5
+          sm:p-4
+          lg:p-6
+
           ${className ?? ""}
         `}
       >
         {/* Header */}
-
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-heading text-lg font-semibold text-[var(--text)]">
+        <div className="mb-2.5 flex shrink-0 items-center justify-between sm:mb-3">
+          <h2 className="font-heading text-sm font-semibold text-[var(--text)] sm:text-[15px] lg:text-lg">
             Achievements
           </h2>
 
           <span
             className="
               rounded-full
-
               bg-[var(--stone-100)]
-
-              px-2.5
-              py-1
-
-              text-xs
+              px-2
+              py-0.5
+              sm:px-2.5
+              sm:py-1
+              text-[10px]
+              sm:text-xs
               font-medium
-
               text-[var(--text-secondary)]
             "
           >
-            {achievements.filter((achievement) => achievement.unlocked).length}/
-            {achievements.length}
+            {unlockedCount}/{achievements.length}
           </span>
         </div>
 
-        {/* Grid */}
-
-        <div className="relative flex-1 overflow-hidden">
+        <div className="relative min-h-0 flex-1 overflow-hidden">
           <div
             className="
-              scrollbar-hidden
-
               h-full
               overflow-y-auto
-
-              p-2
+              p-0.5
+              sm:p-1
+              scrollbar-hidden
             "
           >
-            <div className="grid grid-cols-3 gap-3">
+            {/*
+              Mobile (full-width): 4 compact columns
+              md tablet half-card / desktop: 3 columns
+            */}
+            <div
+              className="
+                grid
+                grid-cols-4
+                gap-2
+
+                sm:grid-cols-4
+                sm:gap-2.5
+
+                md:grid-cols-3
+                md:gap-3
+              "
+            >
               {sortedAchievements.map((achievement) => (
                 <AchievementItem
                   key={achievement.id}
@@ -87,19 +106,14 @@ export default function AchievementCard({ className }: AchievementCardProps) {
             </div>
           </div>
 
-          {/* Fade */}
-
           <div
             className="
               pointer-events-none
-
               absolute
               bottom-0
               left-0
               right-0
-
-              h-12
-
+              h-10
               bg-gradient-to-t
               from-white
               to-transparent
@@ -107,8 +121,6 @@ export default function AchievementCard({ className }: AchievementCardProps) {
           />
         </div>
       </Card>
-
-      {/* Modal */}
 
       <AchievementModal
         achievement={selectedAchievement}

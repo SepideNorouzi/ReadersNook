@@ -11,44 +11,37 @@ export default function QuoteItem({ quote }: Props) {
     <>
       {/* ======================= MOBILE ======================= */}
 
-      <div className="flex h-full flex-col justify-between lg:hidden">
-        <div>
+      <div className="flex h-full min-h-0 flex-col justify-between lg:hidden">
+        <blockquote
+          className="
+            line-clamp-4
+            text-left
+            font-heading
+            text-[12px]
+            italic
+            leading-relaxed
+            text-[var(--text)]
+            sm:text-[13px]
+          "
+        >
+          {quote.text}
+        </blockquote>
 
-          <blockquote
-            className="
-              line-clamp-4
-
-              text-left
-
-              font-heading
-              text-[12px]
-              italic
-              leading-relaxed
-
-              text-[var(--text)]
-            "
-          >
-            {quote.text}
-          </blockquote>
-        </div>
-
-        <div className="mt-4 flex justify-end">
+        <div className="mt-3 flex justify-end sm:mt-4">
           <span
             className="
+              max-w-full
+              truncate
               rounded-xl
-
               border
               border-[var(--border)]
-
               bg-[var(--stone-100)]
-
               px-2
               py-1
-
               text-[8px]
               font-medium
-
               text-[var(--brown-700)]
+              sm:text-[10px]
             "
           >
             ✨ {quote.bookTitle}

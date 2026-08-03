@@ -7,7 +7,7 @@ export default function AppHeader() {
   return (
     <section
       ref={fadeRef}
-      className="sticky top-0 z-0 h-[220px] overflow-hidden lg:h-[320px] xl:h-[360px]"
+      className="sticky top-0 z-0 h-[180px] overflow-hidden sm:h-[220px] lg:h-[320px] xl:h-[360px]"
     >
       <img
         src={hero}

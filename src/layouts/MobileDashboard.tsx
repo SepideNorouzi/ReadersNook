@@ -6,8 +6,8 @@ interface MobileLayoutProps {
 
 export default function MobileLayout({ children }: MobileLayoutProps) {
   return (
-    <main className="min-h-screen bg-[#F5F0E8]">
-      <div className="relative isolate">
+    <main className="min-h-screen overflow-x-hidden bg-[#F5F0E8]">
+      <div className="relative isolate w-full max-w-full">
         <MobileNavbar />
 
         {children}

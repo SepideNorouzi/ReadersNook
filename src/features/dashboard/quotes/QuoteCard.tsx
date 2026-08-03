@@ -64,10 +64,12 @@ export default function QuoteCard({ className }: Props) {
         relative
         flex
         h-full
+        min-h-0
         flex-col
         overflow-hidden
 
-        rounded-[28px]
+        rounded-[22px]
+        sm:rounded-[28px]
 
         border
         border-[var(--brown-200)]
@@ -77,7 +79,8 @@ export default function QuoteCard({ className }: Props) {
         via-[var(--brown-100)]
         to-[var(--brown-300)]
 
-        p-4
+        p-3.5
+        sm:p-4
         lg:p-6
 
         shadow-[var(--shadow)]
@@ -89,30 +92,17 @@ export default function QuoteCard({ className }: Props) {
         ${className ?? ""}
       `}
     >
-      {/* Mobile Header */}
-
-      <div className="mb-3 flex items-center gap-2 lg:hidden">
-        <Quote size={13} className="text-[var(--brown-600)]" />
-
-        <h2 className="font-heading text-[12px] font-semibold text-[var(--text)]">
-          Quote
-        </h2>
-      </div>
-
-      {/* Desktop Header */}
-
-      <div className="hidden items-center justify-between lg:mb-6 lg:flex">
+      {/* Header */}
+      <div className="mb-2.5 flex shrink-0 items-center justify-between sm:mb-3 lg:mb-6">
         <div className="flex items-center gap-2">
-          <Quote size={16} className="text-[var(--brown-600)]" />
+          <Quote
+            size={13}
+            className="text-[var(--brown-600)] lg:size-4"
+          />
 
-          {/* Mobile */}
-          <h2 className="font-heading text-[12px] font-semibold text-[var(--text)] lg:hidden">
-            Quote
-          </h2>
-
-          {/* Desktop */}
-          <h2 className="hidden font-heading text-lg font-semibold text-[var(--text)] lg:block">
-            Daily Quote
+          <h2 className="font-heading text-sm font-semibold text-[var(--text)] lg:text-lg">
+            <span className="lg:hidden">Quote</span>
+            <span className="hidden lg:inline">Daily Quote</span>
           </h2>
         </div>
 
@@ -120,10 +110,13 @@ export default function QuoteCard({ className }: Props) {
           className="
             rounded-full
             bg-[var(--stone-300)]
-            px-2.5
-            py-1
+            px-2
+            py-0.5
+            sm:px-2.5
+            sm:py-1
 
-            text-[10px]
+            text-[9px]
+            sm:text-[10px]
             uppercase
             tracking-[0.15em]
 
@@ -134,7 +127,7 @@ export default function QuoteCard({ className }: Props) {
         </span>
       </div>
 
-      <div className="flex flex-1">
+      <div className="flex min-h-0 flex-1">
         <QuoteItem quote={quote} />
       </div>
     </Card>

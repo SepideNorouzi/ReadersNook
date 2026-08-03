@@ -30,34 +30,53 @@ export default function CollectionsCard({ className }: Props) {
     <>
       <Card
         className={`
-        flex
-        h-full
-        flex-col
+          flex
+          h-full
+          min-h-0
+          flex-col
 
-        rounded-[28px]
+          rounded-[22px]
+          sm:rounded-[28px]
 
-        border
-        border-[var(--border)]
+          border
+          border-[var(--border)]
 
-        bg-gradient-to-b
-        from-white
-        to-[var(--surface-hover)]
+          bg-gradient-to-b
+          from-white
+          to-[var(--surface-hover)]
 
-        p-2
-        lg:p-6
+          p-3.5
+          sm:p-4
+          lg:p-6
 
-        ${className ?? ""}
-      `}
+          ${className ?? ""}
+        `}
       >
-        <div className="mb-2 flex items-center justify-between lg:mb-3">
+        <div className="mb-2.5 flex shrink-0 items-center justify-between sm:mb-3">
           <div className="flex items-center gap-2">
-            <Library size={14} className="text-[var(--brown-700)] lg:size-4" />
-            <h2 className="font-heading text-[12px] font-semibold text-[var(--text)] lg:text-lg">
+            <Library
+              size={14}
+              className="text-[var(--brown-700)] lg:size-4"
+            />
+            <h2 className="font-heading text-sm font-semibold text-[var(--text)] sm:text-[15px] lg:text-lg">
               Collections
             </h2>
           </div>
 
-          <span className="rounded-full bg-[var(--stone-200)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)] lg:px-2.5 lg:py-1 lg:text-[11px]">
+          <span
+            className="
+              rounded-full
+              bg-[var(--stone-200)]
+              px-2
+              py-0.5
+              text-[10px]
+              font-medium
+              text-[var(--text-secondary)]
+              sm:px-2.5
+              sm:py-1
+              sm:text-[11px]
+            "
+          >
             {collections.length}
           </span>
         </div>
@@ -73,14 +92,31 @@ export default function CollectionsCard({ className }: Props) {
             </p>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto pr-1 scrollbar-hidden">
-            <CollectionGrid
-              collections={collections}
-              onCollectionClick={setSelectedCollection}
+          <div className="relative min-h-0 flex-1 overflow-hidden">
+            <div className="h-full overflow-y-auto overflow-x-hidden scrollbar-hidden">
+              <CollectionGrid
+                collections={collections}
+                onCollectionClick={setSelectedCollection}
+              />
+            </div>
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                bottom-0
+                left-0
+                right-0
+                h-8
+                bg-gradient-to-t
+                from-white
+                to-transparent
+              "
             />
           </div>
         )}
       </Card>
+
       {selectedCollection && (
         <CollectionModal
           collection={selectedCollection}

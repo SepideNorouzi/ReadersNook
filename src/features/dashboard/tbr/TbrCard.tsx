@@ -25,9 +25,11 @@ export default function TBRCard({ className }: Props) {
       className={`
         flex
         h-full
+        min-h-0
         flex-col
 
-        rounded-[28px]
+        rounded-[22px]
+        sm:rounded-[28px]
 
         border
         border-[var(--border)]
@@ -36,20 +38,24 @@ export default function TBRCard({ className }: Props) {
         from-white
         to-[var(--surface-hover)]
 
-        p-4
+        p-3.5
+        sm:p-4
         lg:p-6
 
         ${className ?? ""}
       `}
     >
-      {/* Mobile Header */}
-
-      <div className="mb-3 flex items-center justify-between lg:hidden">
+      {/* Header */}
+      <div className="mb-3 flex shrink-0 items-center justify-between lg:mb-5">
         <div className="flex items-center gap-2">
-          <SquarePen size={13} className="text-[var(--brown-700)]" />
+          <SquarePen
+            size={14}
+            className="text-[var(--brown-700)] lg:size-4"
+          />
 
-          <h2 className="font-heading text-[12px] font-semibold text-[var(--text)]">
-            To Read
+          <h2 className="font-heading text-sm font-semibold text-[var(--text)] sm:text-[15px] lg:text-lg">
+            <span className="lg:hidden">To Read</span>
+            <span className="hidden lg:inline">To Be Read</span>
           </h2>
         </div>
 
@@ -60,37 +66,11 @@ export default function TBRCard({ className }: Props) {
 
             px-2
             py-0.5
+            sm:px-2.5
+            sm:py-1
 
             text-[10px]
-            font-medium
-
-            text-[var(--text-secondary)]
-          "
-        >
-          {books.length}
-        </span>
-      </div>
-
-      {/* Desktop Header */}
-
-      <div className="hidden items-center justify-between lg:mb-5 lg:flex">
-        <div className="flex items-center gap-2">
-          <SquarePen size={16} className="text-[var(--brown-700)]" />
-
-          <h2 className="font-heading text-lg font-semibold text-[var(--text)]">
-            To Be Read
-          </h2>
-        </div>
-
-        <span
-          className="
-            rounded-full
-            bg-[var(--stone-200)]
-
-            px-2.5
-            py-1
-
-            text-[11px]
+            sm:text-[11px]
             font-medium
 
             text-[var(--text-secondary)]
@@ -101,7 +81,7 @@ export default function TBRCard({ className }: Props) {
       </div>
 
       {books.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center">
+        <div className="flex flex-1 flex-col items-center justify-center px-2">
           <BookOpen
             size={26}
             className="mb-2 text-[var(--stone-300)] lg:mb-3 lg:size-[34px]"
@@ -116,48 +96,33 @@ export default function TBRCard({ className }: Props) {
           </p>
         </div>
       ) : (
-        <>
-          {/* Mobile */}
-
-          <div className="flex-1 lg:hidden scrollbar-hidden">
+        <div className="relative min-h-0 flex-1 overflow-hidden">
+          <div
+            className="
+              h-full
+              overflow-y-auto
+              overflow-x-hidden
+              p-0.5
+              scrollbar-hidden
+            "
+          >
             <TbrBookGrid books={books} />
           </div>
 
-          {/* Desktop */}
-
-          <div className="relative hidden flex-1 overflow-hidden lg:block">
-            <div
-              className="
-                h-full
-                overflow-y-auto
-                p-1
-                scrollbar-hidden
-                scrollbar-thin
-                scrollbar-thumb-[var(--stone-300)]
-                scrollbar-track-transparent
-              "
-            >
-              <TbrBookGrid books={books} />
-            </div>
-
-            <div
-              className="
-                pointer-events-none
-
-                absolute
-                bottom-0
-                left-0
-                right-0
-
-                h-8
-
-                bg-gradient-to-t
-                from-[var(--surface)]
-                to-transparent
-              "
-            />
-          </div>
-        </>
+          <div
+            className="
+              pointer-events-none
+              absolute
+              bottom-0
+              left-0
+              right-0
+              h-8
+              bg-gradient-to-t
+              from-[var(--surface)]
+              to-transparent
+            "
+          />
+        </div>
       )}
     </Card>
   );

@@ -31,9 +31,11 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
       className={`
         flex
         h-full
+        min-h-0
         flex-col
 
-        rounded-[28px]
+        rounded-[22px]
+        sm:rounded-[28px]
 
         border
         border-[var(--border)]
@@ -43,7 +45,7 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
         to-[var(--surface-hover)]
 
         p-3
-        sm:p-3
+        sm:p-4
         lg:p-6
 
         transition-all
@@ -56,16 +58,12 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
       `}
     >
       {/* Header */}
-      <header className="mb-3 flex items-center justify-between lg:mb-5">
+      <header className="mb-3 flex shrink-0 items-center justify-between lg:mb-5">
         <div className="flex items-center gap-2">
           <Bookmark size={13} className="text-[var(--brown-500)]" />
-          {/* desktop */}
-          <h3 className="hidden lg:block font-heading text-[12px] font-semibold text-[var(--text)] lg:text-lg">
-            Currently Reading
-          </h3>
-          {/* mobile */}
-          <h3 className="block lg:hidden font-heading text-[12px] font-semibold text-[var(--text)] lg:text-lg">
-            Reading
+          <h3 className="font-heading text-sm font-semibold text-[var(--text)] lg:text-lg">
+            <span className="lg:hidden">Reading</span>
+            <span className="hidden lg:inline">Currently Reading</span>
           </h3>
         </div>
 

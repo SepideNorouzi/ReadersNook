@@ -82,12 +82,13 @@ export default function CurrentReadEmbla({
                     }}
                     className="
                       aspect-[3/4]
-                      w-32
-                      rounded-[18px]
+                      w-28
+                      rounded-[16px]
                       object-cover
                       shadow-[0_8px_18px_rgba(0,0,0,.18)]
 
                       sm:w-36
+                      sm:rounded-[18px]
                       lg:w-32
                       xl:w-36
                     "

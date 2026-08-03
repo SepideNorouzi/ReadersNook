@@ -10,8 +10,10 @@ export default function WidgetCard({ className }: WidgetCardProps) {
       className={`
         group
         h-full
+        min-h-0
         overflow-hidden
-        rounded-[28px]
+        rounded-[22px]
+        sm:rounded-[28px]
 
         ${className ?? ""}
       `}
