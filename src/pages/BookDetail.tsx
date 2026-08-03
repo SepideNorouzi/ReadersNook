@@ -1,6 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 
-import { ChevronLeft } from "lucide-react";
+import { BookOpen, ChevronLeft } from "lucide-react";
 
 import { useBook } from "../hooks/useBook";
 
@@ -59,6 +59,54 @@ export default function BookDetail() {
         "
       >
         <ChevronLeft className="h-5 w-5 text-stone-600" />
+      </button>
+      <button
+        onClick={() => navigate("/dashboard")}
+        aria-label="Go to Dashboard"
+        className="
+        hidden
+    fixed
+    top-10
+    right-10
+    z-[100]
+
+    group
+
+    lg:flex
+    h-14
+    w-14
+    items-center
+    justify-center
+
+    rounded-2xl
+
+    bg-gradient-to-br
+    from-[var(--brown-900)]
+    via-[var(--brown-700)]
+    to-[var(--brown-500)]
+
+    text-white
+
+    shadow-[0_12px_30px_rgba(54,35,27,.28),inset_0_1px_1px_rgba(255,255,255,.18)]
+
+    transition-all
+    duration-300
+
+    hover:-translate-y-1
+    hover:scale-105
+    hover:shadow-[0_18px_42px_rgba(54,35,27,.35)]
+
+    active:scale-95
+  "
+      >
+        <BookOpen
+          size={22}
+          className="
+      transition-transform
+      duration-300
+      group-hover:scale-110
+    "
+        />
       </button>
 
       <BookHero book={book} />
