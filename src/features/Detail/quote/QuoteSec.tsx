@@ -11,7 +11,6 @@ export default function QuoteSec({ book }: Props) {
     <section
       className="
         px-15
-        pb-5
       "
     >
       <div className="mx-auto max-w-6xl">
@@ -52,7 +51,7 @@ export default function QuoteSec({ book }: Props) {
         </div>
 
         {/* Embla Carousel */}
-        <div className="mt-10">
+        <div className="mt-5">
           <QuoteEmbla book={book} />
         </div>
       </div>

@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { Plus } from "lucide-react";
-
 import type { Book } from "../../../types/book";
-
 import QuoteCard from "./QuoteCard";
+import AddQuoteCard from "./AddQuoteCard";
 
 interface Props {
   book: Book;
@@ -12,6 +10,7 @@ interface Props {
 
 export default function QuoteEmbla({ book }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
@@ -49,6 +48,7 @@ export default function QuoteEmbla({ book }: Props) {
                 min-w-0
                 flex-[0_0_90%]
                 pr-6
+                pt-1
                 md:flex-[0_0_50%]
                 lg:flex-[0_0_38%]
                 xl:flex-[0_0_33.333%]
@@ -62,76 +62,16 @@ export default function QuoteEmbla({ book }: Props) {
 
           <div
             className="
-              min-w-0
-              flex-[0_0_90%]
-              pr-6
-              md:flex-[0_0_50%]
-              lg:flex-[0_0_38%]
-              xl:flex-[0_0_33.333%]
-            "
+    min-w-0
+    flex-[0_0_90%]
+    pr-6
+    pt-1
+    md:flex-[0_0_50%]
+    lg:flex-[0_0_38%]
+    xl:flex-[0_0_33.333%]
+  "
           >
-            <button
-              className="
-                flex
-                min-h-[280px]
-                w-full
-                flex-col
-                items-center
-                justify-center
-                gap-4
-                rounded-[28px]
-                border-2
-                border-dashed
-                border-[#D8C6AF]
-                bg-[#FCFAF7]
-                transition-all
-                hover:border-[#C68B3C]
-                hover:bg-[#FFFDFB]
-              "
-            >
-              <div
-                className="
-                  flex
-                  h-14
-                  w-14
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-[#EFE2D0]
-                "
-              >
-                <Plus
-                  className="
-                    h-7
-                    w-7
-                    text-[#9C6A2B]
-                  "
-                />
-              </div>
-
-              <h3
-                className="
-                  text-lg
-                  font-medium
-                  text-brown-900
-                "
-              >
-                Add Quote
-              </h3>
-
-              <p
-                className="
-                  max-w-[220px]
-                  text-center
-                  text-sm
-                  leading-6
-                  text-stone-500
-                "
-              >
-                Save a passage from this book and revisit it whenever
-                inspiration strikes.
-              </p>
-            </button>
+            <AddQuoteCard onClick={() => setOpenModal(true)} />
           </div>
         </div>
       </div>
@@ -157,6 +97,49 @@ export default function QuoteEmbla({ book }: Props) {
           />
         ))}
       </div>
+      {openModal && (
+        <div
+          className="
+      fixed
+      inset-0
+      z-50
+      flex
+      items-center
+      justify-center
+      bg-black/40
+      backdrop-blur-sm
+    "
+        >
+          <div
+            className="
+        rounded-3xl
+        bg-white
+        p-8
+        shadow-2xl
+      "
+          >
+            <p className="text-lg font-semibold text-[var(--brown-900)]">
+              Add Quote Modal
+            </p>
+
+            <button
+              onClick={() => setOpenModal(false)}
+              className="
+          mt-4
+          rounded-full
+          bg-[var(--brown-100)]
+          px-4
+          py-2
+          text-sm
+          text-[var(--brown-700)]
+          hover:bg-[var(--brown-200)]
+        "
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
