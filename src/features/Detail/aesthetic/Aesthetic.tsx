@@ -57,8 +57,7 @@ export default function Aesthetic({ bookId }: Props) {
     <section
       className="
         px-6
-        lg:pt-5
-        pb-5
+        lg:pt-7
       "
     >
       <div
@@ -112,21 +111,27 @@ export default function Aesthetic({ bookId }: Props) {
           </p>
         </div>
 
-        <div
-          className="
-            mt-10
-            grid
-            grid-cols-1
-            sm:grid-cols-2
-            lg:grid-cols-3
-            gap-x-6
-            gap-y-10
-          "
-        >
-          {/* Add Photo card */}
-          <button
-            onClick={() => fileInputRef.current?.click()}
+        <div className="relative mt-5">
+          <div
             className="
+      grid
+      grid-cols-1
+      sm:grid-cols-2
+      lg:grid-cols-3
+      gap-x-4
+
+      h-[420px]
+      sm:h-[500px]
+      lg:h-[560px]
+
+      overflow-y-auto
+      p-5
+    "
+          >
+            {/* Add Photo card */}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="
               group
               flex
               aspect-square
@@ -145,9 +150,9 @@ export default function Aesthetic({ bookId }: Props) {
               hover:border-[var(--gold)]
               hover:bg-white/80
             "
-          >
-            <span
-              className="
+            >
+              <span
+                className="
                 flex
                 h-11
                 w-11
@@ -160,39 +165,39 @@ export default function Aesthetic({ bookId }: Props) {
                 duration-300
                 group-hover:scale-110
               "
-            >
-              <Plus className="h-5 w-5 text-[var(--gold)]" />
-            </span>
+              >
+                <Plus className="h-5 w-5 text-[var(--gold)]" />
+              </span>
 
-            <span
-              className="
+              <span
+                className="
                 text-sm
                 font-medium
                 text-[var(--text-secondary)]
               "
-            >
-              Add Photo
-            </span>
-          </button>
+              >
+                Add Photo
+              </span>
+            </button>
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
 
-          {/* User's locally-added photos */}
-          {localPhotos.map((photo, index) => (
-            <div
-              key={photo.id}
-              style={
-                {
-                  "--tilt": `${TILTS[index % TILTS.length]}deg`,
-                } as CSSProperties
-              }
-              className="
+            {/* User's locally-added photos */}
+            {localPhotos.map((photo, index) => (
+              <div
+                key={photo.id}
+                style={
+                  {
+                    "--tilt": `${TILTS[index % TILTS.length]}deg`,
+                  } as CSSProperties
+                }
+                className="
                 group
                 relative
                 aspect-square
@@ -212,91 +217,16 @@ export default function Aesthetic({ bookId }: Props) {
                 hover:scale-[1.06]
                 hover:shadow-[0_20px_45px_rgba(35,23,17,0.24)]
               "
-            >
-              <img
-                src={photo.url}
-                alt=""
-                className="h-full w-full object-cover"
-              />
-
-              <button
-                onClick={() => handleRemoveLocalPhoto(photo.id)}
-                className="
-    absolute
-
-    left-1/2
-    top-1/2
-
-    -translate-x-1/2
-    -translate-y-1/2
-
-    flex
-    h-9
-    w-9
-    items-center
-    justify-center
-
-    rounded-full
-
-    bg-white/90
-    backdrop-blur-md
-
-    shadow-lg
-
-    text-stone-700
-
-    opacity-100
-    scale-100
-
-    transition-all
-    duration-300
-
-
-    hover:bg-red-500
-    hover:text-white
-  "
               >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
+                <img
+                  src={photo.url}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
 
-          {/* Photos from mock/server data, filtered by this book */}
-          {bookPhotos.map((photo, index) => (
-            <div
-              key={photo.id}
-              style={
-                {
-                  "--tilt": `${TILTS[(index + localPhotos.length) % TILTS.length]}deg`,
-                } as CSSProperties
-              }
-              className="
-                group
-                relative
-                aspect-square
-                origin-center
-                rotate-[var(--tilt)]
-                overflow-hidden
-                rounded-[18px]
-                bg-white
-                shadow-[0_10px_24px_rgba(35,23,17,0.16)]
-                transition-all
-                duration-500
-                ease-out
-                hover:z-10
-                hover:rotate-0
-                hover:scale-[1.06]
-                hover:shadow-[0_20px_45px_rgba(35,23,17,0.24)]
-              "
-            >
-              <img
-                src={photo.imageUrl}
-                alt={photo.caption ?? ""}
-                className="h-full w-full object-cover"
-              />
-              <button
-                onClick={() => handleRemoveLocalPhoto(photo.id)}
-                className="
+                <button
+                  onClick={() => handleRemoveLocalPhoto(photo.id)}
+                  className="
     absolute
     left-46
     top-47
@@ -321,11 +251,78 @@ export default function Aesthetic({ bookId }: Props) {
     hover:bg-red-500
     hover:text-white
   "
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+
+            {/* Photos from mock/server data, filtered by this book */}
+            {bookPhotos.map((photo, index) => (
+              <div
+                key={photo.id}
+                style={
+                  {
+                    "--tilt": `${TILTS[(index + localPhotos.length) % TILTS.length]}deg`,
+                  } as CSSProperties
+                }
+                className="
+                group
+                relative
+                aspect-square
+                origin-center
+                rotate-[var(--tilt)]
+                overflow-hidden
+                rounded-[18px]
+                bg-white
+                shadow-[0_10px_24px_rgba(35,23,17,0.16)]
+                transition-all
+                duration-500
+                ease-out
+                hover:z-10
+                hover:rotate-0
+                hover:scale-[1.06]
+                hover:shadow-[0_20px_45px_rgba(35,23,17,0.24)]
+              "
               >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
+                <img
+                  src={photo.imageUrl}
+                  alt={photo.caption ?? ""}
+                  className="h-full w-full object-cover"
+                />
+                <button
+                  onClick={() => handleRemoveLocalPhoto(photo.id)}
+                  className="
+    absolute
+    left-46
+    top-47
+    flex
+    h-7
+    w-7
+    items-center
+    justify-center
+    rounded-full
+    bg-white/90
+    backdrop-blur-md
+    text-stone-700
+    shadow-lg
+    opacity-0
+    scale-90
+    -translate-x-1/2
+    -translate-y-1/2
+    transition-all
+    duration-300
+    group-hover:opacity-100
+    group-hover:scale-100
+    hover:bg-red-500
+    hover:text-white
+  "
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
