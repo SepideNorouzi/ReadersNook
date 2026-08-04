@@ -7,7 +7,7 @@ import Library from "../pages/Library";
 import Collections from "../pages/Collections";
 import Search from "../pages/Search";
 import BookDetail from "../pages/BookDetail";
-import Settings from "../modals/Settings";
+import Settings from "../pages/Settings";
 
 const router = createBrowserRouter([
   {
