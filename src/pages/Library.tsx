@@ -1,12 +1,9 @@
-// src/pages/Library.tsx
 import { useMemo, useState } from "react";
-import { BookOpen } from "lucide-react";
 
 import { useBooks } from "../hooks/useBooks";
 import type { BookStatus } from "../types/book";
 import LibraryFilters from "../features/library/LibraryFilters";
 import BookCard from "../features/library/BookCard";
-
 
 export default function Library() {
   const { data: books, isLoading } = useBooks();
@@ -38,9 +35,6 @@ export default function Library() {
   return (
     <main className="flex flex-col gap-8 p-10">
       <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--brown-900)] via-[var(--brown-700)] to-[var(--brown-500)] text-white shadow-[0_12px_30px_rgba(54,35,27,.28)]">
-          <BookOpen size={22} />
-        </div>
         <div>
           <h1 className="font-heading text-2xl font-semibold text-[var(--text)]">
             Library

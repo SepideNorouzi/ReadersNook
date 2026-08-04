@@ -1,6 +1,5 @@
-// src/features/Library/LibraryFilters.tsx
-import { filterOptions } from "./statusConfig";
 import type { BookStatus } from "../../types/book";
+import { STATUS_OPTIONS } from "../Detail/hero/StatusBadge";
 
 type Props = {
   active: BookStatus | "all";
@@ -8,10 +7,15 @@ type Props = {
   counts: Record<BookStatus | "all", number>;
 };
 
+const FILTERS: { value: BookStatus | "all"; label: string; dot: string }[] = [
+  { value: "all", label: "All Books", dot: "bg-[var(--stone-400)]" },
+  ...STATUS_OPTIONS,
+];
+
 export default function LibraryFilters({ active, onChange, counts }: Props) {
   return (
     <div className="flex flex-wrap gap-2">
-      {filterOptions.map(({ value, label }) => {
+      {FILTERS.map(({ value, label, dot }) => {
         const isActive = active === value;
         return (
           <button
@@ -29,6 +33,7 @@ export default function LibraryFilters({ active, onChange, counts }: Props) {
               }
             `}
           >
+            <span className={`h-2 w-2 rounded-full ${dot}`} />
             {label}
             <span
               className={`rounded-full px-2 py-0.5 text-xs ${
