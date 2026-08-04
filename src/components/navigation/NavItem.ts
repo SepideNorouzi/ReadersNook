@@ -1,4 +1,4 @@
-import { BookOpen, House, Library, Search, Settings } from "lucide-react";
+import { House, Library, Search, Settings } from "lucide-react";
 
 export const navItems = [
   {
@@ -12,12 +12,6 @@ export const navItems = [
     label: "Library",
     path: "/library",
     subtitle: "My Personal Library",
-  },
-  {
-    icon: BookOpen,
-    label: "Collections",
-    path: "/collections",
-    subtitle: "Collections",
   },
   {
     icon: Search,
