@@ -8,7 +8,7 @@ interface Props {
   onChange: (status: BookStatus) => void;
 }
 
-const STATUS_OPTIONS: {
+export const STATUS_OPTIONS: {
   value: BookStatus;
   label: string;
   dot: string;
