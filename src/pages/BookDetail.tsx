@@ -61,7 +61,7 @@ export default function BookDetail() {
         <ChevronLeft className="h-5 w-5 text-stone-600" />
       </button>
       <button
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/")}
         aria-label="Go to Dashboard"
         className="
         hidden
