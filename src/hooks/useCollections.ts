@@ -8,9 +8,7 @@ export function useCollections() {
   });
 
   return {
-    collections: query.data ?? [],
-    isLoading: query.isLoading,
-    error: query.error,
     ...query,
+    collections: query.data ?? [],
   };
 }

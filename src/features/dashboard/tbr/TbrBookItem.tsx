@@ -12,6 +12,7 @@ export default function TBRBookItem({ book }: Props) {
       className="
         group
         flex
+        h-full
         min-w-0
         flex-col
         text-left

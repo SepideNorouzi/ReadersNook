@@ -1,5 +1,5 @@
 import type { BookStatus } from "../../types/book";
-import { STATUS_OPTIONS } from "../Detail/hero/StatusBadge";
+import { STATUS_OPTIONS } from "../Detail/hero/statusOptions";
 
 type Props = {
   active: BookStatus | "all";

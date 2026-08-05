@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { X, BookOpen } from "lucide-react";
 import type { Book } from "../types/book";
@@ -14,10 +14,6 @@ export default function BookPagesModal({ open, book, onClose }: Props) {
   const updateBook = useUpdateBook();
 
   const [page, setPage] = useState(book.currentPage);
-
-  useEffect(() => {
-    setPage(book.currentPage);
-  }, [book]);
 
   if (!open) return null;
 
@@ -103,7 +99,10 @@ export default function BookPagesModal({ open, book, onClose }: Props) {
           </div>
 
           <div className="mt-8">
-            <label htmlFor="page" className="block text-sm font-medium text-stone-700">
+            <label
+              htmlFor="page"
+              className="block text-sm font-medium text-stone-700"
+            >
               Current Page
             </label>
 
@@ -156,7 +155,9 @@ export default function BookPagesModal({ open, book, onClose }: Props) {
           </button>
 
           <button
-            disabled={updateBook.isPending || page < 0 || page > book.totalPages}
+            disabled={
+              updateBook.isPending || page < 0 || page > book.totalPages
+            }
             onClick={handleSave}
             className="
               rounded-full

@@ -10,7 +10,7 @@ export default function TBRBookGrid({ books }: Props) {
     <div
       className="
         grid
-        grid-cols-3
+        grid-cols-2
         gap-2.5
 
         sm:grid-cols-3

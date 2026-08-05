@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 
 import type { Book } from "../../types/book";
 import Card from "../../components/ui/Card";
-import { STATUS_OPTIONS } from "../Detail/hero/StatusBadge";
+import { STATUS_OPTIONS } from "../Detail/hero/statusOptions";
 
 export default function BookCard({ book }: { book: Book }) {
   const progress =

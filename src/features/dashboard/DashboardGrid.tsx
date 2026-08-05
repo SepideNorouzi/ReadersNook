@@ -65,10 +65,10 @@ export default function DashboardGrid() {
         <WidgetCard className="min-h-[200px]" />
       </div>
 
-      <TBRCard className="min-h-[280px] sm:min-h-[300px]" />
-      <AchievementCard className="min-h-[260px] sm:min-h-[280px]" />
-      <QuoteCard className="min-h-[160px]" />
-      <CollectionsCard className="min-h-[220px] sm:min-h-[240px]" />
+      <TBRCard className="h-[280px] sm:h-[300px] min-h-[280px] sm:min-h-[300px]" />
+      <AchievementCard className="h-[260px] sm:h-[280px] min-h-[260px] sm:min-h-[280px]" />
+      <QuoteCard className="h-[160px] min-h-[160px]" />
+      <CollectionsCard className="h-[220px] sm:h-[240px] min-h-[220px] sm:min-h-[240px]" />
     </div>
   );
 }

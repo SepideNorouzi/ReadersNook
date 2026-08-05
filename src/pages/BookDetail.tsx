@@ -11,9 +11,9 @@ export default function BookDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  if (!id) return <Navigate to="/404" replace />;
-
   const { data: book, isLoading } = useBook(id);
+
+  if (!id) return <Navigate to="/404" replace />;
 
   if (isLoading) return <p>Loading...</p>;
 
