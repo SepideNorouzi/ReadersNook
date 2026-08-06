@@ -1,4 +1,3 @@
-// src/features/Settings/ProfileHeader.tsx
 import { UserRound } from "lucide-react";
 
 import type { Profile } from "../../types/profile";
@@ -9,13 +8,17 @@ interface Props {
 }
 
 export default function ProfileHeader({ profile }: Props) {
+  const account =
+    profile.id === "guest" ? "Browsing in demo mode" : "Reader's Nook Member";
+
   return (
     <Card className="flex items-center gap-5">
       <div
         className="
           flex h-20 w-20 shrink-0 items-center justify-center
           overflow-hidden rounded-full
-          border border-[var(--border)] bg-[var(--stone-100)]
+          border border-[var(--border)]
+          bg-[var(--stone-100)]
         "
       >
         {profile.avatarUrl ? (
@@ -29,15 +32,16 @@ export default function ProfileHeader({ profile }: Props) {
         )}
       </div>
 
-      <div>
+      <div className="space-y-1">
         <h1 className="font-heading text-2xl font-semibold text-[var(--text)]">
           {profile.name}
         </h1>
-        <p className="mt-1 text-sm text-[var(--text-secondary)]">
-          {profile.id === "guest"
-            ? "Browsing in demo mode"
-            : "Reader's Nook member"}
-        </p>
+
+        {/* <p className="text-sm text-[var(--text-secondary)]">
+          {profile.email}
+        </p> */}
+
+        <p className="text-sm text-[var(--text-muted)]">{account}</p>
       </div>
     </Card>
   );

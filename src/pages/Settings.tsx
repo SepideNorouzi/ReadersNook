@@ -1,7 +1,7 @@
-// src/modals/Settings.tsx
-import AchievementsGrid from "../features/settings/AchievementsGrid";
 import ProfileHeader from "../features/settings/ProfileHeader";
 import ProfileStats from "../features/settings/ProfileStats";
+import SettingsActions from "../features/settings/SettingsActions";
+
 import { useBooks } from "../hooks/useBooks";
 import { useProfile } from "../hooks/useProfile";
 
@@ -31,7 +31,7 @@ export default function Settings() {
     <main className="flex flex-col gap-6 p-10">
       <ProfileHeader profile={profile} />
       <ProfileStats books={books} />
-      <AchievementsGrid />
+      <SettingsActions />
     </main>
   );
 }
