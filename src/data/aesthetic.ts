@@ -1,4 +1,4 @@
-import type { AestheticPhoto } from "../types/aesthetic";
+import type { AestheticPhoto } from "../types/aestheticPhoto";
 
 export const aestheticPhotos: AestheticPhoto[] = [
   {
