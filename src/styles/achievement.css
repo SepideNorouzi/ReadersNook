@@ -1,304 +1,655 @@
-.badge-first-chapters {
-  --badge-start: #fff7cf;
-  --badge-middle: #f9d73b;
-  --badge-end: #f4a93f;
+/* =========================================================
+   ACHIEVEMENT PRIZE MEDALS — Reader's Nook
+   Circular medals with metallic rims, gem faces, sparkles,
+   ribbons, and trophy-case ambience.
+   ========================================================= */
 
-  --badge-shadow: rgba(244, 194, 63, 0.45);
-  --badge-glow: rgba(255, 245, 180, 0.75);
+/* ---------- Per-badge color tokens ---------- */
+
+.badge-first-chapters {
+  --badge-start: #fff8d6;
+  --badge-middle: #f5c842;
+  --badge-end: #e08a1e;
+  --badge-deep: #9a5a0a;
+  --badge-metal-light: #fff6c8;
+  --badge-metal-dark: #c4841a;
+  --badge-shadow: rgba(224, 138, 30, 0.5);
+  --badge-glow: rgba(255, 220, 100, 0.85);
   --badge-text: #5a3c00;
+  --badge-ribbon: #d4a017;
 }
 
 .badge-adventure-awaits {
-  --badge-start: #eef6ff;
-  --badge-middle: #67baeb;
-  --badge-end: #1da9ff;
-
-  --badge-shadow: rgba(29, 169, 255, 0.38);
-  --badge-glow: rgba(194, 236, 255, 0.75);
+  --badge-start: #e8f6ff;
+  --badge-middle: #4eb3ef;
+  --badge-end: #1578c8;
+  --badge-deep: #0a4a7a;
+  --badge-metal-light: #c8ebff;
+  --badge-metal-dark: #1a6aa0;
+  --badge-shadow: rgba(21, 120, 200, 0.48);
+  --badge-glow: rgba(120, 210, 255, 0.8);
   --badge-text: #0f4772;
+  --badge-ribbon: #1a8fd4;
 }
 
 .badge-book-dragon {
   --badge-start: #eefbdc;
-  --badge-middle: #8cc63e;
-  --badge-end: #64892f;
-
-  --badge-shadow: rgba(100, 137, 47, 0.42);
-  --badge-glow: rgba(215, 248, 180, 0.75);
+  --badge-middle: #8bc63f;
+  --badge-end: #4f7a22;
+  --badge-deep: #2d4a12;
+  --badge-metal-light: #d4f0a8;
+  --badge-metal-dark: #4a7218;
+  --badge-shadow: rgba(79, 122, 34, 0.48);
+  --badge-glow: rgba(180, 240, 100, 0.8);
   --badge-text: #254116;
+  --badge-ribbon: #5a9a28;
 }
 
 .badge-legend {
-  --badge-start: #fff7c7;
-  --badge-middle: #ffca28;
-  --badge-end: #f19534;
-
-  --badge-shadow: rgba(241, 149, 52, 0.45);
-  --badge-glow: rgba(255, 244, 180, 0.8);
+  --badge-start: #fff4c0;
+  --badge-middle: #ffc107;
+  --badge-end: #e8860a;
+  --badge-deep: #8a4a00;
+  --badge-metal-light: #ffe9a0;
+  --badge-metal-dark: #c07010;
+  --badge-shadow: rgba(232, 134, 10, 0.55);
+  --badge-glow: rgba(255, 220, 80, 0.9);
   --badge-text: #5d3700;
+  --badge-ribbon: #d4a017;
 }
 
 .badge-quote-collector {
-  --badge-start: #eefaff;
-  --badge-middle: #42ade2;
-  --badge-end: #256382;
-
-  --badge-shadow: rgba(37, 99, 130, 0.4);
-  --badge-glow: rgba(208, 242, 255, 0.7);
+  --badge-start: #e6f7ff;
+  --badge-middle: #3aa8d8;
+  --badge-end: #1a5a7a;
+  --badge-deep: #0d3550;
+  --badge-metal-light: #b8e8f8;
+  --badge-metal-dark: #1e6a8a;
+  --badge-shadow: rgba(26, 90, 122, 0.48);
+  --badge-glow: rgba(100, 210, 240, 0.75);
   --badge-text: #103d55;
+  --badge-ribbon: #2a8ab0;
 }
 
 .badge-future-reader {
   --badge-start: #ecebff;
-  --badge-middle: #6d79d8;
-  --badge-end: #4d4c78;
-
-  --badge-shadow: rgba(77, 76, 120, 0.42);
-  --badge-glow: rgba(222, 220, 255, 0.75);
+  --badge-middle: #7b84e0;
+  --badge-end: #3d3c6e;
+  --badge-deep: #22224a;
+  --badge-metal-light: #d0d0ff;
+  --badge-metal-dark: #4a4a8a;
+  --badge-shadow: rgba(61, 60, 110, 0.5);
+  --badge-glow: rgba(180, 180, 255, 0.8);
   --badge-text: #f4f3ff;
+  --badge-ribbon: #6a6ac0;
 }
 
 .badge-library {
   --badge-start: #fff0d7;
-  --badge-middle: #e2b36c;
-  --badge-end: #f0e1d4;
-
-  --badge-shadow: rgba(239, 108, 0, 0.42);
-  --badge-glow: rgba(255, 221, 180, 0.7);
+  --badge-middle: #e0a84e;
+  --badge-end: #b06a20;
+  --badge-deep: #6a3a0a;
+  --badge-metal-light: #f5dcb0;
+  --badge-metal-dark: #a06020;
+  --badge-shadow: rgba(176, 106, 32, 0.48);
+  --badge-glow: rgba(255, 200, 120, 0.75);
   --badge-text: #5c2900;
+  --badge-ribbon: #c08030;
 }
 
 .badge-halfway-there {
   --badge-start: #ffe4ea;
-  --badge-middle: #ed4c5c;
-  --badge-end: #b11a31;
-
-  --badge-shadow: rgba(177, 26, 49, 0.42);
-  --badge-glow: rgba(255, 212, 219, 0.72);
+  --badge-middle: #e8455a;
+  --badge-end: #9a1528;
+  --badge-deep: #5a0a18;
+  --badge-metal-light: #ffc0cc;
+  --badge-metal-dark: #a82038;
+  --badge-shadow: rgba(154, 21, 40, 0.5);
+  --badge-glow: rgba(255, 140, 160, 0.8);
   --badge-text: #5d1120;
+  --badge-ribbon: #c02840;
 }
 
 .badge-bookworm {
   --badge-start: #f3ecff;
-  --badge-middle: #d860b5;
-  --badge-end: #4d4c78;
-
-  --badge-shadow: rgba(77, 76, 120, 0.42);
-  --badge-glow: rgba(246, 213, 240, 0.75);
+  --badge-middle: #d050b0;
+  --badge-end: #6a3a8a;
+  --badge-deep: #3a1a55;
+  --badge-metal-light: #e8c0e8;
+  --badge-metal-dark: #8a4080;
+  --badge-shadow: rgba(106, 58, 138, 0.5);
+  --badge-glow: rgba(230, 140, 220, 0.8);
   --badge-text: #311c52;
+  --badge-ribbon: #a040a0;
 }
 
 .badge-collector {
   --badge-start: #ffe8df;
-  --badge-middle: #f76d57;
-  --badge-end: #ea5a47;
-
-  --badge-shadow: rgba(234, 90, 71, 0.42);
-  --badge-glow: rgba(255, 221, 214, 0.72);
+  --badge-middle: #f05a42;
+  --badge-end: #c03020;
+  --badge-deep: #6a1810;
+  --badge-metal-light: #ffc8b8;
+  --badge-metal-dark: #c03828;
+  --badge-shadow: rgba(192, 48, 32, 0.5);
+  --badge-glow: rgba(255, 140, 120, 0.8);
   --badge-text: #61281d;
+  --badge-ribbon: #d04030;
 }
 
 /* =========================================================
-   BADGE
+   PRIZE WRAPPER (button shell)
+   ========================================================= */
+
+.achievement-prize {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+
+  width: 100%;
+  padding: 0.2rem 0.15rem 0.35rem;
+  margin: 0;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.achievement-prize:focus-visible {
+  outline: 2px solid var(--gold, #cfa247);
+  outline-offset: 3px;
+  border-radius: 16px;
+}
+
+.achievement-prize:hover {
+  transform: translateY(-6px) scale(1.04);
+  z-index: 2;
+}
+
+.achievement-prize:active {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.achievement-prize:hover .achievement-badge__rim {
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.4),
+    0 16px 36px var(--badge-shadow),
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.achievement-prize:hover .achievement-badge__aura {
+  opacity: 0.9;
+  filter: blur(14px);
+}
+
+.achievement-prize:hover .achievement-badge__icon-wrapper::before {
+  opacity: 0.9;
+  filter: blur(16px);
+  width: 130%;
+  height: 130%;
+}
+
+.achievement-prize:hover .achievement-badge__shine::before {
+  left: 130%;
+  animation: none;
+}
+
+.achievement-prize:hover .achievement-badge--locked {
+  filter: grayscale(0.7) saturate(0.4) brightness(0.95);
+}
+
+/* =========================================================
+   MEDAL
    ========================================================= */
 
 .achievement-badge {
   position: relative;
+  isolation: isolate;
+
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 100%;
+
+  overflow: visible;
+  pointer-events: none;
+}
+
+.achievement-prize--with-title .achievement-badge {
+  width: min(76px, 100%);
+  margin-inline: auto;
+}
+
+/* =========================================================
+   AURA — soft colored bloom behind medal
+   ========================================================= */
+
+.achievement-badge__aura {
+  position: absolute;
+  inset: 8%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--badge-glow) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  filter: blur(10px);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.achievement-badge--unlocked .achievement-badge__aura {
+  opacity: 0.55;
+  animation: auraPulse 3.2s ease-in-out infinite;
+}
+
+
+
+/* =========================================================
+   METALLIC RIM — outer bezel like a real coin/medal
+   ========================================================= */
+
+.achievement-badge__rim {
+  position: relative;
+  z-index: 1;
 
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  gap: 0.35rem;
 
   width: 100%;
   aspect-ratio: 1;
 
-  padding: 0.55rem;
-
-  overflow: hidden;
-
-  border: none;
-  border-radius: 16px;
-
-  cursor: pointer;
-
-  -webkit-tap-highlight-color: transparent;
+  border-radius: 50%;
 
   background:
-    radial-gradient(
-      circle at 25% 18%,
-      rgba(255,255,255,.38),
-      transparent 42%
-    ),
+    conic-gradient(
+      from 210deg,
+      var(--badge-metal-light) 0deg,
+      var(--badge-metal-dark) 55deg,
+      var(--badge-metal-light) 110deg,
+      var(--badge-deep) 165deg,
+      var(--badge-metal-light) 220deg,
+      var(--badge-metal-dark) 280deg,
+      var(--badge-metal-light) 360deg
+    );
+
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.35),
+    0 10px 22px var(--badge-shadow),
+    0 4px 8px rgba(0, 0, 0, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25);
+
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.achievement-badge__rim-inner {
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+
+  background:
     linear-gradient(
       145deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      transparent 40%,
+      rgba(0, 0, 0, 0.15) 100%
+    ),
+    radial-gradient(
+      circle at 35% 28%,
       var(--badge-start) 0%,
       var(--badge-middle) 48%,
       var(--badge-end) 100%
     );
 
   box-shadow:
-    0 8px 18px var(--badge-shadow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.22),
+    0 0 0 1.5px rgba(0, 0, 0, 0.12);
 
-  transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease;
-}
-
-@media (min-width: 768px) {
-  .achievement-badge {
-    gap: 0.45rem;
-    padding: 0.85rem;
-    border-radius: 22px;
-
-    box-shadow:
-      0 10px 24px var(--badge-shadow),
-      inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  }
-}
-
-.achievement-badge:hover {
-  transform: translateY(-1px) scale(1);
-
-  box-shadow:
-    0 18px 42px var(--badge-shadow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  overflow: hidden;
 }
 
 /* =========================================================
-   SHINE
+   FACE + ICON
    ========================================================= */
 
-.achievement-badge::before {
-  content: "";
-
+.achievement-badge__face {
   position: absolute;
-
-  top: -60%;
-  left: -120%;
-
-  width: 70%;
-  height: 220%;
-
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--badge-glow),
-    transparent
-  );
-
-  transform: rotate(25deg);
-
-  transition: left 0.9s ease;
-}
-
-.achievement-badge:hover::before {
-  left: 20%;
-}
-
-/* =========================================================
-   INNER GLOW
-   ========================================================= */
-
-.achievement-badge::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  border-radius: inherit;
-
+  z-index: 2;
+  inset: 14%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
   pointer-events: none;
-
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.45),
-    inset 0 -3px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* =========================================================
-   ICON
-   ========================================================= */
-
-.achievement-badge__icon-wrapper{
-    position: relative;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    width: 58%;
-    max-width: 52px;
+.achievement-badge__icon-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62%;
+  max-width: 48px;
 }
 
-.achievement-badge__image{
-    width: 100%;
-    height: auto;
-    display: block;
-    animation: badgeFloat 4s ease-in-out infinite;
+.achievement-badge__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+  animation: badgeFloat 4s ease-in-out infinite;
 }
 
 @media (min-width: 768px) {
   .achievement-badge__icon-wrapper {
-    max-width: 64px;
+    max-width: 56px;
   }
 }
 
-@keyframes badgeFloat{
-    0%,100%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-4px);
-    }
+/* Soft colored glow under icon */
+.achievement-badge__icon-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  translate: -50% -50%;
+  width: 110%;
+  height: 110%;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 50%;
+  opacity: 0.55;
+  filter: blur(12px);
+  background: radial-gradient(circle, var(--badge-middle), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.35s ease, filter 0.35s ease, width 0.35s ease, height 0.35s ease;
 }
 
+/* =========================================================
+   SHINE SWEEP on medal face
+   ========================================================= */
 
-.achievement-badge__icon-wrapper::before{
-    content: "";
-    position: absolute;
-    inset: 50%;
-    translate: -50% -50%;
-
-    width: 100%;
-    height: 100%;
-    min-width: 40px;
-    min-height: 40px;
-
-    opacity: .72;
-    filter: blur(18px);
-
-    background: radial-gradient(
-        circle,
-        var(--badge-middle),
-        transparent 72%
-    );
-
-    pointer-events: none;
+.achievement-badge__shine {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.achievement-badge:hover .achievement-badge__icon-wrapper::before{
-    width: 120%;
-    height: 120%;
-    opacity: .95;
-    filter: blur(26px);
+.achievement-badge__shine::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -80%;
+  width: 55%;
+  height: 180%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 35%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.15) 65%,
+    transparent 100%
+  );
+  transform: rotate(28deg);
+  transition: left 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.achievement-badge--unlocked .achievement-badge__shine::before {
+  animation: shineSweep 5s ease-in-out infinite;
+}
+
+/* Static top-left specular on face */
+.achievement-badge__rim-inner::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  left: 14%;
+  width: 38%;
+  height: 22%;
+  border-radius: 50%;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* =========================================================
+   SPARKLES
+   ========================================================= */
+
+.achievement-badge__sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.achievement-badge--unlocked .achievement-badge__sparkles {
+  opacity: 1;
+}
+
+.achievement-badge__sparkle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 4px 1px rgba(255, 255, 255, 0.9),
+    0 0 10px 2px var(--badge-glow);
+  opacity: 0;
+}
+
+.achievement-badge__sparkle--1 {
+  top: 6%;
+  right: 14%;
+  animation: sparkleTwinkle 2.4s ease-in-out infinite;
+}
+
+.achievement-badge__sparkle--2 {
+  top: 22%;
+  left: 4%;
+  width: 3.5px;
+  height: 3.5px;
+  animation: sparkleTwinkle 2.8s ease-in-out 0.6s infinite;
+}
+
+.achievement-badge__sparkle--3 {
+  bottom: 18%;
+  right: 6%;
+  width: 4px;
+  height: 4px;
+  animation: sparkleTwinkle 3.1s ease-in-out 1.1s infinite;
+}
+
+.achievement-badge__sparkle--4 {
+  bottom: 8%;
+  left: 18%;
+  width: 3px;
+  height: 3px;
+  animation: sparkleTwinkle 2.2s ease-in-out 0.3s infinite;
+}
+
+/* Diamond-shaped sparkles via clip */
+.achievement-badge__sparkle--1,
+.achievement-badge__sparkle--3 {
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+
+/* =========================================================
+   RIBBON TAILS — prize medal feel
+   ========================================================= */
+
+.achievement-badge__ribbon {
+  position: absolute;
+  z-index: 0;
+  bottom: -2%;
+  left: 50%;
+  width: 52%;
+  height: 28%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Ribbons only on larger medals — too busy on tiny dashboard cells */
+.achievement-badge--unlocked .achievement-badge__ribbon {
+  opacity: 0;
 }
 
 @media (min-width: 768px) {
-  .achievement-badge__icon-wrapper::before {
-    min-width: 62px;
-    min-height: 62px;
-    filter: blur(22px);
+  .achievement-badge--unlocked .achievement-badge__ribbon {
+    opacity: 0.88;
+  }
+}
+
+.achievement-modal__badge.achievement-badge--unlocked .achievement-badge__ribbon,
+.achievement-prize--with-title .achievement-badge--unlocked .achievement-badge__ribbon {
+  opacity: 0.92;
+}
+
+.achievement-badge__ribbon-left,
+.achievement-badge__ribbon-right {
+  position: absolute;
+  top: 0;
+  width: 42%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    var(--badge-ribbon) 0%,
+    color-mix(in srgb, var(--badge-ribbon) 70%, #000) 100%
+  );
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.achievement-badge__ribbon-left {
+  left: 8%;
+  clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  transform: rotate(-12deg);
+  transform-origin: top center;
+}
+
+.achievement-badge__ribbon-right {
+  right: 8%;
+  clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  transform: rotate(12deg);
+  transform-origin: top center;
+  filter: brightness(0.88);
+}
+
+/* =========================================================
+   STAR SEAL (unlocked) + LOCK
+   ========================================================= */
+
+.achievement-badge__seal {
+  position: absolute;
+  z-index: 5;
+  bottom: 2%;
+  right: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 9px;
+  line-height: 1;
+  color: #5a3c00;
+  background:
+    radial-gradient(circle at 35% 30%, #fff6c0, #f0b429 55%, #c07810);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  animation: sealPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (min-width: 768px) {
+  .achievement-badge__seal {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+}
+
+.achievement-badge__lock {
+  position: absolute;
+  z-index: 5;
+  top: 4%;
+  right: 4%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: #5a4a3a;
+  background: linear-gradient(145deg, #f8f4ef, #e0d5c8);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+@media (min-width: 768px) {
+  .achievement-badge__lock {
+    width: 22px;
+    height: 22px;
   }
 
-  .achievement-badge:hover .achievement-badge__icon-wrapper::before {
-    min-width: 76px;
-    min-height: 76px;
-    filter: blur(30px);
+  .achievement-badge__lock svg {
+    width: 11px;
+    height: 11px;
   }
+}
+
+/* =========================================================
+   LOCKED STATE — cold metal / stone medal
+   ========================================================= */
+
+.achievement-badge--locked {
+  filter: grayscale(0.85) saturate(0.25) brightness(0.92);
+}
+
+.achievement-badge--locked .achievement-badge__rim {
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.achievement-badge--locked .achievement-badge__image {
+  opacity: 0.65;
+  animation: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2)) grayscale(0.3);
+}
+
+.achievement-badge--locked .achievement-badge__shine::before,
+.achievement-badge--locked .achievement-badge__sparkles,
+.achievement-badge--locked .achievement-badge__ribbon,
+.achievement-badge--locked .achievement-badge__seal {
+  display: none;
 }
 
 /* =========================================================
@@ -306,44 +657,225 @@
    ========================================================= */
 
 .achievement-badge__title {
+  position: relative;
+  z-index: 2;
   margin: 0;
-
+  max-width: 100%;
   font-family: var(--font-heading);
-
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
-
-  line-height: 1.15;
-
+  line-height: 1.2;
   letter-spacing: 0.02em;
-
   text-align: center;
-
-  color: var(--badge-text);
-
-  transition: color 0.3s ease;
+  color: var(--text-secondary, #705947);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* =========================================================
-   MODAL
+   TROPHY CASE — dashboard card shell
    ========================================================= */
+
+.achievements-case {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse 90% 60% at 50% -10%,
+      rgba(207, 162, 71, 0.14) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 100% 100%,
+      rgba(184, 109, 69, 0.08) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      165deg,
+      #fffefb 0%,
+      #faf6f0 45%,
+      #f5efe6 100%
+    ) !important;
+  border-color: color-mix(in srgb, var(--gold, #cfa247) 35%, var(--border, #e3d6c7)) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 8px 28px rgba(35, 23, 17, 0.07) !important;
+}
+
+.achievements-case::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(207, 162, 71, 0.07) 0%, transparent 3px),
+    radial-gradient(circle at 78% 32%, rgba(207, 162, 71, 0.06) 0%, transparent 2px),
+    radial-gradient(circle at 42% 88%, rgba(184, 109, 69, 0.05) 0%, transparent 2.5px),
+    radial-gradient(circle at 88% 72%, rgba(207, 162, 71, 0.05) 0%, transparent 2px);
+  opacity: 0.9;
+  z-index: 0;
+}
+
+.achievements-case > * {
+  position: relative;
+  z-index: 1;
+}
+
+.achievements-case__header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background:
+    linear-gradient(145deg, #fff6d0, #e8c050 55%, #c09020);
+  box-shadow:
+    0 3px 10px rgba(192, 144, 32, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  color: #5a3c00;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .achievements-case__header-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+  }
+}
+
+.achievements-case__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #5a3c00;
+  background:
+    linear-gradient(145deg, #fff8e0, #f0d890);
+  border: 1px solid rgba(207, 162, 71, 0.45);
+  box-shadow:
+    0 2px 6px rgba(192, 144, 32, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+@media (min-width: 640px) {
+  .achievements-case__count {
+    font-size: 11px;
+    padding: 0.25rem 0.65rem;
+  }
+}
+
+.achievements-case__progress {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(207, 162, 71, 0.15);
+  overflow: hidden;
+  margin-top: 0.45rem;
+  margin-bottom: 0.15rem;
+}
+
+.achievements-case__progress-bar {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    #e8c050 0%,
+    #cfa247 50%,
+    #f0d878 100%
+  );
+  box-shadow: 0 0 8px rgba(207, 162, 71, 0.5);
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.achievements-case__progress-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  animation: progressShimmer 2.5s ease-in-out infinite;
+}
+
+.achievements-case__grid {
+  padding: 0.35rem 0.2rem 0.85rem;
+}
+
+.achievements-case__fade {
+  background: linear-gradient(
+    to top,
+    #f5efe6 0%,
+    rgba(245, 239, 230, 0) 100%
+  ) !important;
+}
+
+/* =========================================================
+   MODAL — prize showcase
+   ========================================================= */
+
+.achievement-modal {
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 50% 0%,
+      rgba(207, 162, 71, 0.18) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #fffefb 0%, #faf6f0 100%) !important;
+  border: 1px solid color-mix(in srgb, var(--gold, #cfa247) 40%, var(--border)) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+    0 25px 60px rgba(35, 23, 17, 0.22),
+    0 0 80px rgba(207, 162, 71, 0.12) !important;
+}
 
 .achievement-modal__content {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .achievement-modal__badge-wrapper {
   display: flex;
   justify-content: center;
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.achievement-modal__badge-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--badge-glow, rgba(255, 220, 100, 0.5)) 0%,
+    transparent 65%
+  );
+  filter: blur(12px);
+  opacity: 0.7;
+  animation: auraPulse 2.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .achievement-modal__badge {
-  width: 120px;
+  width: 120px !important;
+  height: 120px !important;
   aspect-ratio: 1;
-
-  cursor: default;
-
+  cursor: default !important;
   transform: none !important;
 }
 
@@ -351,130 +883,316 @@
   transform: none !important;
 }
 
-.achievement-modal__badge:hover::before {
-  left: -20%;
+.achievement-modal__badge .achievement-badge__rim {
+  width: 120px;
+  height: 120px;
 }
 
-.achievement-modal__image {
-  width: 76px;
-  height: 76px;
+.achievement-modal__badge .achievement-badge__icon-wrapper {
+  max-width: 64px;
+}
+
+.achievement-modal__badge .achievement-badge__image {
+  width: 64px;
+  max-width: 64px;
+  animation: badgeFloat 3.5s ease-in-out infinite;
+}
+
+.achievement-modal__badge .achievement-badge__shine::before {
+  animation: shineSweep 4s ease-in-out infinite;
+}
+
+/* Pedestal under modal medal */
+.achievement-modal__pedestal {
+  width: 90px;
+  height: 10px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(35, 23, 17, 0.18) 0%,
+    transparent 70%
+  );
+  filter: blur(2px);
+}
+
+.achievement-modal__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.achievement-modal__status--unlocked {
+  color: #3d6a28;
+  background: linear-gradient(145deg, #e8f5d8, #d0e8b0);
+  border: 1px solid rgba(100, 150, 50, 0.35);
+  box-shadow: 0 2px 8px rgba(100, 150, 50, 0.2);
+}
+
+.achievement-modal__status--locked {
+  color: #6a5a4a;
+  background: linear-gradient(145deg, #f4efe8, #e8e0d4);
+  border: 1px solid var(--border, #e3d6c7);
 }
 
 .achievement-modal__title {
-  font-size: 1rem;
+  margin-top: 0.75rem !important;
+  font-size: 1.15rem !important;
+  font-weight: 700;
+  color: var(--text, #231711) !important;
+  letter-spacing: 0.01em;
 }
 
 .achievement-modal__divider {
+  width: 100%;
   height: 1px;
-
-  margin: 2rem 0;
-
+  margin: 1.5rem 0;
   background: linear-gradient(
     to right,
     transparent,
-    var(--border),
+    color-mix(in srgb, var(--gold, #cfa247) 60%, var(--border)),
     transparent
   );
 }
 
 .achievement-modal__body {
   text-align: center;
+  width: 100%;
 }
 
 .achievement-modal__label {
-  margin-bottom: 0.75rem;
-
-  font-size: 0.72rem;
-  font-weight: 600;
-
-  letter-spacing: 0.25em;
+  margin-bottom: 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-
-  color: var(--text-muted);
+  color: var(--gold, #cfa247);
 }
 
 .achievement-modal__description {
-  line-height: 1.8;
-
+  line-height: 1.75;
   font-size: 0.95rem;
-
-  color: var(--text);
+  color: var(--text, #231711);
 }
 
 .achievement-modal__footer {
-  margin-top: 2rem;
-
-  border: 1px solid var(--border);
-
-  border-radius: 18px;
-
-  background: var(--surface-hover);
-
-  padding: 1rem;
+  margin-top: 1.5rem;
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--gold, #cfa247) 30%, var(--border));
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(248, 237, 203, 0.45),
+      rgba(255, 255, 255, 0.6)
+    );
+  padding: 1rem 1.1rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .achievement-modal__footer-text {
   text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--text-secondary, #705947);
+  margin: 0;
+}
 
-  font-size: 0.8rem;
+.achievement-modal__close {
+  z-index: 10;
+}
 
-  line-height: 1.7;
+/* Confetti particles in modal for unlocked */
+.achievement-modal__confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
 
-  color: var(--text-secondary);
+.achievement-modal__confetti span {
+  position: absolute;
+  top: -8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  opacity: 0;
+  animation: confettiFall 3.5s ease-in infinite;
+}
+
+.achievement-modal__confetti span:nth-child(1) {
+  left: 12%;
+  background: #f5c842;
+  animation-delay: 0s;
+}
+.achievement-modal__confetti span:nth-child(2) {
+  left: 28%;
+  background: #e8455a;
+  width: 5px;
+  height: 5px;
+  animation-delay: 0.4s;
+  animation-duration: 4s;
+}
+.achievement-modal__confetti span:nth-child(3) {
+  left: 45%;
+  background: #4eb3ef;
+  animation-delay: 0.8s;
+  animation-duration: 3.2s;
+}
+.achievement-modal__confetti span:nth-child(4) {
+  left: 62%;
+  background: #8bc63f;
+  width: 4px;
+  height: 7px;
+  animation-delay: 0.2s;
+  animation-duration: 3.8s;
+}
+.achievement-modal__confetti span:nth-child(5) {
+  left: 78%;
+  background: #d050b0;
+  animation-delay: 1s;
+  animation-duration: 3.6s;
+}
+.achievement-modal__confetti span:nth-child(6) {
+  left: 88%;
+  background: #cfa247;
+  width: 5px;
+  height: 5px;
+  animation-delay: 0.55s;
 }
 
 /* =========================================================
-   LOCKED BADGES
+   SETTINGS GRID — prize shelf
    ========================================================= */
 
-.achievement-badge--locked {
-  filter: grayscale(1) saturate(0.15);
-
-  opacity: 0.6;
+.achievements-shelf {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse 70% 50% at 50% 0%,
+      rgba(207, 162, 71, 0.12) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #fffefb, #faf6f0) !important;
+  border-color: color-mix(in srgb, var(--gold, #cfa247) 30%, var(--border)) !important;
 }
 
-.achievement-badge--locked:hover {
-  transform: translateY(-2px) scale(1.02);
-}
-
-.achievement-badge--locked::before {
-  display: none;
-}
-
-.achievement-badge--locked .achievement-badge__image {
-  opacity: 0.8;
-}
-
-.achievement-badge__lock {
-  position: absolute;
-
-  top: 6px;
-  right: 6px;
-
+.achievements-shelf__subtitle {
   display: flex;
   align-items: center;
-  justify-content: center;
-
-  width: 18px;
-  height: 18px;
-
-  border-radius: 999px;
-
-  background: rgba(255, 255, 255, 0.9);
-
-  backdrop-filter: blur(10px);
-
-  font-size: 0.65rem;
-
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-@media (min-width: 768px) {
-  .achievement-badge__lock {
-    top: 8px;
-    right: 8px;
-    width: 22px;
-    height: 22px;
-    font-size: 0.7rem;
+/* =========================================================
+   KEYFRAMES
+   ========================================================= */
+
+@keyframes badgeFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes auraPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes shineSweep {
+  0%,
+  55% {
+    left: -80%;
+  }
+  75%,
+  100% {
+    left: 140%;
+  }
+}
+
+@keyframes sparkleTwinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4) rotate(45deg);
+  }
+  40%,
+  60% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+@keyframes sealPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes progressShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(320px) rotate(520deg);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .achievement-badge__image,
+  .achievement-badge--unlocked .achievement-badge__aura,
+  .achievement-badge--unlocked .achievement-badge__shine::before,
+  .achievement-badge__sparkle,
+  .achievements-case__progress-bar::after,
+  .achievement-modal__confetti span,
+  .achievement-modal__badge-wrapper::before {
+    animation: none !important;
+  }
+
+  .achievement-prize:hover {
+    transform: translateY(-2px) scale(1);
   }
 }
