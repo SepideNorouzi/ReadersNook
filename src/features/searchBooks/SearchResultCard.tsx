@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { BookOpen, Check, Plus, Star } from "lucide-react";
 
 import type { BookSearchResult } from "../../types/searchResults";
 import Card from "../../components/ui/Card";
 import { useCreateBook, useIsBookSaved } from "../../hooks/useBooks";
-import { mapSearchResultToBook } from "../../repo/book/searchResultToBook";
+import { bookFromSearchResult } from "../../services/bookFromSearch";
 
 type Props = {
   result: BookSearchResult;
@@ -11,19 +12,28 @@ type Props = {
 
 export default function SearchResultCard({ result }: Props) {
   const hasRating = typeof result.averageRating === "number";
-  const { mutate: addBook, isPending } = useCreateBook();
+  const { mutateAsync: addBook, isPending } = useCreateBook();
   const alreadySaved = useIsBookSaved(result.id);
+  // Covers both the works-detail fetch and the save mutation.
+  const [isHydrating, setIsHydrating] = useState(false);
+  const isAdding = isHydrating || isPending;
 
-  const handleAdd = () => {
-    if (alreadySaved || isPending) return;
-    addBook(mapSearchResultToBook(result));
+  const handleAdd = async () => {
+    if (alreadySaved || isAdding) return;
+
+    setIsHydrating(true);
+    try {
+      const book = await bookFromSearchResult(result);
+      await addBook(book);
+    } finally {
+      setIsHydrating(false);
+    }
   };
 
   return (
     <Card>
       <div className="flex gap-4 p-4">
-        {/* Cover — Google omits this for plenty of books, so i need
-            a real fallback, not just a broken <img> */}
+        {/* Cover — many catalog entries omit one, so use a real fallback */}
         <div className="h-28 w-20 flex-shrink-0 overflow-hidden rounded-md bg-[var(--stone-200)]">
           {result.coverUrl ? (
             <img
@@ -48,7 +58,6 @@ export default function SearchResultCard({ result }: Props) {
             {result.author}
           </p>
 
-          {/* Rating only renders when Google actually sent one */}
           {hasRating && (
             <div className="flex items-center gap-1">
               <Star
@@ -70,7 +79,7 @@ export default function SearchResultCard({ result }: Props) {
           <button
             type="button"
             onClick={handleAdd}
-            disabled={alreadySaved || isPending}
+            disabled={alreadySaved || isAdding}
             aria-pressed={alreadySaved}
             className="mt-auto flex w-fit items-center gap-1.5 rounded-full
               bg-gradient-to-r from-[var(--brown-900)] to-[var(--brown-800)]
@@ -80,7 +89,7 @@ export default function SearchResultCard({ result }: Props) {
             {alreadySaved ? <Check size={14} /> : <Plus size={14} />}
             {alreadySaved
               ? "Added"
-              : isPending
+              : isAdding
                 ? "Adding..."
                 : "Add to Library"}
           </button>
