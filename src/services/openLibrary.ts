@@ -1,6 +1,8 @@
+import type { BookDetails } from "../types/bookDetails";
 import { BookApiError, type BookSearchResult } from "../types/searchResults";
 
 const BASE_URL = "https://openlibrary.org/search.json";
+const WORKS_BASE_URL = "https://openlibrary.org/works";
 
 // Only request the fields we actually use. the default response includes large per-book
 // lists (editions, ISBNs, etc.) that balloon payload size for no benefit
@@ -32,6 +34,11 @@ type OpenLibraryDoc = {
 type OpenLibrarySearchResponse = {
   numFound: number;
   docs: OpenLibraryDoc[];
+};
+
+type OpenLibraryWorkResponse = {
+  description?: string | { value: string };
+  subjects?: string[];
 };
 
 /**
@@ -85,4 +92,33 @@ export async function searchBooks(query: string): Promise<BookSearchResult[]> {
   const data: OpenLibrarySearchResponse = await res.json();
 
   return data.docs.map(mapOpenLibraryDocToSearchResult);
+}
+
+export async function getBookDetails(workKey: string): Promise<BookDetails> {
+  const workId = workKey.split("/").pop();
+
+  if (!workId) {
+    throw new BookApiError("Invalid Open Library work key", 404);
+  }
+
+  const res = await fetch(`${WORKS_BASE_URL}/${workId}.json`);
+
+  if (!res.ok) {
+    throw new BookApiError(
+      `Open Library detail request failed: ${res.status}`,
+      res.status,
+    );
+  }
+
+  const data: OpenLibraryWorkResponse = await res.json();
+
+  const description =
+    typeof data.description === "string"
+      ? data.description
+      : (data.description?.value ?? "");
+
+  return {
+    description,
+    categories: data.subjects ?? [],
+  };
 }
