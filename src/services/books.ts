@@ -23,3 +23,36 @@ export async function updateBook(
 
   return { ...book };
 }
+
+/**
+ * Placeholder for the real backend call. Right now this just pushes
+ * onto the same in-memory `books` array getBooks()/getBook() already
+ * read from — so admin mode "works" today, but nothing here survives
+ * a page refresh, and it's shared across whoever loads this module.
+ */
+export async function createBook(
+  book: Omit<Book, "id" | "addedAt">,
+): Promise<Book> {
+  const newBook = {
+    ...book,
+    id: crypto.randomUUID(),
+    addedAt: new Date().toISOString(),
+  } as Book;
+
+  books.push(newBook);
+
+  return newBook;
+}
+
+/**
+ * Same in-memory placeholder caveat as createBook above.
+ */
+export async function deleteBook(id: string): Promise<void> {
+  const index = books.findIndex((b) => b.id === id);
+
+  if (index === -1) {
+    throw new Error("Book not found.");
+  }
+
+  books.splice(index, 1);
+}

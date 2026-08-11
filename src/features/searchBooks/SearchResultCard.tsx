@@ -1,16 +1,23 @@
-import { BookOpen, Plus, Star } from "lucide-react";
+import { BookOpen, Check, Plus, Star } from "lucide-react";
 
 import type { BookSearchResult } from "../../types/searchResults";
 import Card from "../../components/ui/Card";
+import { useCreateBook, useIsBookSaved } from "../../hooks/useBooks";
+import { mapSearchResultToBook } from "../../repo/book/searchResultToBook";
 
 type Props = {
   result: BookSearchResult;
-  onAdd: (result: BookSearchResult) => void;
-  isAdding?: boolean; // will be driven by a mutation's `isPending` later
 };
 
-export default function SearchResultCard({ result, onAdd, isAdding }: Props) {
+export default function SearchResultCard({ result }: Props) {
   const hasRating = typeof result.averageRating === "number";
+  const { mutate: addBook, isPending } = useCreateBook();
+  const alreadySaved = useIsBookSaved(result.id);
+
+  const handleAdd = () => {
+    if (alreadySaved || isPending) return;
+    addBook(mapSearchResultToBook(result));
+  };
 
   return (
     <Card>
@@ -62,15 +69,20 @@ export default function SearchResultCard({ result, onAdd, isAdding }: Props) {
 
           <button
             type="button"
-            onClick={() => onAdd(result)}
-            disabled={isAdding}
+            onClick={handleAdd}
+            disabled={alreadySaved || isPending}
+            aria-pressed={alreadySaved}
             className="mt-auto flex w-fit items-center gap-1.5 rounded-full
               bg-gradient-to-r from-[var(--brown-900)] to-[var(--brown-800)]
               px-3 py-1.5 text-xs font-medium text-white shadow-[var(--shadow)]
               transition-opacity disabled:opacity-50"
           >
-            <Plus size={14} />
-            {isAdding ? "Adding..." : "Add to Library"}
+            {alreadySaved ? <Check size={14} /> : <Plus size={14} />}
+            {alreadySaved
+              ? "Added"
+              : isPending
+                ? "Adding..."
+                : "Add to Library"}
           </button>
         </div>
       </div>

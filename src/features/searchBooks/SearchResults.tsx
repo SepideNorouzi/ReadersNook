@@ -1,6 +1,6 @@
 import { useSearchBooks } from "../../hooks/useSearchBooks";
 import SearchResultCard from "./SearchResultCard";
-import { BookApiError, type BookSearchResult } from "../../types/searchResults";
+import { BookApiError } from "../../types/searchResults";
 
 type Props = {
   query: string;
@@ -10,13 +10,6 @@ export default function SearchResults({ query }: Props) {
   const trimmed = query.trim();
   const { data: results, isLoading, isError, error } = useSearchBooks(query);
   const isRateLimited = error instanceof BookApiError && error.status === 429;
-
-  const handleAdd = (result: BookSearchResult) => {
-    // TODO: replace with a real mutation (useAddBookToLibrary) once
-    // i build the "add to library" step. For now this just proves
-    // the click path works end to end.
-    console.log("Add to library:", result.title);
-  };
 
   // 1. Idle — nothing searched yet. This is the resting state of the
   // page on first load, distinct from "searched and found nothing."
@@ -38,10 +31,6 @@ export default function SearchResults({ query }: Props) {
   }
 
   // 3. Error — the network call itself failed (bad response, offline, etc).
-  // NOTE: `text-red-600` is a plain Tailwind color, not one of your
-  // --brown/--stone CSS vars — I don't see a danger/error color defined
-  // in what you've shown me. Swap this for a var if you add one, since
-  // an undefined var(--something) fails silently (no crash, just no color).
   if (isError) {
     return (
       <p className="text-sm text-red-600">
@@ -61,14 +50,14 @@ export default function SearchResults({ query }: Props) {
     );
   }
 
-  // 5. Success — the actual results grid.
-  // Wider minmax than Library's grid (280px vs 180px) because
-  // SearchResultCard is a horizontal cover+body layout, not a
-  // vertical cover-on-top card like BookCard.
+  // 5. Success — the actual results grid. Each card is now fully
+  // self-contained: it fetches its own "already saved" state and
+  // owns its own add-book mutation. This component's only job is
+  // fetching search results and laying the cards out.
   return (
     <div className="grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
       {results.map((result) => (
-        <SearchResultCard key={result.id} result={result} onAdd={handleAdd} />
+        <SearchResultCard key={result.id} result={result} />
       ))}
     </div>
   );
