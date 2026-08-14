@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { profile } from "../../data/profile";
+import { profile } from "../data/profile";
 
 export const demoAuthRepo = {
   useMe() {

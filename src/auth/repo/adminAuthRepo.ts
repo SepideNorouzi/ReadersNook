@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { getMe, login, register } from "../../services/auth";
+import { getMe, login, register } from "../services/auth";
 
-import { useAuthStore } from "../../store/authStore";
+import { useAuthStore } from "../store/authStore";
 
-import type { LoginCredentials, RegisterData } from "../../types/auth";
+import type { LoginCredentials, RegisterData } from "../types/auth";
 
 export const adminAuthRepo = {
   useMe(enabled = true) {

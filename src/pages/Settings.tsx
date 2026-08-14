@@ -2,8 +2,8 @@ import ProfileHeader from "../features/settings/ProfileHeader";
 import ProfileStats from "../features/settings/ProfileStats";
 import SettingsActions from "../features/settings/SettingsActions";
 
+import { useProfile } from "../auth/hooks/useProfile";
 import { useBooks } from "../hooks/useBooks";
-import { useProfile } from "../hooks/useProfile";
 
 export default function Settings() {
   const { data: profile, isLoading: profileLoading } = useProfile();

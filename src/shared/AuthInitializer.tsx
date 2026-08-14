@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "../auth/store/authStore";
 
-import { getMe } from "../services/auth";
+import { getMe } from "../auth/services/auth";
 
 export function AuthInitializer() {
   const hydrate = useAuthStore((state) => state.hydrate);
