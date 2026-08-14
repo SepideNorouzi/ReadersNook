@@ -1,4 +1,5 @@
-import { authRepository } from "../repo/auth/AuthRepo";
+
+import { authRepository } from "../repo/auth/authRepo";
 import { useAuthStore } from "../store/authStore";
 
 export function useAuth() {
