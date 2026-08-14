@@ -7,7 +7,7 @@ export const authRepository = {
   useMe() {
     const mode = useModeStore((state) => state.mode);
 
-    const demo = demoAuthRepo.useMe(mode === "demo");
+    const demo = demoAuthRepo.useMe();
 
     const admin = adminAuthRepo.useMe(mode === "admin");
 

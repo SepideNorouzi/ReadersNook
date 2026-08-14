@@ -4,12 +4,12 @@ import type { Profile } from "../../auth/types/profile";
 import Card from "../../components/ui/Card";
 
 interface Props {
-  profile: Profile;
+  user: Profile;
 }
 
-export default function ProfileHeader({ profile }: Props) {
+export default function ProfileHeader({ user }: Props) {
   const account =
-    profile.id === "guest" ? "Browsing in demo mode" : "Reader's Nook Member";
+    user.id === "guest" ? "Browsing in demo mode" : "Reader's Nook Member";
 
   return (
     <Card className="flex items-center gap-5">
@@ -21,10 +21,10 @@ export default function ProfileHeader({ profile }: Props) {
           bg-[var(--stone-100)]
         "
       >
-        {profile.avatarUrl ? (
+        {user.avatarUrl ? (
           <img
-            src={profile.avatarUrl}
-            alt={profile.name}
+            src={user.avatarUrl}
+            alt={user.name}
             className="h-full w-full object-cover"
           />
         ) : (
@@ -34,7 +34,7 @@ export default function ProfileHeader({ profile }: Props) {
 
       <div className="space-y-1">
         <h1 className="font-heading text-2xl font-semibold text-[var(--text)]">
-          {profile.name}
+          {user.name}
         </h1>
 
         {/* <p className="text-sm text-[var(--text-secondary)]">

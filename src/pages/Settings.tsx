@@ -2,14 +2,14 @@ import ProfileHeader from "../features/settings/ProfileHeader";
 import ProfileStats from "../features/settings/ProfileStats";
 import SettingsActions from "../features/settings/SettingsActions";
 
-import { useProfile } from "../auth/hooks/useProfile";
 import { useBooks } from "../hooks/useBooks";
+import { useAuthStore } from "../auth/store/authStore";
 
 export default function Settings() {
-  const { data: profile, isLoading: profileLoading } = useProfile();
+  const user = useAuthStore((state) => state.user);
   const { data: books = [], isLoading: booksLoading } = useBooks();
 
-  const isLoading = profileLoading || booksLoading;
+  const isLoading = booksLoading;
 
   if (isLoading) {
     return (
@@ -19,7 +19,7 @@ export default function Settings() {
     );
   }
 
-  if (!profile) {
+  if (!user) {
     return (
       <main className="p-10">
         <p className="text-[var(--text-muted)]">Couldn't load profile.</p>
@@ -29,7 +29,7 @@ export default function Settings() {
 
   return (
     <main className="flex flex-col gap-6 p-10">
-      <ProfileHeader profile={profile} />
+      <ProfileHeader user={user} />
       <ProfileStats books={books} />
       <SettingsActions />
     </main>
