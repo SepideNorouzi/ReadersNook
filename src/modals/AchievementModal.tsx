@@ -106,11 +106,7 @@ export default function AchievementModal({
                 <span className="achievement-badge__ribbon-left" />
                 <span className="achievement-badge__ribbon-right" />
               </span>
-              {unlocked && (
-                <span className="achievement-badge__seal" aria-hidden="true">
-                  ★
-                </span>
-              )}
+            
               {!unlocked && (
                 <span className="achievement-badge__lock" aria-hidden="true">
                   <svg

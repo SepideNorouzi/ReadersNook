@@ -82,17 +82,9 @@ export default function AchievementItem({
             </svg>
           </span>
         )}
-
-        {unlocked && (
-          <span className="achievement-badge__seal" aria-hidden="true">
-            ★
-          </span>
-        )}
       </span>
 
-      {showTitle && (
-        <span className="achievement-badge__title">{title}</span>
-      )}
+      {showTitle && <span className="achievement-badge__title">{title}</span>}
     </button>
   );
 }
