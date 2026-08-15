@@ -1,4 +1,4 @@
-import type { Profile } from "../types/profile";
+import type { Profile } from "../types/auth";
 
 export const profile: Profile = {
   id: "guest",

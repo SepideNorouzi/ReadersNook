@@ -1,6 +1,6 @@
 import { UserRound } from "lucide-react";
 
-import type { Profile } from "../../auth/types/profile";
+import type { Profile } from "../../auth/types/auth";
 import Card from "../../components/ui/Card";
 
 interface Props {

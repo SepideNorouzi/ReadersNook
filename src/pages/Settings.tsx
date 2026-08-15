@@ -3,13 +3,13 @@ import ProfileStats from "../features/settings/ProfileStats";
 import SettingsActions from "../features/settings/SettingsActions";
 
 import { useBooks } from "../hooks/useBooks";
-import { useAuthStore } from "../auth/store/authStore";
+import { useAuth } from "../auth/hooks/useAuth";
 
 export default function Settings() {
-  const user = useAuthStore((state) => state.user);
+  const { user, userLoading } = useAuth();
   const { data: books = [], isLoading: booksLoading } = useBooks();
 
-  const isLoading = booksLoading;
+  const isLoading = booksLoading || userLoading;
 
   if (isLoading) {
     return (
