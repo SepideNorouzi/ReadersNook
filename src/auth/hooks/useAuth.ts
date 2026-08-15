@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { authRepository } from "../repo/authRepo";
 import { useAuthStore } from "../store/authStore";
 import { authKeys } from "../queries/authKeys";
+import { adminAuthRepo } from "../repo/adminAuthRepo";
 
 export function useAuth() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -18,6 +19,7 @@ export function useAuth() {
 
   const login = authRepository.useLogin();
   const register = authRepository.useRegister();
+  const adminLogin = adminAuthRepo.useLogin();
 
   const logout = () => {
     storeLogout();
@@ -30,5 +32,13 @@ export function useAuth() {
     if (isError) logout();
   }, [isError]);
 
-  return { user, userLoading, isAuthenticated, login, register, logout };
+  return {
+    user,
+    userLoading,
+    isAuthenticated,
+    login,
+    adminLogin,
+    register,
+    logout,
+  };
 }

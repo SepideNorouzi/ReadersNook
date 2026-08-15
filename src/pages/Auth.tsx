@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, signupSchema } from "../auth/schemas/authSchema";
 import { useAuth } from "../auth/hooks/useAuth";
 import Card from "../components/ui/Card";
+import { useModeStore } from "../store/modeStore";
 
 // Combined shape covers both modes; RHF needs one type to register against,
 // and fields only relevant to signup are simply optional here.
@@ -21,7 +23,9 @@ export default function Auth() {
   const [authError, setAuthError] = useState("");
   const [authInfo, setAuthInfo] = useState("");
 
-  const { login, register: registerUser } = useAuth();
+  const { login, adminLogin, register: registerUser } = useAuth();
+  const setMode = useModeStore((state) => state.setMode);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -66,6 +70,28 @@ export default function Auth() {
       setAuthError(message);
     }
   }
+
+  const quickLoginHandler = async () => {
+    setAuthError("");
+
+    try {
+      setMode("admin");
+
+      await adminLogin.mutateAsync({
+        username: import.meta.env.VITE_DEV_USERNAME,
+        password: import.meta.env.VITE_DEV_PASSWORD,
+      });
+
+      navigate("/dashboard");
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Dev login failed. Please try again.";
+
+      setAuthError(message);
+    }
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center p-6">
@@ -206,12 +232,7 @@ export default function Auth() {
           {import.meta.env.DEV && (
             <button
               type="button"
-              onClick={() =>
-                login.mutateAsync({
-                  username: "testuser",
-                  password: "testpass123",
-                })
-              }
+              onClick={quickLoginHandler}
               className="w-full rounded-xl border border-dashed border-[var(--border)] py-2 text-xs text-[var(--text-muted)]"
             >
               Dev quick login
