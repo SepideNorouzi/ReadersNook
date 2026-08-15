@@ -36,7 +36,8 @@ export default function Auth() {
     resolver: zodResolver(isLogin ? loginSchema : signupSchema),
   });
 
-  const isPending = login.isPending || registerUser.isPending;
+  const isPending =
+    login.isPending || adminLogin.isPending || registerUser.isPending;
 
   async function onSubmit(data: AuthFormValues) {
     setAuthError("");
@@ -232,10 +233,11 @@ export default function Auth() {
           {import.meta.env.DEV && (
             <button
               type="button"
+              disabled={isPending}
               onClick={quickLoginHandler}
-              className="w-full rounded-xl border border-dashed border-[var(--border)] py-2 text-xs text-[var(--text-muted)]"
+              className="w-full rounded-xl border border-dashed border-[var(--border)] py-2 text-xs text-[var(--text-muted)] disabled:opacity-60"
             >
-              Dev quick login
+              {adminLogin.isPending ? "Signing in..." : "Dev quick login"}
             </button>
           )}
         </form>
