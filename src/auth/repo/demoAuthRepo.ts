@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { profile } from "../data/profile";
 import { authKeys } from "../queries/authKeys";
+import type { LoginCredentials, RegisterData } from "../types/auth";
 
 export const demoAuthRepo = {
   useMe() {
@@ -14,13 +15,13 @@ export const demoAuthRepo = {
 
   useLogin() {
     return useMutation({
-      mutationFn: async () => profile,
+      mutationFn: async (_credentials: LoginCredentials) => profile, //prefixed with _ since it's intentionally unused
     });
   },
 
   useRegister() {
     return useMutation({
-      mutationFn: async () => profile,
+      mutationFn: async (_data: RegisterData) => profile,
     });
   },
 };
