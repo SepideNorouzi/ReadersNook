@@ -41,7 +41,7 @@ export const adminAuthRepo = {
   useRegister() {
     return useMutation({
       mutationFn: async (data: RegisterData) => {
-        return register(data);
+        return toProfile(await register(data));
       },
     });
   },
