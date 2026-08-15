@@ -1,11 +1,21 @@
 import type {
   AuthUser,
   LoginCredentials,
+  Profile,
   RegisterData,
   TokenResponse,
 } from "../types/auth";
 
 const API_URL = "http://localhost:8000/api";
+
+export function toProfile(user: AuthUser): Profile {
+  return {
+    id: user.username,
+    name: `${user.first_name} ${user.last_name}`.trim(),
+    username: user.username,
+    avatarUrl: null,
+  };
+}
 
 export async function login(
   credentials: LoginCredentials,
