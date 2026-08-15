@@ -1,7 +1,17 @@
+// Raw shape returned by the backend's /auth/me/ endpoint.
 export interface AuthUser {
   first_name: string;
   last_name: string;
   username: string;
+}
+
+// Canonical, UI-facing user shape — everything in the app (components,
+// hooks, both repos) should consume this and never the raw AuthUser.
+export interface Profile {
+  id: string;
+  name: string;
+  username: string;
+  avatarUrl: string | null;
 }
 
 export interface LoginCredentials {
