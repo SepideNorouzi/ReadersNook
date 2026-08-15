@@ -7,39 +7,58 @@ interface AuthStore {
   hydrated: boolean;
 
   hydrate: () => void;
-  setTokens: (accessToken: string, refreshToken: string) => void;
+  setTokens: (accessToken: string, refreshToken?: string) => void;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  accessToken: null,
-  refreshToken: null,
-  isAuthenticated: false,
-  hydrated: false,
+function readStoredTokens() {
+  try {
+    return {
+      accessToken: localStorage.getItem("accessToken"),
+      refreshToken: localStorage.getItem("refreshToken"),
+    };
+  } catch {
+    return { accessToken: null, refreshToken: null };
+  }
+}
 
-  hydrate: () => {
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
+export const useAuthStore = create<AuthStore>((set) => {
+  const { accessToken, refreshToken } = readStoredTokens();
 
-    set({
-      accessToken,
-      refreshToken,
-      isAuthenticated: Boolean(accessToken),
-      hydrated: true,
-    });
-  },
+  return {
+    accessToken,
+    refreshToken,
+    isAuthenticated: Boolean(accessToken),
+    hydrated: true,
 
-  setTokens: (accessToken, refreshToken) => {
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    hydrate: () => {
+      const tokens = readStoredTokens();
 
-    set({ accessToken, refreshToken, isAuthenticated: true });
-  },
+      set({
+        ...tokens,
+        isAuthenticated: Boolean(tokens.accessToken),
+        hydrated: true,
+      });
+    },
 
-  logout: () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    setTokens: (accessToken, refreshToken) => {
+      localStorage.setItem("accessToken", accessToken);
+      if (refreshToken) {
+        localStorage.setItem("refreshToken", refreshToken);
+      }
 
-    set({ accessToken: null, refreshToken: null, isAuthenticated: false });
-  },
-}));
+      set((state) => ({
+        accessToken,
+        refreshToken: refreshToken ?? state.refreshToken,
+        isAuthenticated: true,
+      }));
+    },
+
+    logout: () => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
+      set({ accessToken: null, refreshToken: null, isAuthenticated: false });
+    },
+  };
+});

@@ -29,5 +29,6 @@ export interface RegisterData {
 
 export interface TokenResponse {
   access: string;
-  refresh: string;
+  // SimpleJWT omits this unless ROTATE_REFRESH_TOKENS is on.
+  refresh?: string;
 }

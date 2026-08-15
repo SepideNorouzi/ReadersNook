@@ -4,7 +4,7 @@ export const navItems = [
   {
     icon: House,
     label: "Dashboard",
-    path: "/",
+    path: "/dashboard",
     subtitle: "Dashboard",
   },
   {

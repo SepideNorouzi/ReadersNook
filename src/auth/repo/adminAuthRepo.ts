@@ -1,10 +1,38 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getMe, login, register, toProfile } from "../services/auth";
+import {
+  AuthHttpError,
+  getMe,
+  login,
+  refreshToken,
+  register,
+  toProfile,
+} from "../services/auth";
 import { useAuthStore } from "../store/authStore";
 import { authKeys } from "../queries/authKeys";
 
-import type { LoginCredentials, RegisterData } from "../types/auth";
+import type { LoginCredentials, RegisterData, TokenResponse } from "../types/auth";
+
+let refreshInFlight: Promise<TokenResponse> | null = null;
+
+async function refreshSession(): Promise<TokenResponse> {
+  if (refreshInFlight) return refreshInFlight;
+
+  refreshInFlight = (async () => {
+    const refresh = useAuthStore.getState().refreshToken;
+    if (!refresh) {
+      throw new AuthHttpError("Refresh token expired.", 401);
+    }
+
+    const tokens = await refreshToken(refresh);
+    useAuthStore.getState().setTokens(tokens.access, tokens.refresh);
+    return tokens;
+  })().finally(() => {
+    refreshInFlight = null;
+  });
+
+  return refreshInFlight;
+}
 
 export const adminAuthRepo = {
   useMe(enabled = true) {
@@ -12,7 +40,23 @@ export const adminAuthRepo = {
 
     return useQuery({
       queryKey: authKeys.me("admin"),
-      queryFn: async () => toProfile(await getMe(accessToken!)),
+      queryFn: async () => {
+        const token = useAuthStore.getState().accessToken;
+        if (!token) {
+          throw new AuthHttpError("Not authenticated.", 401);
+        }
+
+        try {
+          return toProfile(await getMe(token));
+        } catch (error) {
+          if (!(error instanceof AuthHttpError) || error.status !== 401) {
+            throw error;
+          }
+
+          const tokens = await refreshSession();
+          return toProfile(await getMe(tokens.access));
+        }
+      },
       enabled: enabled && Boolean(accessToken),
       retry: false,
     });

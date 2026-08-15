@@ -13,7 +13,7 @@ interface Props {
 
 export default function RedirectIfAuthenticated({
   children,
-  redirectTo = "/",
+  redirectTo = "/dashboard",
 }: Props) {
   const mode = useModeStore((state) => state.mode);
   const hydrated = useAuthStore((state) => state.hydrated);

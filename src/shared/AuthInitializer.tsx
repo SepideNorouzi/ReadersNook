@@ -13,7 +13,9 @@ export function AuthInitializer() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const mode = useModeStore((state) => state.mode);
 
-  const { login } = useAuth();
+  const { adminLogin } = useAuth();
+  const autoLogin = adminLogin.mutate;
+  const autoLoginPending = adminLogin.isPending;
 
   useEffect(() => {
     hydrate();
@@ -25,12 +27,14 @@ export function AuthInitializer() {
     if (mode !== "admin") return;
     if (!hydrated) return; // don't race the real localStorage check
     if (isAuthenticated) return; // already have a session — don't re-login
+    if (autoLoginPending) return;
 
-    login.mutate({
-      username: import.meta.env.VITE_DEV_USERNAME!,
-      password: import.meta.env.VITE_DEV_PASSWORD!,
-    });
-  }, [mode, hydrated, isAuthenticated]);
+    const username = import.meta.env.VITE_DEV_USERNAME;
+    const password = import.meta.env.VITE_DEV_PASSWORD;
+    if (!username || !password) return;
+
+    autoLogin({ username, password });
+  }, [mode, hydrated, isAuthenticated, autoLogin, autoLoginPending]);
 
   return null;
 }

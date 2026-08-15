@@ -23,7 +23,7 @@ export default function Auth() {
   const [authError, setAuthError] = useState("");
   const [authInfo, setAuthInfo] = useState("");
 
-  const { login, adminLogin, register: registerUser } = useAuth();
+  const { adminLogin, adminRegister } = useAuth();
   const setMode = useModeStore((state) => state.setMode);
   const navigate = useNavigate();
 
@@ -36,22 +36,26 @@ export default function Auth() {
     resolver: zodResolver(isLogin ? loginSchema : signupSchema),
   });
 
-  const isPending =
-    login.isPending || adminLogin.isPending || registerUser.isPending;
+  const isPending = adminLogin.isPending || adminRegister.isPending;
 
   async function onSubmit(data: AuthFormValues) {
     setAuthError("");
     setAuthInfo("");
 
     try {
+      // /auth is always a real-account flow. Using the admin mutations
+      // avoids the demo no-op if the user landed here while still in demo mode.
+      setMode("admin");
+
       if (isLogin) {
-        await login.mutateAsync({
+        await adminLogin.mutateAsync({
           username: data.username,
           password: data.password,
         });
         reset();
+        navigate("/dashboard");
       } else {
-        await registerUser.mutateAsync({
+        await adminRegister.mutateAsync({
           first_name: data.first_name!,
           last_name: data.last_name!,
           username: data.username,
@@ -75,13 +79,18 @@ export default function Auth() {
   const quickLoginHandler = async () => {
     setAuthError("");
 
+    const username = import.meta.env.VITE_DEV_USERNAME;
+    const password = import.meta.env.VITE_DEV_PASSWORD;
+
+    if (!username || !password) {
+      setAuthError("Dev credentials are not configured.");
+      return;
+    }
+
     try {
       setMode("admin");
 
-      await adminLogin.mutateAsync({
-        username: import.meta.env.VITE_DEV_USERNAME,
-        password: import.meta.env.VITE_DEV_PASSWORD,
-      });
+      await adminLogin.mutateAsync({ username, password });
 
       navigate("/dashboard");
     } catch (error: unknown) {

@@ -11,17 +11,27 @@ export default function SettingsActions() {
   const [darkMode, setDarkMode] = useState(false);
 
   const mode = useModeStore((state) => state.mode);
-  const { logout } = useAuth();
+  const setMode = useModeStore((state) => state.setMode);
+  const { logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const isDemo = mode === "demo";
 
   const handleAuthAction = () => {
     if (isDemo) {
-      navigate("/login"); // point this at wherever sign-in route actually lives
-    } else {
-      logout();
+      if (isAuthenticated) {
+        setMode("admin");
+        navigate("/dashboard");
+        return;
+      }
+
+      navigate("/auth");
+      return;
     }
+
+    setMode("demo");
+    logout();
+    navigate("/");
   };
 
   const toggleDarkMode = () => {
