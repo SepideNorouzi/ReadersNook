@@ -2,9 +2,12 @@ import { LogOut, Moon } from "lucide-react";
 import { useState } from "react";
 
 import Card from "../../components/ui/Card";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 export default function SettingsActions() {
   const [darkMode, setDarkMode] = useState(false);
+
+  const { logout } = useAuth();
 
   const toggleDarkMode = () => {
     const next = !darkMode;
@@ -15,7 +18,7 @@ export default function SettingsActions() {
   };
 
   const handleLogout = () => {
-    console.log("Log out");
+    logout();
   };
 
   return (
