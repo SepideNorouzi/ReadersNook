@@ -1,13 +1,28 @@
-import { LogOut, Moon } from "lucide-react";
 import { useState } from "react";
+import { LogOut, LogIn, Moon } from "lucide-react"; // add LogIn
+import { useNavigate } from "react-router"; // adjust if you use a different router setup
+
+import { useModeStore } from "../../store/modeStore";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 import Card from "../../components/ui/Card";
-import { useAuth } from "../../auth/hooks/useAuth";
 
 export default function SettingsActions() {
   const [darkMode, setDarkMode] = useState(false);
 
+  const mode = useModeStore((state) => state.mode);
   const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const isDemo = mode === "demo";
+
+  const handleAuthAction = () => {
+    if (isDemo) {
+      navigate("/login"); // point this at wherever sign-in route actually lives
+    } else {
+      logout();
+    }
+  };
 
   const toggleDarkMode = () => {
     const next = !darkMode;
@@ -15,10 +30,6 @@ export default function SettingsActions() {
     setDarkMode(next);
 
     document.documentElement.classList.toggle("dark", next);
-  };
-
-  const handleLogout = () => {
-    logout();
   };
 
   return (
@@ -54,18 +65,11 @@ export default function SettingsActions() {
 
       <div className="border-t border-[var(--border)] pt-5">
         <button
-          onClick={handleLogout}
-          className="
-            flex w-full items-center gap-3
-            rounded-xl p-3
-            text-red-600
-            transition-colors
-            hover:bg-red-50
-          "
+          onClick={handleAuthAction}
+          className="flex w-full items-center gap-3 rounded-xl p-3 text-red-600 transition-colors hover:bg-red-50"
         >
-          <LogOut size={18} />
-
-          <span className="font-medium">Log Out</span>
+          {isDemo ? <LogIn size={18} /> : <LogOut size={18} />}
+          <span className="font-medium">{isDemo ? "Sign In" : "Log Out"}</span>
         </button>
       </div>
     </Card>
