@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { profile } from "../data/profile";
+import { authKeys } from "../queries/authKeys";
 
 export const demoAuthRepo = {
   useMe() {
     return useQuery({
-      queryKey: ["auth", "me", "demo"],
+      queryKey: authKeys.me("demo"),
       queryFn: async () => profile,
       staleTime: Infinity,
     });
@@ -13,17 +14,13 @@ export const demoAuthRepo = {
 
   useLogin() {
     return useMutation({
-      mutationFn: async () => {
-        return profile;
-      },
+      mutationFn: async () => profile,
     });
   },
 
   useRegister() {
     return useMutation({
-      mutationFn: async () => {
-        return profile;
-      },
+      mutationFn: async () => profile,
     });
   },
 };
