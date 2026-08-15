@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { authRepository } from "../repo/authRepo";
@@ -9,17 +10,25 @@ export function useAuth() {
   const storeLogout = useAuthStore((state) => state.logout);
   const queryClient = useQueryClient();
 
-  const { data: user, isLoading: userLoading } = authRepository.useMe();
+  const {
+    data: user,
+    isLoading: userLoading,
+    isError,
+  } = authRepository.useMe();
 
   const login = authRepository.useLogin();
   const register = authRepository.useRegister();
 
   const logout = () => {
     storeLogout();
-    // Drop any cached profile data so a re-login (possibly as a
-    // different user) never flashes stale info before refetching.
     queryClient.removeQueries({ queryKey: authKeys.all });
   };
+
+  // Query failed to fetch the profile → token is invalid/expired.
+  // (Demo mode's useMe() never errors, so this is effectively admin-only.)
+  useEffect(() => {
+    if (isError) logout();
+  }, [isError]);
 
   return { user, userLoading, isAuthenticated, login, register, logout };
 }
