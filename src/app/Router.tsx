@@ -12,6 +12,7 @@ import Auth from "../pages/Auth";
 
 import ProtectedRoutes from "../auth/components/ProtectedRoutes";
 import RedirectIfAuthenticated from "../auth/components/RedirectAuthenticated";
+import Intro from "../pages/Intro";
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
       {
         element: <DashboardLayout />,
         children: [
-          { path: "/", element: <Dashboard /> },
+          { path: "/dashboard", element: <Dashboard /> },
           { path: "/library", element: <Library /> },
           { path: "/collections", element: <Collections /> },
           { path: "/search", element: <Search /> },
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         <Auth />
       </RedirectIfAuthenticated>
     ),
+  },
+  {
+    path: "/",
+    element: <Intro />,
   },
 ]);
 
