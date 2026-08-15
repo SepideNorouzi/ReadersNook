@@ -8,42 +8,38 @@ import Collections from "../pages/Collections";
 import Search from "../pages/Search";
 import BookDetail from "../pages/BookDetail";
 import Settings from "../pages/Settings";
+import Auth from "../pages/Auth";
+
+import ProtectedRoutes from "../auth/components/ProtectedRoutes";
+import RedirectIfAuthenticated from "../auth/components/RedirectAuthenticated";
 
 const router = createBrowserRouter([
   {
-    element: <DashboardLayout />,
-
+    element: <ProtectedRoutes />,
     children: [
       {
-        path: "/",
-        element: <Dashboard />,
+        element: <DashboardLayout />,
+        children: [
+          { path: "/", element: <Dashboard /> },
+          { path: "/library", element: <Library /> },
+          { path: "/collections", element: <Collections /> },
+          { path: "/search", element: <Search /> },
+          { path: "/settings", element: <Settings /> },
+        ],
       },
-
       {
-        path: "/library",
-        element: <Library />,
-      },
-
-      {
-        path: "/collections",
-        element: <Collections />,
-      },
-
-      {
-        path: "/search",
-        element: <Search />,
-      },
-
-      {
-        path: "/settings",
-        element: <Settings />,
+        path: "/book/:id",
+        element: <BookDetail />,
       },
     ],
   },
-
   {
-    path: "/book/:id",
-    element: <BookDetail />,
+    path: "/auth",
+    element: (
+      <RedirectIfAuthenticated>
+        <Auth />
+      </RedirectIfAuthenticated>
+    ),
   },
 ]);
 
