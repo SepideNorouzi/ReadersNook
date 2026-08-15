@@ -2,3 +2,4 @@ Django==5.2.17
 djangorestframework==3.17.2
 djangorestframework-simplejwt[crypto]==5.5.1
 drf-spectacular==0.30.0
+django-cors-headers==4.7.0
