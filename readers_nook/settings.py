@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     "user_module",
+    'books',
 ]
 
 MIDDLEWARE = [
