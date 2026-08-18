@@ -13,7 +13,9 @@ export default function CollectionPicker({ book }: Props) {
     isLoading,
     createCollection,
     addBookToCollection,
+    removeBookFromCollection,
     isAddingBook,
+    isRemovingBook,
   } = useCollections();
 
   const [open, setOpen] = useState(false);
@@ -31,22 +33,23 @@ export default function CollectionPicker({ book }: Props) {
     );
   };
 
-  async function handleAdd(collectionId: string) {
-    if (isInCollection(collectionId)) {
-      return;
-    }
+  async function handleToggle(collectionId: string) {
+    const alreadyIn = isInCollection(collectionId);
 
     try {
       setBusyId(collectionId);
 
-      await addBookToCollection({
-        collectionId,
-        bookId: book.id,
-      });
-
-      setOpen(false);
+      if (alreadyIn) {
+        await removeBookFromCollection({ collectionId, bookId: book.id });
+      } else {
+        await addBookToCollection({ collectionId, bookId: book.id });
+        setOpen(false); // keep closing only on add — let people untoggle a few in a row
+      }
     } catch (error) {
-      console.error("Failed to add book to collection:", error);
+      console.error(
+        `Failed to ${alreadyIn ? "remove from" : "add to"} collection:`,
+        error,
+      );
     } finally {
       setBusyId(null);
     }
@@ -138,14 +141,16 @@ export default function CollectionPicker({ book }: Props) {
                 ) : (
                   collections.map((collection) => {
                     const selected = isInCollection(collection.id);
-                    const busy = isAddingBook && busyId === collection.id;
+                    const busy =
+                      (isAddingBook || isRemovingBook) &&
+                      busyId === collection.id;
 
                     return (
                       <button
                         key={collection.id}
                         type="button"
-                        disabled={isAddingBook}
-                        onClick={() => handleAdd(collection.id)}
+                        disabled={isAddingBook || isRemovingBook}
+                        onClick={() => handleToggle(collection.id)}
                         className="
         flex
         w-full

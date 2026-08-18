@@ -23,14 +23,14 @@ export async function getCollectionsWithBooks(): Promise<
   const allBooks = await getBooks();
 
   const bookById = new Map<string, Book>(
-    allBooks.map((book) => [book.id, book]),
+    allBooks.map((book) => [String(book.id), book]),
   );
 
   return collections.map(({ bookIds, ...rest }) => ({
     ...rest,
 
     books: bookIds
-      .map((id) => bookById.get(id))
+      .map((id) => bookById.get(String(id)))
       .filter((book): book is Book => Boolean(book)),
   }));
 }

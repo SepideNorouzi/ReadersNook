@@ -16,7 +16,7 @@ export default function CollectionsCard({
   className,
   onCreateCollection,
 }: Props) {
-  const { collections, isLoading } = useCollections();
+  const { collections, isLoading, isError } = useCollections();
 
   const [selectedCollectionId, setSelectedCollectionId] = useState<
     string | null
@@ -32,6 +32,18 @@ export default function CollectionsCard({
         className={`flex h-full items-center justify-center ${className ?? ""}`}
       >
         <p className="text-sm text-[var(--text-secondary)]">Loading...</p>
+      </Card>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Card
+        className={`flex h-full items-center justify-center ${className ?? ""}`}
+      >
+        <p className="text-sm text-red-600">
+          Couldn't load your collections. Try refreshing.
+        </p>
       </Card>
     );
   }
