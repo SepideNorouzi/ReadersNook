@@ -18,24 +18,34 @@ export class AuthHttpError extends Error {
   }
 }
 
+function firstMessage(value: unknown): string | null {
+  if (typeof value === "string" && value.trim()) return value;
+  if (Array.isArray(value)) return firstMessage(value[0]);
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return firstMessage(record.string ?? record.msg ?? record.message ?? record.detail);
+  }
+  return null;
+}
+
 export function parseApiError(error: unknown, fallback: string): string {
   if (!error || typeof error !== "object") return fallback;
 
   const body = error as Record<string, unknown>;
 
-  if (typeof body.detail === "string") return body.detail;
-  if (Array.isArray(body.detail) && typeof body.detail[0] === "string") {
-    return body.detail[0];
+  const fromDetail = firstMessage(body.detail);
+  if (fromDetail) return fromDetail;
+
+  const fromMessage = firstMessage(body.message);
+  if (fromMessage) return fromMessage;
+
+  for (const [key, value] of Object.entries(body)) {
+    if (key === "code") continue;
+    const message = firstMessage(value);
+    if (message) return message;
   }
-  if (typeof body.message === "string") return body.message;
 
-  const fieldMessages = Object.values(body).flatMap((value) => {
-    if (typeof value === "string") return [value];
-    if (Array.isArray(value) && typeof value[0] === "string") return [value[0]];
-    return [];
-  });
-
-  return fieldMessages[0] ?? fallback;
+  return fallback;
 }
 
 async function throwApiError(
@@ -47,9 +57,11 @@ async function throwApiError(
 }
 
 export function toProfile(user: AuthUser): Profile {
+  const name = `${user.first_name} ${user.last_name}`.trim();
+
   return {
     id: user.username,
-    name: `${user.first_name} ${user.last_name}`.trim(),
+    name: name || user.username,
     username: user.username,
     avatarUrl: null,
   };
