@@ -1,5 +1,6 @@
 import { useUpdateBook } from "../../../hooks/useUpdateBook";
 import type { Book } from "../../../types/book";
+import CollectionPicker from "../collection/CollectionPicker";
 import StatusBadge from "./StatusBadge";
 
 interface Props {
@@ -51,18 +52,20 @@ export default function HeroContent({ book }: Props) {
           >
             {book.author}
           </p>
-
-          <StatusBadge
-            value={book.status}
-            onChange={(status) =>
-              updateBook.mutate({
-                id: book.id,
-                changes: {
-                  status,
-                },
-              })
-            }
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge
+              value={book.status}
+              onChange={(status) =>
+                updateBook.mutate({
+                  id: book.id,
+                  changes: {
+                    status,
+                  },
+                })
+              }
+            />
+            <CollectionPicker book={book} />
+          </div>
         </div>
 
         <div
