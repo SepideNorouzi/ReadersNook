@@ -26,24 +26,26 @@ export default function CollectionModal({ collection, onClose }: Props) {
 
   async function handleRename() {
     const trimmedName = name.trim();
-
     if (!trimmedName) return;
 
-    await renameCollection({
-      collectionId: collection.id,
-      name: trimmedName,
-    });
-
-    setEditingName(false);
+    try {
+      await renameCollection({
+        collectionId: collection.id,
+        name: trimmedName,
+      });
+      setEditingName(false);
+    } catch (error) {
+      console.error("Failed to rename collection:", error);
+    }
   }
 
   async function handleRemove(bookId: string) {
-    await removeBookFromCollection({
-      collectionId: collection.id,
-      bookId,
-    });
+    try {
+      await removeBookFromCollection({ collectionId: collection.id, bookId });
+    } catch (error) {
+      console.error("Failed to remove book from collection:", error);
+    }
   }
-
   return (
     <div
       onClick={onClose}
