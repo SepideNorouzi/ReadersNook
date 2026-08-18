@@ -14,9 +14,9 @@ export default function CollectionPicker({ book }: Props) {
   const [open, setOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
-  const [busyId, setBusyId] = useState<number | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
-  const isInCollection = (collectionId: number) => {
+  const isInCollection = (collectionId: string) => {
     const collection = collections.find(
       (collection) => collection.id === collectionId,
     );
@@ -26,7 +26,7 @@ export default function CollectionPicker({ book }: Props) {
     );
   };
 
-  async function handleAdd(collectionId: number) {
+  async function handleAdd(collectionId: string) {
     if (isInCollection(collectionId)) {
       setOpen(false);
       return;
