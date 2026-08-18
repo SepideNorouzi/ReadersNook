@@ -1,44 +1,75 @@
-import { X, Library } from "lucide-react";
+import { useState } from "react";
+import { X, Library, Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
+
 import type { CollectionWithBooks } from "../types/collection";
 import Card from "../components/ui/Card";
+import { useCollections } from "../hooks/useCollections";
 
 interface Props {
   collection: CollectionWithBooks;
   onClose: () => void;
 }
 
-export default function CollectionModal({ collection, onClose }: Props) {
+export default function CollectionModal({
+  collection,
+  onClose,
+}: Props) {
   const navigate = useNavigate();
 
+  const {
+    renameCollection,
+    removeBookFromCollection,
+    isRemovingBook,
+    isRenaming,
+  } = useCollections();
+
+  const [editingName, setEditingName] = useState(false);
+  const [name, setName] = useState(collection.name);
+
+  async function handleRename() {
+    const trimmedName = name.trim();
+
+    if (!trimmedName) return;
+
+    await renameCollection({
+      collectionId: collection.id,
+      name: trimmedName,
+    });
+
+    setEditingName(false);
+  }
+
+  async function handleRemove(bookId: number) {
+    await removeBookFromCollection({
+      collectionId: collection.id,
+      bookId,
+    });
+  }
+
   return (
-    /*
-      Full-screen backdrop.
-      Clicking outside the modal closes it.
-    */
     <div
       onClick={onClose}
       className="
-        fixed inset-0 z-50
-        flex items-center justify-center
-
+        fixed
+        inset-0
+        z-50
+        flex
+        items-center
+        justify-center
         bg-black/40
-        backdrop-blur-sm
-
         p-4
+        backdrop-blur-sm
       "
     >
-      {/* Prevent clicks inside the modal from closing it */}
       <Card
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
         className="
           flex
           h-[80vh]
           w-full
-
           max-w-[380px]
-          sm:max-w-[300px]
-          lg:max-w-[500px]
+          sm:max-w-[500px]
 
           flex-col
 
@@ -54,16 +85,68 @@ export default function CollectionModal({ collection, onClose }: Props) {
           p-6
         "
       >
-        {/* ================= HEADER ================= */}
+        {/* HEADER */}
 
-        <div className="mb-4 flex items-start justify-between">
-          <div>
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <Library size={18} className="text-[var(--brown-700)]" />
+              <Library
+                size={18}
+                className="shrink-0 text-[var(--brown-700)]"
+              />
 
-              <h2 className="font-heading text-xl font-bold text-[var(--text)]">
-                {collection.name}
-              </h2>
+              {!editingName ? (
+                <h2 className="truncate font-heading text-xl font-bold text-[var(--text)]">
+                  {collection.name}
+                </h2>
+              ) : (
+                <input
+                  autoFocus
+                  value={name}
+                  onChange={(event) =>
+                    setName(event.target.value)
+                  }
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      handleRename();
+                    }
+
+                    if (event.key === "Escape") {
+                      setEditingName(false);
+                      setName(collection.name);
+                    }
+                  }}
+                  className="
+                    min-w-0
+                    flex-1
+                    rounded-lg
+                    border
+                    border-stone-300
+                    px-2
+                    py-1
+                    text-lg
+                    font-semibold
+                    outline-none
+                    focus:border-stone-500
+                  "
+                />
+              )}
+
+              {!editingName && (
+                <button
+                  type="button"
+                  onClick={() => setEditingName(true)}
+                  className="
+                    rounded-full
+                    p-1.5
+                    text-stone-400
+                    hover:bg-stone-100
+                    hover:text-stone-700
+                  "
+                >
+                  <Pencil size={14} />
+                </button>
+              )}
             </div>
 
             {collection.description && (
@@ -74,13 +157,17 @@ export default function CollectionModal({ collection, onClose }: Props) {
 
             <p className="mt-3 text-sm text-[var(--text-secondary)]">
               {collection.books.length}{" "}
-              {collection.books.length === 1 ? "Book" : "Books"}
+              {collection.books.length === 1
+                ? "Book"
+                : "Books"}
             </p>
           </div>
 
           <button
+            type="button"
             onClick={onClose}
             className="
+              shrink-0
               rounded-full
               p-2
               transition
@@ -91,99 +178,188 @@ export default function CollectionModal({ collection, onClose }: Props) {
           </button>
         </div>
 
-        {/* Divider */}
+        {editingName && (
+          <div className="mb-4 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setEditingName(false);
+                setName(collection.name);
+              }}
+              className="
+                rounded-full
+                px-3
+                py-1.5
+                text-xs
+                text-stone-500
+                hover:bg-stone-100
+              "
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              disabled={!name.trim() || isRenaming}
+              onClick={handleRename}
+              className="
+                rounded-full
+                bg-stone-900
+                px-4
+                py-1.5
+                text-xs
+                font-medium
+                text-white
+                disabled:opacity-40
+              "
+            >
+              {isRenaming ? "Saving..." : "Save"}
+            </button>
+          </div>
+        )}
 
         <div className="mb-5 border-b border-[var(--border)]" />
 
-        {/* ================= BOOK GRID ================= */}
-
-        {/*
-          flex-1 makes this section fill the remaining height.
-
-          overflow-y-auto means only THIS section scrolls,
-          while the header always stays visible.
-        */}
+        {/* BOOKS */}
 
         <div
           className="
             flex-1
             overflow-y-auto
-
             pr-2
-          pt-1
+            pt-1
             scrollbar-hidden
           "
         >
-          <div
-            className="
-              grid
-
-              grid-cols-3
-
-              gap-4
-
-              sm:gap-5
-            "
-          >
-            {collection.books.map((book) => (
-              <button
-                key={book.id}
-                onClick={() => {
-                  onClose(); // close the modal
-                  navigate(`/book/${book.id}`); // go to the detail page
-                }}
+          {collection.books.length === 0 ? (
+            <div
+              className="
+                flex
+                h-full
+                flex-col
+                items-center
+                justify-center
+                px-6
+                text-center
+              "
+            >
+              <div
                 className="
-                  group
-
                   flex
-                  flex-col
+                  h-14
+                  w-14
                   items-center
-
-                  text-center
+                  justify-center
+                  rounded-full
+                  bg-[var(--stone-100)]
+                  text-[var(--brown-500)]
                 "
               >
-                {/* Book cover */}
+                <Library size={22} />
+              </div>
 
-                <img
-                  src={book.coverUrl}
-                  alt={book.title}
-                  className="
-                    aspect-[2/3]
-                    w-full
+              <h3 className="mt-4 font-heading text-base font-semibold text-[var(--text)]">
+                This collection is empty
+              </h3>
 
-                    rounded-xl
-
-                    object-cover
-
-                    shadow-md
-
-                    transition-all
-                    duration-300
-
-                    group-hover:-translate-y-1
-                    group-hover:shadow-xl
-                  "
-                />
-
-                {/* Title */}
-
-                <p
-                  className="
-                    mt-2
-
-                    line-clamp-2
-
-                    text-xs
-                    font-medium
-
-                    text-[var(--text)]
-                  "
+              <p className="mt-1 max-w-[240px] text-sm text-[var(--text-secondary)]">
+                Add books from their detail pages to build
+                this collection.
+              </p>
+            </div>
+          ) : (
+            <div
+              className="
+                grid
+                grid-cols-3
+                gap-4
+                sm:gap-5
+              "
+            >
+              {collection.books.map((book) => (
+                <div
+                  key={book.id}
+                  className="group relative"
                 >
-                  {book.title}
-                </p>
-              </button>
-            ))}
-          </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      navigate(`/book/${book.id}`);
+                    }}
+                    className="
+                      flex
+                      w-full
+                      flex-col
+                      items-center
+                      text-center
+                    "
+                  >
+                    <img
+                      src={book.coverUrl}
+                      alt={book.title}
+                      className="
+                        aspect-[2/3]
+                        w-full
+                        rounded-xl
+                        object-cover
+                        shadow-md
+                        transition-all
+                        duration-300
+                        group-hover:-translate-y-1
+                        group-hover:shadow-xl
+                      "
+                    />
+
+                    <p
+                      className="
+                        mt-2
+                        line-clamp-2
+                        text-xs
+                        font-medium
+                        text-[var(--text)]
+                      "
+                    >
+                      {book.title}
+                    </p>
+                  </button>
+
+                  {/* REMOVE */}
+
+                  <button
+                    type="button"
+                    disabled={isRemovingBook}
+                    onClick={() =>
+                      handleRemove(book.id)
+                    }
+                    className="
+                      absolute
+                      right-1
+                      top-1
+                      flex
+                      h-7
+                      w-7
+                      items-center
+                      justify-center
+                      rounded-full
+                      bg-white/95
+                      text-stone-500
+                      opacity-0
+                      shadow-md
+                      transition-all
+                      group-hover:opacity-100
+                      hover:bg-red-50
+                      hover:text-red-600
+                      disabled:opacity-40
+                    "
+                    aria-label={`Remove ${book.title}`}
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </Card>
     </div>
