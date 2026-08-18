@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Check, ChevronDown, Plus } from "lucide-react";
 import type { Book } from "../../../types/book";
 import { useCollections } from "../../../hooks/useCollections";
-import type { Collection } from "../../../types/collection";
 
 interface Props {
   book: Book;
@@ -26,7 +25,7 @@ export default function CollectionPicker({ book }: Props) {
 
   const isInCollection = (collectionId: string) => {
     const collection = collections.find(
-      (collection: Collection) => collection.id === collectionId,
+      (collection) => collection.id === collectionId,
     );
 
     return collection?.books.some(
@@ -140,7 +139,7 @@ export default function CollectionPicker({ book }: Props) {
                     No collections yet.
                   </p>
                 ) : (
-                  collections.map((collection: Collection) => {
+                  collections.map((collection) => {
                     const selected = isInCollection(collection.id);
                     const busy =
                       (isAddingBook || isRemovingBook) &&
