@@ -4,7 +4,6 @@ import Card from "../../../components/ui/Card";
 import CollectionGrid from "./CollectionGrid";
 import CollectionModal from "../../../modals/CollectionModal";
 import { useCollections } from "../../../hooks/useCollections";
-import type { CollectionWithBooks } from "../../../types/collection";
 
 interface Props {
   className?: string;
@@ -19,8 +18,13 @@ export default function CollectionsCard({
 }: Props) {
   const { collections, isLoading } = useCollections();
 
-  const [selectedCollection, setSelectedCollection] =
-    useState<CollectionWithBooks | null>(null);
+  const [selectedCollectionId, setSelectedCollectionId] = useState<
+    string | null
+  >(null);
+
+  const selectedCollection = selectedCollectionId
+    ? (collections.find((c) => c.id === selectedCollectionId) ?? null)
+    : null;
 
   if (isLoading) {
     return (
@@ -160,7 +164,9 @@ export default function CollectionsCard({
             <div className="h-full overflow-y-auto overflow-x-hidden scrollbar-hidden">
               <CollectionGrid
                 collections={collections}
-                onCollectionClick={setSelectedCollection}
+                onCollectionClick={(collection) =>
+                  setSelectedCollectionId(collection.id)
+                }
               />
             </div>
 
@@ -183,8 +189,9 @@ export default function CollectionsCard({
 
       {selectedCollection && (
         <CollectionModal
+          key={selectedCollection.id}
           collection={selectedCollection}
-          onClose={() => setSelectedCollection(null)}
+          onClose={() => setSelectedCollectionId(null)}
         />
       )}
     </>

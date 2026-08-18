@@ -11,10 +11,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function CollectionModal({
-  collection,
-  onClose,
-}: Props) {
+export default function CollectionModal({ collection, onClose }: Props) {
   const navigate = useNavigate();
 
   const {
@@ -40,7 +37,7 @@ export default function CollectionModal({
     setEditingName(false);
   }
 
-  async function handleRemove(bookId: number) {
+  async function handleRemove(bookId: string) {
     await removeBookFromCollection({
       collectionId: collection.id,
       bookId,
@@ -90,10 +87,7 @@ export default function CollectionModal({
         <div className="mb-4 flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <Library
-                size={18}
-                className="shrink-0 text-[var(--brown-700)]"
-              />
+              <Library size={18} className="shrink-0 text-[var(--brown-700)]" />
 
               {!editingName ? (
                 <h2 className="truncate font-heading text-xl font-bold text-[var(--text)]">
@@ -103,9 +97,7 @@ export default function CollectionModal({
                 <input
                   autoFocus
                   value={name}
-                  onChange={(event) =>
-                    setName(event.target.value)
-                  }
+                  onChange={(event) => setName(event.target.value)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") {
                       handleRename();
@@ -157,9 +149,7 @@ export default function CollectionModal({
 
             <p className="mt-3 text-sm text-[var(--text-secondary)]">
               {collection.books.length}{" "}
-              {collection.books.length === 1
-                ? "Book"
-                : "Books"}
+              {collection.books.length === 1 ? "Book" : "Books"}
             </p>
           </div>
 
@@ -263,8 +253,7 @@ export default function CollectionModal({
               </h3>
 
               <p className="mt-1 max-w-[240px] text-sm text-[var(--text-secondary)]">
-                Add books from their detail pages to build
-                this collection.
+                Add books from their detail pages to build this collection.
               </p>
             </div>
           ) : (
@@ -277,10 +266,7 @@ export default function CollectionModal({
               "
             >
               {collection.books.map((book) => (
-                <div
-                  key={book.id}
-                  className="group relative"
-                >
+                <div key={book.id} className="group relative">
                   <button
                     type="button"
                     onClick={() => {
@@ -329,9 +315,7 @@ export default function CollectionModal({
                   <button
                     type="button"
                     disabled={isRemovingBook}
-                    onClick={() =>
-                      handleRemove(book.id)
-                    }
+                    onClick={() => handleRemove(book.id)}
                     className="
                       absolute
                       right-1
