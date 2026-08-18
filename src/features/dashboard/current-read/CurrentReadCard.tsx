@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Bookmark } from "lucide-react";
+import { useNavigate } from "react-router";
+import { Bookmark, BookMarked } from "lucide-react";
 
 import { useCurrentRead } from "../../../hooks/useCurrentRead";
 import Card from "../../../components/ui/Card";
@@ -13,6 +14,7 @@ interface CurrentReadProps {
 
 export default function CurrentReadingCard({ className }: CurrentReadProps) {
   const { books, isLoading } = useCurrentRead();
+  const navigate = useNavigate();
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -20,10 +22,7 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
     return <Card>Loading...</Card>;
   }
 
-  if (books.length === 0) {
-    return <Card>No current book.</Card>;
-  }
-
+  const hasBooks = books.length > 0;
   const currentBook = books[currentIndex];
 
   return (
@@ -67,42 +66,122 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
           </h3>
         </div>
 
-        <span
-          className="
-      rounded-full
-      bg-[var(--stone-100)]
+        {/*only show the count once there's one worth showing */}
+        {hasBooks && (
+          <span
+            className="
+              rounded-full
+              bg-[var(--stone-100)]
 
-      px-2
-      py-0.5
+              px-2
+              py-0.5
 
-      text-[10px]
-      font-medium
-      uppercase
-      tracking-[0.18em]
+              text-[10px]
+              font-medium
+              uppercase
+              tracking-[0.18em]
 
-      text-[var(--text-secondary)]
+              text-[var(--text-secondary)]
 
-      lg:px-2.5
-      lg:py-1
-      lg:text-[11px]
-    "
-        >
-          {books.length}
-        </span>
+              lg:px-2.5
+              lg:py-1
+              lg:text-[11px]
+            "
+          >
+            {books.length}
+          </span>
+        )}
       </header>
 
-      <CurrentReadEmbla
-        books={books}
-        currentIndex={currentIndex}
-        onSelect={setCurrentIndex}
-      />
+      {hasBooks ? (
+        <>
+          <CurrentReadEmbla
+            books={books}
+            currentIndex={currentIndex}
+            onSelect={setCurrentIndex}
+          />
 
-      {/* Bottom */}
-      <div className="mt-auto space-y-3 pt-1 lg:space-y-2 lg:pt-2">
-        <CurrentReadProgress book={currentBook} />
+          {/* Bottom */}
+          <div className="mt-auto space-y-3 pt-1 lg:space-y-2 lg:pt-2">
+            <CurrentReadProgress book={currentBook} />
 
-        <CurrentReadDetails book={currentBook} />
-      </div>
+            <CurrentReadDetails book={currentBook} />
+          </div>
+        </>
+      ) : (
+        /* Empty state */
+        <div
+          className="
+            flex
+            flex-1
+            flex-col
+            items-center
+            justify-center
+            gap-3
+
+            py-4
+
+            text-center
+          "
+        >
+          <div
+            className="
+              flex
+              h-11
+              w-11
+              items-center
+              justify-center
+
+              rounded-full
+              bg-[var(--stone-100)]
+
+              text-[var(--brown-500)]
+
+              lg:h-14
+              lg:w-14
+            "
+          >
+            <BookMarked size={18} className="lg:hidden" />
+            <BookMarked size={22} className="hidden lg:block" />
+          </div>
+
+          <div className="space-y-1">
+            <p className="font-heading text-sm font-semibold text-[var(--text)] lg:text-base">
+              Nothing in progress
+            </p>
+            <p className="mx-auto max-w-[200px] text-xs text-[var(--text-secondary)] lg:text-sm">
+              Add a book and mark it as current to see it here.
+            </p>
+          </div>
+
+          <button
+            onClick={() => navigate("/search")}
+            className="
+              mt-1
+
+              rounded-full
+              border
+              border-[var(--border)]
+              bg-white
+
+              px-4
+              py-1.5
+
+              text-xs
+              font-medium
+              text-[var(--text)]
+
+              transition-all
+              hover:border-[var(--brown-500)]
+              hover:bg-[var(--stone-100)]
+
+              lg:text-sm
+            "
+          >
+            Find a book
+          </button>
+        </div>
+      )}
     </Card>
   );
 }
