@@ -8,8 +8,13 @@ interface Props {
 }
 
 export default function CollectionPicker({ book }: Props) {
-  const { collections, isLoading, createCollection, addBookToCollection } =
-    useCollections();
+  const {
+    collections,
+    isLoading,
+    createCollection,
+    addBookToCollection,
+    isAddingBook,
+  } = useCollections();
 
   const [open, setOpen] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -28,7 +33,6 @@ export default function CollectionPicker({ book }: Props) {
 
   async function handleAdd(collectionId: string) {
     if (isInCollection(collectionId)) {
-      setOpen(false);
       return;
     }
 
@@ -41,6 +45,8 @@ export default function CollectionPicker({ book }: Props) {
       });
 
       setOpen(false);
+    } catch (error) {
+      console.error("Failed to add book to collection:", error);
     } finally {
       setBusyId(null);
     }
@@ -63,7 +69,7 @@ export default function CollectionPicker({ book }: Props) {
       setCreating(false);
       setOpen(false);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to create collection:", error);
     }
   }
 
@@ -132,28 +138,29 @@ export default function CollectionPicker({ book }: Props) {
                 ) : (
                   collections.map((collection) => {
                     const selected = isInCollection(collection.id);
-                    const busy = busyId === collection.id;
+                    const busy = isAddingBook && busyId === collection.id;
 
                     return (
                       <button
                         key={collection.id}
                         type="button"
-                        disabled={busy}
+                        disabled={isAddingBook}
                         onClick={() => handleAdd(collection.id)}
                         className="
-                          flex
-                          w-full
-                          items-center
-                          justify-between
-                          gap-3
-                          px-4
-                          py-3
-                          text-left
-                          text-sm
-                          transition-colors
-                          hover:bg-stone-100
-                          disabled:opacity-50
-                        "
+        flex
+        w-full
+        items-center
+        justify-between
+        gap-3
+        px-4
+        py-3
+        text-left
+        text-sm
+        transition-colors
+        hover:bg-stone-100
+        disabled:cursor-not-allowed
+        disabled:opacity-50
+      "
                       >
                         <span
                           className={
@@ -165,7 +172,7 @@ export default function CollectionPicker({ book }: Props) {
                           {collection.name}
                         </span>
 
-                        {selected && (
+                        {selected && !busy && (
                           <Check size={16} className="text-green-600" />
                         )}
 

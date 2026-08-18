@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   getCollectionsWithBooks,
@@ -16,6 +20,11 @@ export function useCollections() {
     queryFn: getCollectionsWithBooks,
   });
 
+
+  // ─────────────────────────────────────────
+  // CREATE
+  // ─────────────────────────────────────────
+
   const createMutation = useMutation({
     mutationFn: createCollection,
 
@@ -26,6 +35,11 @@ export function useCollections() {
     },
   });
 
+
+  // ─────────────────────────────────────────
+  // ADD BOOK
+  // ─────────────────────────────────────────
+
   const addBookMutation = useMutation({
     mutationFn: ({
       collectionId,
@@ -33,7 +47,8 @@ export function useCollections() {
     }: {
       collectionId: string;
       bookId: string;
-    }) => addBookToCollection(collectionId, bookId),
+    }) =>
+      addBookToCollection(collectionId, bookId),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -41,6 +56,11 @@ export function useCollections() {
       });
     },
   });
+
+
+  // ─────────────────────────────────────────
+  // REMOVE BOOK
+  // ─────────────────────────────────────────
 
   const removeBookMutation = useMutation({
     mutationFn: ({
@@ -49,7 +69,8 @@ export function useCollections() {
     }: {
       collectionId: string;
       bookId: string;
-    }) => removeBookFromCollection(collectionId, bookId),
+    }) =>
+      removeBookFromCollection(collectionId, bookId),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -57,6 +78,11 @@ export function useCollections() {
       });
     },
   });
+
+
+  // ─────────────────────────────────────────
+  // RENAME
+  // ─────────────────────────────────────────
 
   const renameMutation = useMutation({
     mutationFn: ({
@@ -65,7 +91,8 @@ export function useCollections() {
     }: {
       collectionId: string;
       name: string;
-    }) => renameCollection(collectionId, name),
+    }) =>
+      renameCollection(collectionId, name),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -73,6 +100,7 @@ export function useCollections() {
       });
     },
   });
+
 
   return {
     ...query,
@@ -83,11 +111,11 @@ export function useCollections() {
     createCollection: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
 
-    // Add book
+    // Add
     addBookToCollection: addBookMutation.mutateAsync,
     isAddingBook: addBookMutation.isPending,
 
-    // Remove book
+    // Remove
     removeBookFromCollection: removeBookMutation.mutateAsync,
     isRemovingBook: removeBookMutation.isPending,
 
