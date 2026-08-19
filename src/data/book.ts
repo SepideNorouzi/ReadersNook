@@ -21,6 +21,7 @@ const createBook = ({
   rating: number;
 }): Book => ({
   id,
+
   title,
   author,
   summary,
@@ -38,17 +39,21 @@ const createBook = ({
   quotes: [
     {
       id: `${id}-1`,
+      bookId: id,
       text: "The smallest choices shape the largest stories.",
       page: Math.floor(totalPages * 0.25),
       favorite: true,
       createdAt: "2026-07-01",
+      updatedAt: "2026-07-01",
     },
     {
       id: `${id}-2`,
+      bookId: id,
       text: "Every page changes the reader a little.",
       page: Math.floor(totalPages * 0.65),
       favorite: false,
       createdAt: "2026-07-05",
+      updatedAt: "2026-07-05",
     },
   ],
 });
@@ -379,8 +384,7 @@ export const books: Book[] = [
     id: "30",
     title: "Sapiens",
     author: "Yuval Noah Harari",
-    summary:
-      "A sweeping history of humankind from foragers to the modern age.",
+    summary: "A sweeping history of humankind from foragers to the modern age.",
     currentPage: 443,
     totalPages: 443,
     status: "read",
