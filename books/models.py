@@ -67,7 +67,7 @@ class Quote(models.Model):
 
 class AestheticPhoto(models.Model):
     book = models.ForeignKey(
-        Book, related_name="aesthetic_images", on_delete=models.CASCADE
+        Book, related_name="aesthetic_photos", on_delete=models.CASCADE
     )
     image_url = models.URLField(max_length=500)
     caption = models.CharField(max_length=255, blank=True)

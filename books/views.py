@@ -2,12 +2,13 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly , IsAuthenticated
 from django.db.models import Prefetch
-from .models import Book , Quote
+from .models import AestheticPhoto, Book , Quote
 from .serializers import (BookCreateSerializer,
                            BookSerializer ,
                            BookDetailSerializer ,
                            QuoteSerializer ,
-                           QuoteCreateSerializer
+                           QuoteCreateSerializer,
+                           AestheticPhotoSerializer,
 )
 
 @extend_schema_view(
@@ -42,8 +43,9 @@ class BookListAPIView(generics.ListAPIView):
 )
 class BookDetailAPIView(generics.RetrieveAPIView):
     queryset = Book.objects.prefetch_related(
-    Prefetch("quotes", queryset=Quote.objects.select_related("created_by"))
-)
+        Prefetch("quotes", queryset=Quote.objects.select_related("created_by")),
+        "aesthetic_photos",
+    )
     serializer_class = BookDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -120,3 +122,19 @@ class QuoteUpdateAPIView(generics.UpdateAPIView):
         return Quote.objects.filter(
             created_by=self.request.user, book_id=self.kwargs["pk"]
         )
+
+
+@extend_schema_view(
+    post=extend_schema(
+        tags=["Aesthetic Photos"],
+        summary="Create an aesthetic photo",
+    )
+)
+class AestheticPhotoCreateAPIView(generics.CreateAPIView):
+    queryset = AestheticPhoto.objects.all()
+    serializer_class = AestheticPhotoSerializer
+    permission_classes = [IsAdminUser]
+
+    def perform_create(self, serializer):
+        book = generics.get_object_or_404(Book, pk=self.kwargs["pk"])
+        serializer.save(book=book)

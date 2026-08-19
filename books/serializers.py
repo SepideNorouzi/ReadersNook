@@ -1,12 +1,18 @@
 from rest_framework import serializers
 
-from .models import Book, Quote
+from .models import AestheticPhoto, Book, Quote
 
 
 class QuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quote
         fields = "__all__"
+        read_only_fields = ("id", "created_at", "updated_at", "created_by")
+
+class ShortQuoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quote
+        fields = ("id", "book", "text", "page", "favorite" , "created_by")
         read_only_fields = ("id", "created_at", "updated_at", "created_by")
 
 class QuoteCreateSerializer(QuoteSerializer):
@@ -57,17 +63,23 @@ class BookCreateSerializer(BookSerializer):
         fields = ("id", "title", "author", "summary", "cover_url", "total_pages")
         read_only_fields = ("id",)
 
+
+class AestheticPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AestheticPhoto
+        fields = ("id", "book", "image_url", "caption" , "order")
+        read_only_fields = ("id", "created_at")
+
+
 class BookDetailSerializer(BookSerializer):
-    quotes = QuoteSerializer(many=True, read_only=True)
+    quotes = ShortQuoteSerializer(many=True, read_only=True)
+    aesthetic_photos = AestheticPhotoSerializer(many=True, read_only=True)
 
     class Meta(BookSerializer.Meta):
         model = Book
         fields = (
             "id", "title", "author", "summary", "cover_url",
             "current_page", "total_pages", "status", "rating",
-            "created_at", "updated_at", "quotes",
+            "created_at", "updated_at", "quotes", "aesthetic_photos",
         )
         read_only_fields = ("id", "created_at", "updated_at")
-
-
-

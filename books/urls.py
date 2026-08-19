@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    AestheticPhotoCreateAPIView,
     BookCreateAPIView,
     BookDetailAPIView,
     BookListAPIView,
@@ -20,4 +21,5 @@ urlpatterns = [
     path("<int:pk>/quotes/", QuoteListAPIView.as_view(), name="quote-list"),
     path("<int:pk>/quotes/create/", QuoteCreateAPIView.as_view(), name="quote-create"),
     path("<int:pk>/quotes/<int:quote_pk>/update/", QuoteUpdateAPIView.as_view(), name="quote-update"),
+    path("<int:pk>/aesthetic_photos/create/", AestheticPhotoCreateAPIView.as_view(), name="aesthetic-photo-create"),
 ]
