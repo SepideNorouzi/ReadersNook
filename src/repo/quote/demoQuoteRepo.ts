@@ -17,12 +17,16 @@ export const demoQuoteRepo = {
           page: number;
         };
       }) => {
+        const now = new Date().toISOString();
+        
         const newQuote: Quote = {
           id: crypto.randomUUID(),
           text: quote.text,
           page: quote.page,
           favorite: false,
-          createdAt: new Date().toISOString(),
+          createdAt: now,
+          updatedAt: now,
+          bookId,
         };
 
         useBookStore.getState().updateBook(bookId, {

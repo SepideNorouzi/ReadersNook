@@ -5,29 +5,29 @@ import { adminQuoteRepo } from "./adminQuoteRepo";
 
 export const quoteRepository = {
   useCreateQuote() {
-    const mode = useModeStore((state) => state.mode);
+    const mode = useModeStore((s) => s.mode);
 
-    const demoMutation = demoQuoteRepo.useCreateQuote();
-    const adminMutation = adminQuoteRepo.useCreateQuote();
+    const demo = demoQuoteRepo.useCreateQuote();
+    const admin = adminQuoteRepo.useCreateQuote();
 
-    return mode === "demo" ? demoMutation : adminMutation;
+    return mode === "demo" ? demo : admin;
   },
 
   useUpdateQuote() {
-    const mode = useModeStore((state) => state.mode);
+    const mode = useModeStore((s) => s.mode);
 
-    const demoMutation = demoQuoteRepo.useUpdateQuote();
-    const adminMutation = adminQuoteRepo.useUpdateQuote();
+    const demo = demoQuoteRepo.useUpdateQuote();
+    const admin = adminQuoteRepo.useUpdateQuote();
 
-    return mode === "demo" ? demoMutation : adminMutation;
+    return mode === "demo" ? demo : admin;
   },
 
   useDeleteQuote() {
-    const mode = useModeStore((state) => state.mode);
+    const mode = useModeStore((s) => s.mode);
 
-    const demoMutation = demoQuoteRepo.useDeleteQuote();
-    const adminMutation = adminQuoteRepo.useDeleteQuote();
+    const demo = demoQuoteRepo.useDeleteQuote();
+    const admin = adminQuoteRepo.useDeleteQuote();
 
-    return mode === "demo" ? demoMutation : adminMutation;
+    return mode === "demo" ? demo : admin;
   },
 };

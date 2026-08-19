@@ -1,16 +1,13 @@
-import {
-  useAdminCreateQuote,
-  useAdminUpdateQuote,
-  useAdminDeleteQuote,
-} from "../repo/quote/adminQuoteRepo";
-export { useBookQuotes } from "./useBookQuotes";
+import { quoteRepository } from "../repo/quote/quoteRepo";
 
 export function useCreateQuote() {
-  return useAdminCreateQuote();
+  return quoteRepository.useCreateQuote();
 }
+
 export function useUpdateQuote() {
-  return useAdminUpdateQuote();
+  return quoteRepository.useUpdateQuote();
 }
+
 export function useDeleteQuote() {
-  return useAdminDeleteQuote();
+  return quoteRepository.useDeleteQuote();
 }
