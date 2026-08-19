@@ -3,6 +3,21 @@ from rest_framework import serializers
 from .models import Book, Quote
 
 
+class QuoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quote
+        fields = "__all__"
+        read_only_fields = ("id", "created_at", "updated_at", "created_by")
+
+class QuoteCreateSerializer(QuoteSerializer):
+    class Meta(QuoteSerializer.Meta):
+        read_only_fields = QuoteSerializer.Meta.read_only_fields + ("book",)
+
+    def create(self, validated_data):
+        validated_data["created_by"] = self.context["request"].user
+        return super().create(validated_data)
+
+
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
@@ -39,19 +54,20 @@ class BookSerializer(serializers.ModelSerializer):
 
 class BookCreateSerializer(BookSerializer):
     class Meta(BookSerializer.Meta):
-        pass
+        fields = ("id", "title", "author", "summary", "cover_url", "total_pages")
+        read_only_fields = ("id",)
+
+class BookDetailSerializer(BookSerializer):
+    quotes = QuoteSerializer(many=True, read_only=True)
+
+    class Meta(BookSerializer.Meta):
+        model = Book
+        fields = (
+            "id", "title", "author", "summary", "cover_url",
+            "current_page", "total_pages", "status", "rating",
+            "created_at", "updated_at", "quotes",
+        )
+        read_only_fields = ("id", "created_at", "updated_at")
 
 
-class QuoteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Quote
-        fields = "__all__"
-        read_only_fields = ("id", "created_at", "updated_at", "created_by")
 
-class QuoteCreateSerializer(QuoteSerializer):
-    class Meta(QuoteSerializer.Meta):
-        pass
-
-    def create(self, validated_data):
-        validated_data["created_by"] = self.context["request"].user
-        return super().create(validated_data)

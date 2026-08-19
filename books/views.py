@@ -1,10 +1,14 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly , IsAuthenticated
-
+from django.db.models import Prefetch
 from .models import Book , Quote
-from .serializers import BookCreateSerializer, BookSerializer , QuoteSerializer , QuoteCreateSerializer
-
+from .serializers import (BookCreateSerializer,
+                           BookSerializer ,
+                           BookDetailSerializer ,
+                           QuoteSerializer ,
+                           QuoteCreateSerializer
+)
 
 @extend_schema_view(
     post=extend_schema(
@@ -37,8 +41,10 @@ class BookListAPIView(generics.ListAPIView):
     )
 )
 class BookDetailAPIView(generics.RetrieveAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
+    queryset = Book.objects.prefetch_related(
+    Prefetch("quotes", queryset=Quote.objects.select_related("created_by"))
+)
+    serializer_class = BookDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
@@ -73,6 +79,10 @@ class QuoteCreateAPIView(generics.CreateAPIView):
     serializer_class = QuoteCreateSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        book = generics.get_object_or_404(Book, pk=self.kwargs["pk"])
+        serializer.save(book=book)
+
 
 @extend_schema_view(
     get=extend_schema(
@@ -85,7 +95,9 @@ class QuoteListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
         user = self.request.user
-        queryset = Quote.objects.filter(created_by=user)
+        queryset = Quote.objects.filter(
+            created_by=user, book_id=self.kwargs["pk"]
+        )
         return queryset
 
 
@@ -102,6 +114,9 @@ class QuoteListAPIView(generics.ListAPIView):
 class QuoteUpdateAPIView(generics.UpdateAPIView):
     serializer_class = QuoteSerializer
     permission_classes = [IsAuthenticated]
+    lookup_url_kwarg = "quote_pk"
 
     def get_queryset(self):
-        return Quote.objects.filter(created_by=self.request.user)
+        return Quote.objects.filter(
+            created_by=self.request.user, book_id=self.kwargs["pk"]
+        )
