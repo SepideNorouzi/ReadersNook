@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createQuote, updateQuote, deleteQuote } from "../../services/quotes";
 import type { Quote } from "../../types/quote";
-
-const BOOKS_KEY = ["books"];
+import { BOOKS_KEY } from "../book/bookRepo";
 
 export function useAdminCreateQuote() {
   const queryClient = useQueryClient();
