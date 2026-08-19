@@ -7,11 +7,12 @@ import {
   removeBookFromCollection,
   renameCollection,
 } from "../../services/collection";
+import { COLLECTION_KEY } from "./collectionRepo";
 
 export const adminCollectionRepo = {
   useCollections(isAdmin: boolean) {
     return useQuery({
-      queryKey: ["collections"],
+      queryKey: COLLECTION_KEY,
       queryFn: getCollectionsWithBooks,
       enabled: isAdmin,
     });
@@ -25,7 +26,7 @@ export const adminCollectionRepo = {
 
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["collections"],
+          queryKey: COLLECTION_KEY,
         });
       },
     });
@@ -45,7 +46,7 @@ export const adminCollectionRepo = {
 
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["collections"],
+          queryKey: COLLECTION_KEY,
         });
       },
     });
@@ -65,7 +66,7 @@ export const adminCollectionRepo = {
 
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["collections"],
+          queryKey: COLLECTION_KEY,
         });
       },
     });
@@ -85,7 +86,7 @@ export const adminCollectionRepo = {
 
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["collections"],
+          queryKey: COLLECTION_KEY,
         });
       },
     });

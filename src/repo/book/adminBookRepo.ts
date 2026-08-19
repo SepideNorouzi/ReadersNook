@@ -7,8 +7,7 @@ import {
   deleteBook,
 } from "../../services/books";
 import type { Book } from "../../types/book";
-
-const BOOKS_KEY = ["books"];
+import { BOOKS_KEY } from "./bookRepo";
 
 export const adminBookRepo = {
   async getAll() {

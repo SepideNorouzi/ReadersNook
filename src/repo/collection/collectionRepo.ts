@@ -3,6 +3,8 @@ import { useModeStore } from "../../store/modeStore";
 import { demoCollectionRepo } from "./demoCollectionRepo";
 import { adminCollectionRepo } from "./adminCollectionRepo";
 
+export const COLLECTION_KEY = ["collections"];
+
 export const collectionRepository = {
   useCollections() {
     const mode = useModeStore((state) => state.mode);
