@@ -1,9 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { getQuotes } from "../services/quotes";
+import {
+  useAdminCreateQuote,
+  useAdminUpdateQuote,
+  useAdminDeleteQuote,
+} from "../repo/quote/adminQuoteRepo";
+export { useBookQuotes } from "./useBookQuotes";
 
-export function useQuotes() {
-  return useQuery({
-    queryKey: ["quotes"],
-    queryFn: getQuotes,
-  });
+export function useCreateQuote() {
+  return useAdminCreateQuote();
+}
+export function useUpdateQuote() {
+  return useAdminUpdateQuote();
+}
+export function useDeleteQuote() {
+  return useAdminDeleteQuote();
 }
