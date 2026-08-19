@@ -1,10 +1,11 @@
 import type { Book } from "../types/book";
 import type { ApiBook, ApiBookPayload } from "../types/api/apiBook";
+import { mapApiQuoteToQuote } from "./MapApiToQuote";
 
 /** Django Book -> app-internal Book. */
 export function mapApiBookToBook(apiBook: ApiBook): Book {
   return {
-    id: String(apiBook.id), // number -> string at the boundary
+    id: String(apiBook.id),
     title: apiBook.title,
     author: apiBook.author,
     summary: apiBook.summary,
@@ -14,10 +15,7 @@ export function mapApiBookToBook(apiBook: ApiBook): Book {
     status: apiBook.status,
     rating: apiBook.rating,
     addedAt: apiBook.created_at,
-
-    // Not modeled on the backend yet — safe defaults so nothing
-    // downstream has to guard against undefined arrays.
-    quotes: [],
+    quotes: apiBook.quotes.map(mapApiQuoteToQuote),
     aestheticImages: [],
     genres: [],
     sourceId: undefined,
