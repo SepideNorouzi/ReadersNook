@@ -4,4 +4,6 @@ export interface Quote {
   page: number;
   favorite: boolean;
   createdAt: string;
+  updatedAt: string;
+  bookId: string;
 }
