@@ -1,38 +1,42 @@
 import { apiFetch } from "../lib/apiClient";
-import { mapApiBookToBook, mapBookToApiPayload } from "../mappers/MapApiToBook";
+import {
+  mapApiBookSummaryToBook,
+  mapApiBookDetailToBook,
+  mapBookToCreatePayload,
+  mapBookToUpdatePayload,
+} from "../mappers/MapApiToBook";
 import type { Book } from "../types/book";
-import type { ApiBook } from "../types/api/apiBook";
+import type { ApiBookSummary, ApiBookDetail } from "../types/api/apiBook";
 
 export async function getBooks(): Promise<Book[]> {
-  const apiBooks = await apiFetch<ApiBook[]>("/books/");
-  return apiBooks.map(mapApiBookToBook);
+  const apiBooks = await apiFetch<ApiBookSummary[]>("/books/");
+  return apiBooks.map(mapApiBookSummaryToBook);
 }
 
 export async function getBook(id: string): Promise<Book> {
-  const apiBook = await apiFetch<ApiBook>(`/books/${id}/`);
-  return mapApiBookToBook(apiBook);
+  const apiBook = await apiFetch<ApiBookDetail>(`/books/${id}/`);
+  return mapApiBookDetailToBook(apiBook);
 }
 
 export async function createBook(
   book: Omit<Book, "id" | "addedAt">,
 ): Promise<Book> {
-  const apiBook = await apiFetch<ApiBook>("/books/create/", {
+  const apiBook = await apiFetch<ApiBookSummary>("/books/create/", {
     method: "POST",
-    body: mapBookToApiPayload(book),
+    body: mapBookToCreatePayload(book),
   });
-  return mapApiBookToBook(apiBook);
+  return mapApiBookSummaryToBook(apiBook);
 }
 
 export async function updateBook(
   id: string,
   changes: Partial<Book>,
 ): Promise<Book> {
-  // PATCH, not PUT.
-  const apiBook = await apiFetch<ApiBook>(`/books/${id}/update/`, {
+  const apiBook = await apiFetch<ApiBookSummary>(`/books/${id}/update/`, {
     method: "PATCH",
-    body: mapBookToApiPayload(changes),
+    body: mapBookToUpdatePayload(changes),
   });
-  return mapApiBookToBook(apiBook);
+  return mapApiBookSummaryToBook(apiBook);
 }
 
 export async function deleteBook(id: string): Promise<void> {
