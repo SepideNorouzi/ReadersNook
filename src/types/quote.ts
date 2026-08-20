@@ -3,7 +3,7 @@ export interface Quote {
   text: string;
   page: number;
   favorite: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string; // undefined for quotes nested in GET /books/{id}/
+  updatedAt?: string;
   bookId: string;
 }
