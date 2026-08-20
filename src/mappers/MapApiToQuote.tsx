@@ -1,6 +1,9 @@
-// mappers/mapApiToQuote.ts
 import type { Quote } from "../types/quote";
-import type { ApiQuote, ApiQuotePayload } from "../types/api/apiQuote";
+import type {
+  ApiQuote,
+  ApiQuoteNested,
+  ApiQuotePayload,
+} from "../types/api/apiQuote";
 
 export function mapApiQuoteToQuote(apiQuote: ApiQuote): Quote {
   return {
@@ -14,7 +17,19 @@ export function mapApiQuoteToQuote(apiQuote: ApiQuote): Quote {
   };
 }
 
-// Full payload — used only for CREATE, where every field is required.
+// For quotes nested inside GET /books/{id}/. No timestamps to map.
+export function mapApiQuoteNestedToQuote(apiQuote: ApiQuoteNested): Quote {
+  return {
+    id: String(apiQuote.id),
+    text: apiQuote.text,
+    page: apiQuote.page,
+    favorite: apiQuote.favorite,
+    createdAt: undefined,
+    updatedAt: undefined,
+    bookId: String(apiQuote.book),
+  };
+}
+
 export function mapQuoteToCreatePayload(quote: {
   text: string;
   page: number;
@@ -28,8 +43,6 @@ export function mapQuoteToCreatePayload(quote: {
   };
 }
 
-// "only include what changed" approach so a favorite-toggle doesn't
-// accidentally overwrite text/page with stale values.
 export function mapQuoteToUpdatePayload(
   changes: Partial<Pick<Quote, "text" | "page" | "favorite">>,
 ): Partial<ApiQuotePayload> {
