@@ -5,11 +5,14 @@ export type ApiQuote = {
   favorite: boolean;
   created_at: string;
   updated_at: string;
-  book: number; // which book this quote belongs to
+  book: number;
   created_by: number;
 };
 
-// What create/update actually send. Not the same shape as ApiQuote
+// Quotes as they appear NESTED inside GET /books/{id}/ — same fields
+// as ApiQuote minus created_at/updated_at
+export type ApiQuoteNested = Omit<ApiQuote, "created_at" | "updated_at">;
+
 export type ApiQuotePayload = {
   text: string;
   page: number;
