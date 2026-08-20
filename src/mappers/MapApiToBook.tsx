@@ -1,9 +1,14 @@
 import type { Book } from "../types/book";
-import type { ApiBook, ApiBookPayload } from "../types/api/apiBook";
-import { mapApiQuoteToQuote } from "./MapApiToQuote";
+import type {
+  ApiBookSummary,
+  ApiBookDetail,
+  ApiBookCreatePayload,
+  ApiBookUpdatePayload,
+} from "../types/api/apiBook";
+import { mapApiQuoteNestedToQuote } from "./MapApiToQuote";
 
-/** Django Book -> app-internal Book. */
-export function mapApiBookToBook(apiBook: ApiBook): Book {
+/** list/create/update response -> Book. No quotes/photos at this shape. */
+export function mapApiBookSummaryToBook(apiBook: ApiBookSummary): Book {
   return {
     id: String(apiBook.id),
     title: apiBook.title,
@@ -15,30 +20,49 @@ export function mapApiBookToBook(apiBook: ApiBook): Book {
     status: apiBook.status,
     rating: apiBook.rating,
     addedAt: apiBook.created_at,
-    quotes: apiBook.quotes.map(mapApiQuoteToQuote),
+    quotes: [],
     aestheticImages: [],
     genres: [],
     sourceId: undefined,
   };
 }
 
-/** App-internal Book -> the payload POST/PUT/PATCH expect. */
-export function mapBookToApiPayload(
-  book: Partial<Book>,
-): Partial<ApiBookPayload> {
-  const payload: Partial<ApiBookPayload> = {};
+/** single retrieve response -> Book. Only this shape has real quotes + photos. */
+export function mapApiBookDetailToBook(apiBook: ApiBookDetail): Book {
+  return {
+    ...mapApiBookSummaryToBook(apiBook),
+    quotes: apiBook.quotes.map(mapApiQuoteNestedToQuote),
+    aestheticImages: apiBook.aesthetic_photos
+      .sort((a, b) => a.order - b.order)
+      .map((photo) => photo.image_url),
+  };
+}
 
-  if (book.title !== undefined) payload.title = book.title;
-  if (book.author !== undefined) payload.author = book.author;
-  if (book.summary !== undefined) payload.summary = book.summary;
-  if (book.coverUrl !== undefined) payload.cover_url = book.coverUrl;
-  if (book.currentPage !== undefined) payload.current_page = book.currentPage;
-  if (book.totalPages !== undefined) payload.total_pages = book.totalPages;
-  if (book.status !== undefined) payload.status = book.status;
-  if (book.rating !== undefined) payload.rating = book.rating;
+export function mapBookToCreatePayload(
+  book: Omit<Book, "id" | "addedAt">,
+): ApiBookCreatePayload {
+  return {
+    title: book.title,
+    author: book.author,
+    summary: book.summary,
+    cover_url: book.coverUrl,
+    total_pages: book.totalPages,
+  };
+}
 
-  // quotes/aestheticImages/genres/sourceId intentionally omitted —
-  // the backend has no columns for them, so sending them does nothing useful.
-
+export function mapBookToUpdatePayload(
+  changes: Partial<Book>,
+): Partial<ApiBookUpdatePayload> {
+  const payload: Partial<ApiBookUpdatePayload> = {};
+  if (changes.title !== undefined) payload.title = changes.title;
+  if (changes.author !== undefined) payload.author = changes.author;
+  if (changes.summary !== undefined) payload.summary = changes.summary;
+  if (changes.coverUrl !== undefined) payload.cover_url = changes.coverUrl;
+  if (changes.currentPage !== undefined)
+    payload.current_page = changes.currentPage;
+  if (changes.totalPages !== undefined)
+    payload.total_pages = changes.totalPages;
+  if (changes.status !== undefined) payload.status = changes.status;
+  if (changes.rating !== undefined) payload.rating = changes.rating;
   return payload;
 }
