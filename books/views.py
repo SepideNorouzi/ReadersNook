@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly , IsAuthenticated
 from django.db.models import Prefetch
 from .models import AestheticPhoto, Book , Quote
-from .serializers import (BookCreateSerializer,
+from .serializers import (
                            BookSerializer ,
                            BookDetailSerializer ,
                            QuoteSerializer ,
@@ -19,7 +19,7 @@ from .serializers import (BookCreateSerializer,
 )
 class BookCreateAPIView(generics.CreateAPIView):
     queryset = Book.objects.all()
-    serializer_class = BookCreateSerializer
+    serializer_class = BookSerializer
     permission_classes = [IsAdminUser]
 
 

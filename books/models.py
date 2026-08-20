@@ -26,7 +26,8 @@ class Book(models.Model):
         db_index=True,
     )
     rating = models.FloatField(
-        default=0,
+        null=True,
+        blank=True,
         validators=[MinValueValidator(0), MaxValueValidator(5)],
     )
 

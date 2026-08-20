@@ -57,13 +57,6 @@ class BookSerializer(serializers.ModelSerializer):
 
         return attrs
 
-
-class BookCreateSerializer(BookSerializer):
-    class Meta(BookSerializer.Meta):
-        fields = ("id", "title", "author", "summary", "cover_url", "total_pages")
-        read_only_fields = ("id",)
-
-
 class AestheticPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AestheticPhoto
