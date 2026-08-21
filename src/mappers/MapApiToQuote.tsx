@@ -1,8 +1,10 @@
+// mappers/MapApiToQuote.tsx
 import type { Quote } from "../types/quote";
 import type {
   ApiQuote,
   ApiQuoteNested,
-  ApiQuotePayload,
+  ApiQuoteCreatePayload,
+  ApiQuoteUpdatePayload,
 } from "../types/api/apiQuote";
 
 export function mapApiQuoteToQuote(apiQuote: ApiQuote): Quote {
@@ -30,23 +32,24 @@ export function mapApiQuoteNestedToQuote(apiQuote: ApiQuoteNested): Quote {
   };
 }
 
+// bookId is a function PARAMETER, not a payload field — the caller uses it
+// to build the URL (`/books/${bookId}/quotes/create/`), and it's compile-time
+// impossible for it to leak into the returned body now.
 export function mapQuoteToCreatePayload(quote: {
   text: string;
   page: number;
-  bookId: string;
-}): ApiQuotePayload {
+}): ApiQuoteCreatePayload {
   return {
     text: quote.text,
     page: quote.page,
     favorite: false,
-    book: Number(quote.bookId),
   };
 }
 
 export function mapQuoteToUpdatePayload(
   changes: Partial<Pick<Quote, "text" | "page" | "favorite">>,
-): Partial<ApiQuotePayload> {
-  const payload: Partial<ApiQuotePayload> = {};
+): Partial<ApiQuoteUpdatePayload> {
+  const payload: Partial<ApiQuoteUpdatePayload> = {};
   if (changes.text !== undefined) payload.text = changes.text;
   if (changes.page !== undefined) payload.page = changes.page;
   if (changes.favorite !== undefined) payload.favorite = changes.favorite;
