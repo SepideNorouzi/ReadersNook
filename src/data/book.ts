@@ -1,5 +1,14 @@
 import type { Book } from "../types/book";
 import img1 from "../assets/hero.jpg";
+import { aestheticPhotos } from "./aesthetic";
+
+const imagesByBookId = aestheticPhotos.reduce<Record<string, string[]>>(
+  (acc, photo) => {
+    acc[photo.bookId] = [...(acc[photo.bookId] ?? []), photo.imageUrl];
+    return acc;
+  },
+  {},
+);
 
 const createBook = ({
   id,
@@ -28,7 +37,7 @@ const createBook = ({
 
   coverUrl: img1,
 
-  aestheticImages: [img1, img1, img1],
+  aestheticImages: imagesByBookId[id] ?? [img1],
 
   currentPage,
   totalPages,

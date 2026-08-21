@@ -1,5 +1,4 @@
-// mappers/MapApiToQuote.tsx
-import type { Quote } from "../types/quote";
+import type { Quote, QuoteChanges, QuoteDraft } from "../types/quote";
 import type {
   ApiQuote,
   ApiQuoteNested,
@@ -7,38 +6,33 @@ import type {
   ApiQuoteUpdatePayload,
 } from "../types/api/apiQuote";
 
-export function mapApiQuoteToQuote(apiQuote: ApiQuote): Quote {
+function toQuote(
+  apiQuote: Pick<ApiQuote, "id" | "text" | "page" | "favorite" | "book">,
+  timestamps?: { createdAt?: string; updatedAt?: string },
+): Quote {
   return {
     id: String(apiQuote.id),
     text: apiQuote.text,
-    page: apiQuote.page,
+    page: apiQuote.page ?? 0,
     favorite: apiQuote.favorite,
+    createdAt: timestamps?.createdAt,
+    updatedAt: timestamps?.updatedAt,
+    bookId: String(apiQuote.book),
+  };
+}
+
+export function mapApiQuoteToQuote(apiQuote: ApiQuote): Quote {
+  return toQuote(apiQuote, {
     createdAt: apiQuote.created_at,
     updatedAt: apiQuote.updated_at,
-    bookId: String(apiQuote.book),
-  };
+  });
 }
 
-// For quotes nested inside GET /books/{id}/. No timestamps to map.
 export function mapApiQuoteNestedToQuote(apiQuote: ApiQuoteNested): Quote {
-  return {
-    id: String(apiQuote.id),
-    text: apiQuote.text,
-    page: apiQuote.page,
-    favorite: apiQuote.favorite,
-    createdAt: undefined,
-    updatedAt: undefined,
-    bookId: String(apiQuote.book),
-  };
+  return toQuote(apiQuote);
 }
 
-// bookId is a function PARAMETER, not a payload field — the caller uses it
-// to build the URL (`/books/${bookId}/quotes/create/`), and it's compile-time
-// impossible for it to leak into the returned body now.
-export function mapQuoteToCreatePayload(quote: {
-  text: string;
-  page: number;
-}): ApiQuoteCreatePayload {
+export function mapQuoteToCreatePayload(quote: QuoteDraft): ApiQuoteCreatePayload {
   return {
     text: quote.text,
     page: quote.page,
@@ -47,7 +41,7 @@ export function mapQuoteToCreatePayload(quote: {
 }
 
 export function mapQuoteToUpdatePayload(
-  changes: Partial<Pick<Quote, "text" | "page" | "favorite">>,
+  changes: QuoteChanges,
 ): Partial<ApiQuoteUpdatePayload> {
   const payload: Partial<ApiQuoteUpdatePayload> = {};
   if (changes.text !== undefined) payload.text = changes.text;

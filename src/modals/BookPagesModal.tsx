@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { X, BookOpen } from "lucide-react";
 import type { Book } from "../types/book";
-import { useUpdateBook } from "../hooks/useUpdateBook";
+import { useUpdateBook } from "../hooks/useBooks";
 
 interface Props {
   open: boolean;

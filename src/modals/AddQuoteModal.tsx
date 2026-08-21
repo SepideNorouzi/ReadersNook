@@ -1,16 +1,17 @@
-// AddQuoteModal.tsx
 import { useEffect, useState } from "react";
 import { X, Quote as QuoteIcon } from "lucide-react";
-import type { Quote } from "../types/quote";
+import type { QuoteDraft } from "../types/quote";
 
 interface AddQuoteModalProps {
   onClose: () => void;
-  onSubmit: (quote: Quote) => void;
+  onSubmit: (quote: QuoteDraft) => void;
+  isSubmitting?: boolean;
 }
 
 export default function AddQuoteModal({
   onClose,
   onSubmit,
+  isSubmitting = false,
 }: AddQuoteModalProps) {
   const [text, setText] = useState("");
   const [page, setPage] = useState("");
@@ -35,11 +36,8 @@ export default function AddQuoteModal({
     }
 
     onSubmit({
-      id: crypto.randomUUID(),
       text: trimmed,
-      page: Number(page),
-      favorite: false,
-      createdAt: new Date().toISOString(),
+      page: Number(page) || 0,
     });
 
     setText("");
@@ -194,6 +192,7 @@ export default function AddQuoteModal({
             </button>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="
                 rounded-full
                 bg-gradient-to-r
@@ -207,7 +206,7 @@ export default function AddQuoteModal({
                 hover:opacity-90
               "
             >
-              Save Quote
+              {isSubmitting ? "Saving..." : "Save Quote"}
             </button>
           </div>
         </form>

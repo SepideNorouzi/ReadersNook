@@ -7,13 +7,27 @@ import {
   deleteBook,
 } from "../../services/books";
 import type { Book } from "../../types/book";
-import { BOOKS_KEY } from "./bookRepo";
+import { BOOKS_KEY, bookDetailKey } from "./bookRepo";
+
+function mergeBookIntoList(queryClient: ReturnType<typeof useQueryClient>, book: Book) {
+  queryClient.setQueryData<Book[]>(BOOKS_KEY, (old) => {
+    if (!old) return old;
+    return old.map((item) =>
+      item.id === book.id
+        ? {
+            ...item,
+            quotes: book.quotes,
+            aestheticImages: book.aestheticImages,
+            currentPage: book.currentPage,
+            status: book.status,
+            rating: book.rating,
+          }
+        : item,
+    );
+  });
+}
 
 export const adminBookRepo = {
-  async getAll() {
-    return await getBooks();
-  },
-
   useBooks(enabled = true) {
     const {
       data = [],
@@ -23,18 +37,31 @@ export const adminBookRepo = {
     } = useQuery({
       queryKey: BOOKS_KEY,
       queryFn: getBooks,
-      staleTime: 0, // always refetch on mount
-      enabled, // ← false in demo mode. This is what skips the real
-      // fetch entirely when you're not in admin mode, so a not-yet-
-      // connected backend never gets hit while you're browsing demo data.
+      staleTime: 0,
+      enabled,
       retry: 1,
     });
 
     return { data, isLoading: enabled && isLoading, isError, error };
   },
 
-  async getById(id: string) {
-    return await getBook(id);
+  useBook(id: string | undefined, enabled = true) {
+    const queryClient = useQueryClient();
+    const canFetch = enabled && Boolean(id);
+
+    const { data, isLoading, isError, error } = useQuery({
+      queryKey: bookDetailKey(id ?? ""),
+      queryFn: async () => {
+        const book = await getBook(id as string);
+        mergeBookIntoList(queryClient, book);
+        return book;
+      },
+      enabled: canFetch,
+      staleTime: 0,
+      retry: 1,
+    });
+
+    return { data, isLoading: canFetch && isLoading, isError, error };
   },
 
   useCreateBook() {
@@ -50,7 +77,10 @@ export const adminBookRepo = {
     return useMutation({
       mutationFn: ({ id, changes }: { id: string; changes: Partial<Book> }) =>
         updateBook(id, changes),
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: BOOKS_KEY }),
+      onSuccess: (_book, { id }) => {
+        queryClient.invalidateQueries({ queryKey: BOOKS_KEY });
+        queryClient.invalidateQueries({ queryKey: bookDetailKey(id) });
+      },
     });
   },
 

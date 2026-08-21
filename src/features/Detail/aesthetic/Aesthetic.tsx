@@ -1,7 +1,5 @@
-// features/Detail/aesthetic/Aesthetic.tsx
 import { useEffect, useRef, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
-import { aestheticPhotos } from "../../../data/aesthetic";
 import useScrollFade from "../../../hooks/useScrollFade";
 
 interface LocalPhoto {
@@ -10,18 +8,16 @@ interface LocalPhoto {
 }
 
 interface Props {
-  bookId: string;
+  images: string[];
 }
 
-export default function Aesthetic({ bookId }: Props) {
+export default function Aesthetic({ images }: Props) {
   const [localPhotos, setLocalPhotos] = useState<LocalPhoto[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useScrollFade();
 
-  const bookPhotos = aestheticPhotos.filter((photo) => photo.bookId === bookId);
-
-  const totalCount = localPhotos.length + bookPhotos.length;
+  const totalCount = localPhotos.length + images.length;
 
   useEffect(() => {
     return () => {
@@ -293,10 +289,9 @@ sm:w-7
               </div>
             ))}
 
-            {/* Photos from mock/server data, filtered by this book */}
-            {bookPhotos.map((photo) => (
+            {images.map((url, index) => (
               <div
-                key={photo.id}
+                key={`${url}-${index}`}
                 className="
                 group
                 relative
@@ -319,76 +314,10 @@ lg:rounded-[18px]
               "
               >
                 <img
-                  src={photo.imageUrl}
-                  alt={photo.caption ?? ""}
+                  src={url}
+                  alt=""
                   className="h-full w-full object-cover"
                 />
-                <div
-                  className="
-    absolute
-    inset-0
-
-    bg-black/30
-
-    opacity-0
-active:opacity-100
-
-sm:opacity-0
-sm:group-hover:opacity-100
-
-    transition-opacity
-    duration-300
-  "
-                />
-                <button
-                  onClick={() => handleRemoveLocalPhoto(photo.id)}
-                  className="
-absolute
-left-1/2
-top-1/2
-
-z-10
-
-flex
-h-9
-w-9
-sm:h-10
-sm:w-10
-
-items-center
-justify-center
-
-rounded-full
-
-bg-white
-text-red-500
-
-shadow-xl
-
--translate-x-1/2
--translate-y-1/2
-
-opacity-0
-scale-90
-
-active:opacity-100
-active:scale-100
-
-sm:opacity-0
-sm:scale-90
-sm:group-hover:opacity-100
-sm:group-hover:scale-100
-
-transition-all
-duration-300
-
-hover:scale-110
-hover:bg-red-500
-hover:text-white
-"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
               </div>
             ))}
           </div>

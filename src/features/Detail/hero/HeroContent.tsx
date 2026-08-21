@@ -1,4 +1,4 @@
-import { useUpdateBook } from "../../../hooks/useUpdateBook";
+import { useUpdateBook } from "../../../hooks/useBooks";
 import type { Book } from "../../../types/book";
 import CollectionPicker from "../collection/CollectionPicker";
 import StatusBadge from "./StatusBadge";

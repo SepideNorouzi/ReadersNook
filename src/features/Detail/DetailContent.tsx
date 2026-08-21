@@ -25,7 +25,7 @@ export default function DetailContent({ book }: Props) {
       <BookStats book={book} />
       <BookSummary book={book} />
       <QuoteSec book={book} />
-      <Aesthetic bookId={book.id} />
+      <Aesthetic images={book.aestheticImages} />
     </div>
   );
 }

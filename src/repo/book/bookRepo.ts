@@ -2,21 +2,29 @@ import { useModeStore } from "../../store/modeStore";
 import { demoBookRepo } from "./demoBookRepo";
 import { adminBookRepo } from "./adminBookRepo";
 
-export const BOOKS_KEY = ["books"];
+export const BOOKS_KEY = ["books"] as const;
+
+export const bookDetailKey = (id: string) => [...BOOKS_KEY, id] as const;
 
 export const bookRepository = {
   useBooks() {
     const mode = useModeStore((s) => s.mode);
     const isAdmin = mode === "admin";
 
-    // Both hooks are ALWAYS called, every render, regardless of mode.
-    // This isn't optional — React's rules of hooks require the same
-    // hooks to run in the same order on every render. Only the return
-    // value below is conditional, never the hook calls themselves.
     const demoBooks = demoBookRepo.useBooks();
     const adminBooks = adminBookRepo.useBooks(isAdmin);
 
     return isAdmin ? adminBooks : demoBooks;
+  },
+
+  useBook(id: string | undefined) {
+    const mode = useModeStore((s) => s.mode);
+    const isAdmin = mode === "admin";
+
+    const demoBook = demoBookRepo.useBook(id);
+    const adminBook = adminBookRepo.useBook(id, isAdmin);
+
+    return isAdmin ? adminBook : demoBook;
   },
 
   useCreateBook() {

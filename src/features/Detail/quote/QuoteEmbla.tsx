@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { Book } from "../../../types/book";
+import type { QuoteDraft } from "../../../types/quote";
 import QuoteCard from "./QuoteCard";
 import AddQuoteCard from "./AddQuoteCard";
-import type { Quote } from "../../../types/quote";
 import AddQuoteModal from "../../../modals/AddQuoteModal";
+import { useCreateQuote } from "../../../hooks/useQuotes";
 
 interface Props {
   book: Book;
@@ -13,8 +14,7 @@ interface Props {
 export default function QuoteEmbla({ book }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
-
-  const [localQuotes, setLocalQuotes] = useState<Quote[]>([]);
+  const createQuote = useCreateQuote();
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
@@ -30,7 +30,6 @@ export default function QuoteEmbla({ book }: Props) {
     };
 
     handleSelect();
-
     emblaApi.on("select", handleSelect);
 
     return () => {
@@ -38,32 +37,27 @@ export default function QuoteEmbla({ book }: Props) {
     };
   }, [emblaApi]);
 
-  const allQuotes = [...book.quotes, ...localQuotes];
-  const totalSlides = allQuotes.length + 1;
+  const totalSlides = book.quotes.length + 1;
 
-  function handleAddQuote(newQuote: Quote) {
-    const quote: Quote = {
-      id: crypto.randomUUID(),
-      text: newQuote.text,
-      page: newQuote.page ?? 0,
-      favorite: false,
-      createdAt: new Date().toISOString(),
-    };
-
-    setLocalQuotes((prev) => [...prev, quote]);
-    setOpenModal(false);
-
-    requestAnimationFrame(() => {
-      emblaApi?.scrollTo(allQuotes.length);
-    });
+  function handleAddQuote(quote: QuoteDraft) {
+    createQuote.mutate(
+      { bookId: book.id, quote },
+      {
+        onSuccess: () => {
+          setOpenModal(false);
+          requestAnimationFrame(() => {
+            emblaApi?.scrollTo(book.quotes.length);
+          });
+        },
+      },
+    );
   }
 
   return (
     <>
-      {/* Carousel */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {allQuotes.map((quote) => (
+          {book.quotes.map((quote) => (
             <div
               key={quote.id}
               className="
@@ -80,7 +74,6 @@ export default function QuoteEmbla({ book }: Props) {
             </div>
           ))}
 
-          {/* Add Quote Card */}
           <div
             className="
               min-w-0
@@ -97,7 +90,6 @@ export default function QuoteEmbla({ book }: Props) {
         </div>
       </div>
 
-      {/* Dots */}
       <div className="mt-8 flex justify-center gap-2">
         {Array.from({ length: totalSlides }).map((_, index) => (
           <button
@@ -122,6 +114,7 @@ export default function QuoteEmbla({ book }: Props) {
         <AddQuoteModal
           onClose={() => setOpenModal(false)}
           onSubmit={handleAddQuote}
+          isSubmitting={createQuote.isPending}
         />
       )}
     </>

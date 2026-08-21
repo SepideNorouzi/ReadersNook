@@ -1,8 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-
 import { useBookStore } from "../../store/demoBookStore";
-
-import type { Quote } from "../../types/quote";
+import type { Quote, QuoteChanges, QuoteDraft } from "../../types/quote";
 
 export const demoQuoteRepo = {
   useCreateQuote() {
@@ -12,13 +10,9 @@ export const demoQuoteRepo = {
         quote,
       }: {
         bookId: string;
-        quote: {
-          text: string;
-          page: number;
-        };
+        quote: QuoteDraft;
       }) => {
         const now = new Date().toISOString();
-        
         const newQuote: Quote = {
           id: crypto.randomUUID(),
           text: quote.text,
@@ -29,12 +23,12 @@ export const demoQuoteRepo = {
           bookId,
         };
 
+        const book = useBookStore
+          .getState()
+          .books.find((item) => item.id === bookId);
+
         useBookStore.getState().updateBook(bookId, {
-          quotes: [
-            ...(useBookStore.getState().books.find((book) => book.id === bookId)
-              ?.quotes ?? []),
-            newQuote,
-          ],
+          quotes: [...(book?.quotes ?? []), newQuote],
         });
 
         return newQuote;
@@ -51,21 +45,19 @@ export const demoQuoteRepo = {
       }: {
         bookId: string;
         quoteId: string;
-        changes: Partial<Pick<Quote, "text" | "page" | "favorite">>;
+        changes: QuoteChanges;
       }) => {
         const book = useBookStore
           .getState()
-          .books.find((book) => book.id === bookId);
+          .books.find((item) => item.id === bookId);
 
-        if (!book) {
-          throw new Error("Book not found");
-        }
+        if (!book) throw new Error("Book not found");
 
-        const quotes = book.quotes.map((quote) =>
-          quote.id === quoteId ? { ...quote, ...changes } : quote,
-        );
-
-        useBookStore.getState().updateBook(bookId, { quotes });
+        useBookStore.getState().updateBook(bookId, {
+          quotes: book.quotes.map((quote) =>
+            quote.id === quoteId ? { ...quote, ...changes } : quote,
+          ),
+        });
       },
     });
   },
@@ -81,15 +73,13 @@ export const demoQuoteRepo = {
       }) => {
         const book = useBookStore
           .getState()
-          .books.find((book) => book.id === bookId);
+          .books.find((item) => item.id === bookId);
 
-        if (!book) {
-          throw new Error("Book not found");
-        }
+        if (!book) throw new Error("Book not found");
 
-        const quotes = book.quotes.filter((quote) => quote.id !== quoteId);
-
-        useBookStore.getState().updateBook(bookId, { quotes });
+        useBookStore.getState().updateBook(bookId, {
+          quotes: book.quotes.filter((quote) => quote.id !== quoteId),
+        });
       },
     });
   },

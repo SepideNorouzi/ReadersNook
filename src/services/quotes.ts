@@ -4,32 +4,39 @@ import {
   mapQuoteToCreatePayload,
   mapQuoteToUpdatePayload,
 } from "../mappers/MapApiToQuote";
-import type { Quote } from "../types/quote";
+import type { Quote, QuoteChanges, QuoteDraft } from "../types/quote";
 import type { ApiQuote } from "../types/api/apiQuote";
+
+export async function getQuotes(bookId: string): Promise<Quote[]> {
+  const apiQuotes = await apiFetch<ApiQuote[]>(`/books/${bookId}/quotes/`);
+  return apiQuotes.map(mapApiQuoteToQuote);
+}
 
 export async function createQuote(
   bookId: string,
-  quote: { text: string; page: number },
+  quote: QuoteDraft,
 ): Promise<Quote> {
-  const apiQuote = await apiFetch<ApiQuote>("/books/quotes/create/", {
-    method: "POST",
-    body: mapQuoteToCreatePayload({ ...quote, bookId }),
-  });
+  const apiQuote = await apiFetch<ApiQuote>(
+    `/books/${bookId}/quotes/create/`,
+    {
+      method: "POST",
+      body: mapQuoteToCreatePayload(quote),
+    },
+  );
   return mapApiQuoteToQuote(apiQuote);
 }
 
 export async function updateQuote(
-  id: string,
-  changes: Partial<Pick<Quote, "text" | "page" | "favorite">>,
+  bookId: string,
+  quoteId: string,
+  changes: QuoteChanges,
 ): Promise<Quote> {
-  const apiQuote = await apiFetch<ApiQuote>(`/books/quotes/${id}/update/`, {
-    method: "PATCH",
-    body: mapQuoteToUpdatePayload(changes),
-  });
+  const apiQuote = await apiFetch<ApiQuote>(
+    `/books/${bookId}/quotes/${quoteId}/update/`,
+    {
+      method: "PATCH",
+      body: mapQuoteToUpdatePayload(changes),
+    },
+  );
   return mapApiQuoteToQuote(apiQuote);
-}
-
-export async function deleteQuote(id: string): Promise<void> {
-  // ⚠️ Assumed endpoint
-  await apiFetch<void>(`/books/quotes/${id}/delete/`, { method: "DELETE" });
 }

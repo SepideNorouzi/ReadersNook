@@ -6,8 +6,8 @@ import type {
   ApiBookUpdatePayload,
 } from "../types/api/apiBook";
 import { mapApiQuoteNestedToQuote } from "./MapApiToQuote";
+import { mapApiAestheticPhoto } from "./MapApiToAestheticPhoto";
 
-/** list/create/update response -> Book. No quotes/photos at this shape. */
 export function mapApiBookSummaryToBook(apiBook: ApiBookSummary): Book {
   return {
     id: String(apiBook.id),
@@ -18,7 +18,7 @@ export function mapApiBookSummaryToBook(apiBook: ApiBookSummary): Book {
     currentPage: apiBook.current_page,
     totalPages: apiBook.total_pages,
     status: apiBook.status,
-    rating: apiBook.rating,
+    rating: apiBook.rating ?? 0,
     addedAt: apiBook.created_at,
     quotes: [],
     aestheticImages: [],
@@ -27,14 +27,13 @@ export function mapApiBookSummaryToBook(apiBook: ApiBookSummary): Book {
   };
 }
 
-/** single retrieve response -> Book. Only this shape has real quotes + photos. */
 export function mapApiBookDetailToBook(apiBook: ApiBookDetail): Book {
+  const photos = [...apiBook.aesthetic_photos].sort((a, b) => a.order - b.order);
+
   return {
     ...mapApiBookSummaryToBook(apiBook),
     quotes: apiBook.quotes.map(mapApiQuoteNestedToQuote),
-    aestheticImages: apiBook.aesthetic_photos
-      .sort((a, b) => a.order - b.order)
-      .map((photo) => photo.image_url),
+    aestheticImages: photos.map((photo) => mapApiAestheticPhoto(photo).imageUrl),
   };
 }
 

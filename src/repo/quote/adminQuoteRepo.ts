@@ -1,10 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createQuote, updateQuote } from "../../services/quotes";
+import type { QuoteChanges, QuoteDraft } from "../../types/quote";
+import { BOOKS_KEY, bookDetailKey } from "../book/bookRepo";
 
-import { createQuote, updateQuote, deleteQuote } from "../../services/quotes";
-
-import type { Quote } from "../../types/quote";
-
-import { BOOKS_KEY } from "../book/bookRepo";
+function invalidateBookQueries(
+  queryClient: ReturnType<typeof useQueryClient>,
+  bookId: string,
+) {
+  queryClient.invalidateQueries({ queryKey: BOOKS_KEY });
+  queryClient.invalidateQueries({ queryKey: bookDetailKey(bookId) });
+}
 
 export const adminQuoteRepo = {
   useCreateQuote() {
@@ -16,16 +21,10 @@ export const adminQuoteRepo = {
         quote,
       }: {
         bookId: string;
-        quote: {
-          text: string;
-          page: number;
-        };
+        quote: QuoteDraft;
       }) => createQuote(bookId, quote),
-
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: BOOKS_KEY,
-        });
+      onSuccess: (_quote, { bookId }) => {
+        invalidateBookQueries(queryClient, bookId);
       },
     });
   },
@@ -35,17 +34,16 @@ export const adminQuoteRepo = {
 
     return useMutation({
       mutationFn: ({
-        id,
+        bookId,
+        quoteId,
         changes,
       }: {
-        id: string;
-        changes: Partial<Pick<Quote, "text" | "page" | "favorite">>;
-      }) => updateQuote(id, changes),
-
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: BOOKS_KEY,
-        });
+        bookId: string;
+        quoteId: string;
+        changes: QuoteChanges;
+      }) => updateQuote(bookId, quoteId, changes),
+      onSuccess: (_quote, { bookId }) => {
+        invalidateBookQueries(queryClient, bookId);
       },
     });
   },
@@ -54,12 +52,18 @@ export const adminQuoteRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: (id: string) => deleteQuote(id),
-
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: BOOKS_KEY,
-        });
+      mutationFn: async ({
+        bookId,
+        quoteId,
+      }: {
+        bookId: string;
+        quoteId: string;
+      }) => {
+        void bookId;
+        void quoteId;
+      },
+      onSuccess: (_result, { bookId }) => {
+        invalidateBookQueries(queryClient, bookId);
       },
     });
   },
