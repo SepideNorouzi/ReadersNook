@@ -6,6 +6,7 @@ export interface Quote {
   createdAt?: string;
   updatedAt?: string;
   bookId: string;
+  createdBy: string; // NEW — FK to the user who created the quote
 }
 
 export type QuoteDraft = {
