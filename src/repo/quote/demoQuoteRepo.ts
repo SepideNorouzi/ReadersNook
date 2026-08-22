@@ -21,6 +21,7 @@ export const demoQuoteRepo = {
           createdAt: now,
           updatedAt: now,
           bookId,
+          createdBy: "user",
         };
 
         const book = useBookStore
