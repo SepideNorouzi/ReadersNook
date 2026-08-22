@@ -54,6 +54,7 @@ const createBook = ({
       favorite: true,
       createdAt: "2026-07-01",
       updatedAt: "2026-07-01",
+      createdBy: "user",
     },
     {
       id: `${id}-2`,
@@ -63,6 +64,7 @@ const createBook = ({
       favorite: false,
       createdAt: "2026-07-05",
       updatedAt: "2026-07-05",
+      createdBy: "user",
     },
   ],
 });
