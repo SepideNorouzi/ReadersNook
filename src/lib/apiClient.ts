@@ -2,7 +2,7 @@ import { useAuthStore } from "../auth/store/authStore";
 import { refreshToken as refreshTokenRequest } from "../auth/services/auth"; // adjust path to your real services/auth.ts
 
 const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000/api";
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 export class ApiError extends Error {
   status: number;
