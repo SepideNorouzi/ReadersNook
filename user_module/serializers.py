@@ -24,16 +24,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "last_name": {"required": True, "allow_blank": False},
         }
 
-    def validate_password1(self, value):
-        return value
-
-    def validate_password2(self, value):
-        if value != self.initial_data.get("password1"):
-            raise serializers.ValidationError("Passwords don't match")
-        return value
 
     def create(self, validated_data):
-        validated_data.pop("password2")
+        password2 = validated_data.pop("password2")
+        if validated_data["password"] != password2:
+            raise ValueError("password dont match")
         return super().create(validated_data)
         
 
