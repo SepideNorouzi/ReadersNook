@@ -4,7 +4,6 @@ import type { ApiCollectionSummary } from "../types/api/apiCollection";
 
 let collectionsDb: ApiCollectionSummary[] = [];
 
-// call this in a test's beforeEach/afterEach to reset state between tests
 export function resetCollectionsDb(seed: ApiCollectionSummary[] = []) {
   collectionsDb = seed;
 }
