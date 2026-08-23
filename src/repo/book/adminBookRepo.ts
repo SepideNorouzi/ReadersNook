@@ -68,7 +68,18 @@ export const adminBookRepo = {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: createBook,
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: BOOKS_KEY }),
+      onSuccess: (created) => {
+        queryClient.setQueryData<Book[]>(BOOKS_KEY, (old) => {
+          if (!old) return [created];
+          if (old.some((item) => item.id === created.id)) {
+            return old.map((item) =>
+              item.id === created.id ? { ...item, ...created } : item,
+            );
+          }
+          return [created, ...old];
+        });
+        queryClient.invalidateQueries({ queryKey: BOOKS_KEY });
+      },
     });
   },
 

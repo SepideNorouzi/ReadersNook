@@ -25,7 +25,11 @@ export async function createBook(
     method: "POST",
     body: mapBookToCreatePayload(book),
   });
-  return mapApiBookSummaryToBook(apiBook);
+  return {
+    ...mapApiBookSummaryToBook(apiBook),
+    sourceId: book.sourceId,
+    genres: book.genres,
+  };
 }
 
 export async function updateBook(

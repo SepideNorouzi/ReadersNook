@@ -6,7 +6,7 @@ import type {
   TokenResponse,
 } from "../types/auth";
 
-const API_URL = "http://localhost:8000/api";
+const API_URL = "http://localhost:8000";
 
 export class AuthHttpError extends Error {
   status: number;
@@ -23,7 +23,9 @@ function firstMessage(value: unknown): string | null {
   if (Array.isArray(value)) return firstMessage(value[0]);
   if (value && typeof value === "object") {
     const record = value as Record<string, unknown>;
-    return firstMessage(record.string ?? record.msg ?? record.message ?? record.detail);
+    return firstMessage(
+      record.string ?? record.msg ?? record.message ?? record.detail,
+    );
   }
   return null;
 }

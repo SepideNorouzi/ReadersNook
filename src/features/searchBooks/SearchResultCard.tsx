@@ -13,18 +13,25 @@ type Props = {
 export default function SearchResultCard({ result }: Props) {
   const hasRating = typeof result.averageRating === "number";
   const { mutateAsync: addBook, isPending } = useCreateBook();
-  const alreadySaved = useIsBookSaved(result.id);
+  const alreadySaved = useIsBookSaved(result.id, {
+    title: result.title,
+    author: result.author,
+  });
   // Covers both the works-detail fetch and the save mutation.
   const [isHydrating, setIsHydrating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isAdding = isHydrating || isPending;
 
   const handleAdd = async () => {
     if (alreadySaved || isAdding) return;
 
+    setErrorMessage(null);
     setIsHydrating(true);
     try {
       const book = await bookFromSearchResult(result);
       await addBook(book);
+    } catch {
+      setErrorMessage("Couldn't add this book. Please try again.");
     } finally {
       setIsHydrating(false);
     }
@@ -93,6 +100,9 @@ export default function SearchResultCard({ result }: Props) {
                 ? "Adding..."
                 : "Add to Library"}
           </button>
+          {errorMessage && (
+            <p className="text-xs text-red-600">{errorMessage}</p>
+          )}
         </div>
       </div>
     </Card>

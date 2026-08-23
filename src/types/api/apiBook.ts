@@ -29,7 +29,14 @@ export type ApiBookDetail = ApiBookSummary & {
 
 export type ApiBookCreatePayload = Pick<
   ApiBookSummary,
-  "title" | "author" | "summary" | "cover_url" | "total_pages"
+  | "title"
+  | "author"
+  | "summary"
+  | "cover_url"
+  | "current_page"
+  | "total_pages"
+  | "status"
+  | "rating"
 >;
 
 export type ApiBookUpdatePayload = Omit<

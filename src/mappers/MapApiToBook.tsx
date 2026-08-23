@@ -37,15 +37,37 @@ export function mapApiBookDetailToBook(apiBook: ApiBookDetail): Book {
   };
 }
 
+function clip(value: string, max: number): string {
+  return value.length <= max ? value : value.slice(0, max);
+}
+
+function toCoverUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return clip(url, 500);
+    }
+  } catch {
+    // Invalid absolute URL — the API's URLField would 400.
+  }
+  return "";
+}
+
 export function mapBookToCreatePayload(
   book: Omit<Book, "id" | "addedAt">,
 ): ApiBookCreatePayload {
+  const totalPages = Math.max(0, Math.round(book.totalPages || 0));
+  const currentPage = Math.max(0, Math.round(book.currentPage || 0));
+
   return {
-    title: book.title,
-    author: book.author,
+    title: clip(book.title, 255),
+    author: clip(book.author, 255),
     summary: book.summary,
-    cover_url: book.coverUrl,
-    total_pages: book.totalPages,
+    cover_url: toCoverUrl(book.coverUrl),
+    current_page: Math.min(currentPage, totalPages),
+    total_pages: totalPages,
+    status: book.status || "tbr",
+    rating: book.rating ?? 0,
   };
 }
 

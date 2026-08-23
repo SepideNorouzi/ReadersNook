@@ -16,8 +16,22 @@ export function useDeleteBook() {
   return bookRepository.useDeleteBook();
 }
 
-export function useIsBookSaved(sourceId: string | undefined) {
+export function useIsBookSaved(
+  sourceId: string | undefined,
+  identity?: { title: string; author: string },
+) {
   const { data: books } = useBooks();
-  if (!sourceId) return false;
-  return books.some((book) => book.sourceId === sourceId);
+  if (!books?.length) return false;
+
+  return books.some((book) => {
+    if (sourceId && book.sourceId === sourceId) return true;
+    if (
+      identity &&
+      book.title === identity.title &&
+      book.author === identity.author
+    ) {
+      return true;
+    }
+    return false;
+  });
 }
