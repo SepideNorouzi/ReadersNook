@@ -1,4 +1,3 @@
-// src/data/collection.ts
 import type { Collection } from "../types/collection";
 
 export const collections: Collection[] = [
