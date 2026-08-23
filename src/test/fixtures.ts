@@ -1,7 +1,11 @@
 import type { ApiBookSummary } from "../types/api/apiBook";
 import type { ApiCollectionSummary } from "../types/api/apiCollection";
+// a factory for fake data
 
-export function mockApiBook(overrides: Partial<ApiBookSummary> = {}): ApiBookSummary {
+export function mockApiBook(
+  overrides: Partial<ApiBookSummary> = {},
+): ApiBookSummary {
+  // The overrides at the end replaces the defaults.
   return {
     id: 1,
     title: "Piranesi",
