@@ -80,3 +80,54 @@ class AestheticPhoto(models.Model):
 
     def __str__(self):
         return self.caption or self.image_url
+
+
+class Collection(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    books = models.ManyToManyField(Book, related_name="collections" , blank=True)
+    created_by = models.ForeignKey(User , on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["created_by", "name"],
+                name="uq_collection_created_by_name",
+            ),
+        ]
+
+    def __str__(self):
+        return self.name
+
+
+class Achievement(models.Model):
+    class Category(models.TextChoices):
+        READING   = "reading", "Reading"     
+        WRITING   = "writing", "Writing"      
+        POPULARITY = "popularity", "Popularity" 
+
+    code = models.SlugField(unique=True)
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=255)
+    category = models.CharField(max_length=40 , choices=Category.choices)
+    threshold = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ["category", "threshold"]
+
+
+class UserAchievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="achievements")
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    unlocked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "achievement"],
+                name="uq_user_achievement"
+            ),
+        ]

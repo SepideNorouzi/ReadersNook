@@ -2,14 +2,23 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly , IsAuthenticated
 from django.db.models import Prefetch
-from .models import AestheticPhoto, Book , Quote
+from .models import AestheticPhoto, Book , Quote , Collection
 from .serializers import (
                            BookSerializer ,
                            BookDetailSerializer ,
                            QuoteSerializer ,
                            QuoteCreateSerializer,
                            AestheticPhotoSerializer,
+                           AchievementSerializer,
+                           CollectionSerializer
+
 )
+
+
+#______________________________________________
+# Books
+#______________________________________________
+
 
 @extend_schema_view(
     post=extend_schema(
@@ -70,6 +79,11 @@ class BookUpdateAPIView(generics.UpdateAPIView):
     permission_classes = [IsAdminUser]
 
 
+#______________________________________________
+# Quote
+#______________________________________________
+
+
 @extend_schema_view(
     post=extend_schema(
         tags=["Quotes"],
@@ -124,6 +138,9 @@ class QuoteUpdateAPIView(generics.UpdateAPIView):
         )
 
 
+#______________________________________________
+# AestheticPhoto
+#______________________________________________
 @extend_schema_view(
     post=extend_schema(
         tags=["Aesthetic Photos"],
@@ -138,3 +155,80 @@ class AestheticPhotoCreateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
         book = generics.get_object_or_404(Book, pk=self.kwargs["pk"])
         serializer.save(book=book)
+
+
+#______________________________________________
+# Colleection
+#______________________________________________
+
+@extend_schema_view(
+    post=extend_schema(
+        tags=["Collections"],
+        summary="Create a Collection",
+    )
+)
+class CollectionCreateAPIView(generics.CreateAPIView):
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+    permission_classes = [IsAuthenticated] 
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Collections"],
+        summary="List my collection",
+    )
+)
+class CollectionListAPIView(generics.ListAPIView):
+    serializer_class = CollectionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return (Collection.objects
+                .filter(created_by=self.request.user)
+                .prefetch_related("books"))
+
+
+@extend_schema_view(
+    put=extend_schema(
+        tags=["Collections"],
+        summary="Replace a collection",
+        description="Full update: every writable field must be supplied.",
+    ),
+    patch=extend_schema(
+        tags=["Collections"],
+        summary="Partially update a collection",
+        description="Partial update: only the supplied fields are changed.",
+    ),
+    delete=extend_schema(
+        tags=["Collections"],
+        summary="Delete a collection",
+    ),
+)
+class CollectionUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """Handle PUT/PATCH (update) and DELETE for a collection owned by the caller."""
+
+    serializer_class = CollectionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Collection.objects.filter(
+            created_by=self.request.user
+        ).prefetch_related("books")
+
+
+#______________________________________________
+# Achievement
+#______________________________________________
+
+@extend_schema_view(
+    post=extend_schema(
+        tags=["Achievements"],
+        summary="Create an Achievements",
+    )
+)
+class AchievementCreateAPIView(generics.CreateAPIView):
+    queryset = None
+    serializer_class = AchievementSerializer
+    permission_classes = [IsAdminUser]
+
+

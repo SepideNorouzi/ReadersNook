@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import AestheticPhoto, Book, Quote
+from .models import AestheticPhoto, Book, Quote , Achievement , Collection
 
 
 class QuoteSerializer(serializers.ModelSerializer):
@@ -76,3 +76,39 @@ class BookDetailSerializer(BookSerializer):
             "created_at", "updated_at", "quotes", "aesthetic_photos",
         )
         read_only_fields = ("id", "created_at", "updated_at")
+
+
+
+class CollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Collection
+        fields = ["id","name", "description", "books", "created_by" , "created_at", "updated_at"]
+        read_only_fields = ["id", "created_by" ,"created_at", "updated_at"]
+        extra_kwargs = {
+            "description": {"required": False, "allow_blank": True},
+            "books":       {"required": False},
+        }
+
+    def validate_name(self, value):
+        request = self.context.get("request")
+        user = getattr(request, "user", None)
+        queryset = Collection.objects.filter(created_by=user, name=value)
+        if self.instance is not None:
+            queryset = queryset.exclude(pk=self.instance.pk)
+        if user is not None and queryset.exists():
+            raise serializers.ValidationError(
+                "You already have a collection with this name."
+            )
+        return value
+
+    def create(self, validated_data):
+        validated_data["created_by"] = self.context["request"].user
+        return super().create(validated_data)
+
+
+class AchievementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Achievement
+        fields = '__all__'
+        read_only_fields = ("id",)
+
