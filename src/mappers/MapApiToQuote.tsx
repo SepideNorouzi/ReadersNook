@@ -16,6 +16,7 @@ function toQuote(
     page: apiQuote.page ?? 0,
     favorite: apiQuote.favorite,
     createdAt: timestamps?.createdAt,
+    createdBy: "api",
     updatedAt: timestamps?.updatedAt,
     bookId: String(apiQuote.book),
   };
@@ -32,7 +33,9 @@ export function mapApiQuoteNestedToQuote(apiQuote: ApiQuoteNested): Quote {
   return toQuote(apiQuote);
 }
 
-export function mapQuoteToCreatePayload(quote: QuoteDraft): ApiQuoteCreatePayload {
+export function mapQuoteToCreatePayload(
+  quote: QuoteDraft,
+): ApiQuoteCreatePayload {
   return {
     text: quote.text,
     page: quote.page,
