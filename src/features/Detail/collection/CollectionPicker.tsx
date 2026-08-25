@@ -14,6 +14,7 @@ export default function CollectionPicker({ book }: Props) {
     createCollection,
     addBookToCollection,
     removeBookFromCollection,
+    isCreating,
     isAddingBook,
     isRemovingBook,
   } = useCollections();
@@ -183,9 +184,10 @@ export default function CollectionPicker({ book }: Props) {
 
                         {busy && (
                           <span className="text-xs text-stone-400">
-                            Adding...
+                            {selected ? "Removing..." : "Adding..."}
                           </span>
                         )}
+
                       </button>
                     );
                   })
@@ -266,7 +268,7 @@ export default function CollectionPicker({ book }: Props) {
 
                 <button
                   type="button"
-                  disabled={!name.trim()}
+                  disabled={!name.trim() || isCreating || isAddingBook}
                   onClick={handleCreate}
                   className="
                     rounded-full
@@ -280,7 +282,7 @@ export default function CollectionPicker({ book }: Props) {
                     disabled:opacity-40
                   "
                 >
-                  Create & add
+                  {isCreating || isAddingBook ? "Creating..." : "Create & add"}
                 </button>
               </div>
             </div>

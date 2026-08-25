@@ -1,16 +1,14 @@
 import clsx from "clsx";
-import { type ReactNode, type MouseEventHandler } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
-  className?: string;
-  onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
-export default function Card({ children, className, onClick }: Props) {
+export default function Card({ children, className, ...rest }: Props) {
   return (
     <div
-      onClick={onClick}
+      {...rest}
       className={clsx(
         "rounded-3xl bg-white p-6 shadow-sm border border-[#E6DDCF] transition-all hover:shadow-lg",
         className,

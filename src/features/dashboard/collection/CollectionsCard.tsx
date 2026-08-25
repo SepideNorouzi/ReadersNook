@@ -138,7 +138,7 @@ export default function CollectionsCard({
                 No collections yet
               </p>
               <p className="mx-auto max-w-[200px] text-xs text-[var(--text-secondary)] lg:text-sm">
-                Group your books into shelves like "Favorites" or "2026 Reads."
+                Group your books into shelves.
               </p>
             </div>
 

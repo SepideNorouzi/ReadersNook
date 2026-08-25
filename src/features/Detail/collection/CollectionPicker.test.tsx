@@ -1,39 +1,48 @@
 import { it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import CollectionPicker from "./CollectionPicker";
 import type { Book } from "../../../types/book";
-import { resetCollectionsDb } from "../../../data/handlers";
-import { mockApiCollection } from "../../../test/fixtures";
+import { useCollectionStore } from "../../../store/demoCollectionStore";
 
 const mockBook = { id: "5", title: "Piranesi" } as Book;
 
-function renderPicker() {
+function renderPicker(book: Book = mockBook) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
   return render(
     <QueryClientProvider client={client}>
-      <CollectionPicker book={mockBook} />
+      <CollectionPicker book={book} />
     </QueryClientProvider>,
   );
 }
 
-beforeEach(() => resetCollectionsDb());
+beforeEach(() => {
+  useCollectionStore.getState().setCollections([]);
+});
 
 it("shows existing collections and lets you toggle the book into one", async () => {
-  resetCollectionsDb([
-    mockApiCollection({ id: 1, name: "Cozy Fantasy", books: [] }),
+  useCollectionStore.getState().setCollections([
+    { id: "c-cozy", name: "Cozy Fantasy", bookIds: [] },
   ]);
   const user = userEvent.setup();
   renderPicker();
 
   await user.click(screen.getByText("Add to collection"));
-  expect(await screen.findByText("Cozy Fantasy")).toBeInTheDocument();
+  const row = await screen.findByRole("button", { name: /Cozy Fantasy/ });
+  expect(row).toBeInTheDocument();
 
-  await user.click(screen.getByText("Cozy Fantasy"));
-  expect(await screen.findByText("Cozy Fantasy")).toHaveClass("font-semibold"); // now selected
+  await user.click(row);
+
+  // Dropdown closes on add — re-open to confirm the book stuck.
+  await user.click(screen.getByText("Add to collection"));
+  const selected = await screen.findByRole("button", { name: /Cozy Fantasy/ });
+  expect(within(selected).getByText("Cozy Fantasy")).toHaveClass(
+    "font-semibold",
+  );
+  expect(useCollectionStore.getState().collections[0].bookIds).toContain("5");
 });
 
 it("creates a new collection and adds the book in one action", async () => {
@@ -48,10 +57,31 @@ it("creates a new collection and adds the book in one action", async () => {
   );
   await user.click(screen.getByText("Create & add"));
 
-  // handleCreate closes the dropdown on success — a real behavioral
-  // assertion, not a guess about whether the request "probably" worked
-  await screen.findByText("Add to collection"); // dropdown collapsed back
+  await screen.findByText("Add to collection");
   expect(
     screen.queryByPlaceholderText("Collection name"),
   ).not.toBeInTheDocument();
+
+  const created = useCollectionStore
+    .getState()
+    .collections.find((collection) => collection.name === "Cozy Fantasy");
+  expect(created).toBeDefined();
+  expect(created?.bookIds).toContain("5");
+});
+
+it("removes a book from a collection when you toggle it off", async () => {
+  useCollectionStore.getState().setCollections([
+    { id: "c-cozy", name: "Cozy Fantasy", bookIds: ["5"] },
+  ]);
+  const user = userEvent.setup();
+  renderPicker();
+
+  await user.click(screen.getByText("Add to collection"));
+  await user.click(screen.getByRole("button", { name: /Cozy Fantasy/ }));
+
+  expect(useCollectionStore.getState().collections[0].bookIds).not.toContain(
+    "5",
+  );
+  // Remove keeps the menu open so you can untoggle a few in a row.
+  expect(screen.getByRole("button", { name: /Cozy Fantasy/ })).toBeInTheDocument();
 });

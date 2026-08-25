@@ -62,6 +62,9 @@ export default function CollectionModal({ collection, onClose }: Props) {
       "
     >
       <Card
+        role="dialog"
+        aria-modal="true"
+        aria-label={collection.name}
         onClick={(event) => event.stopPropagation()}
         className="
           flex
@@ -129,6 +132,7 @@ export default function CollectionModal({ collection, onClose }: Props) {
               {!editingName && (
                 <button
                   type="button"
+                  aria-label="Rename collection"
                   onClick={() => setEditingName(true)}
                   className="
                     rounded-full
@@ -141,6 +145,7 @@ export default function CollectionModal({ collection, onClose }: Props) {
                   <Pencil size={14} />
                 </button>
               )}
+
             </div>
 
             {collection.description && (
