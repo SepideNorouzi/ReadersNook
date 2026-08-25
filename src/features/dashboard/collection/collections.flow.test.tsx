@@ -53,33 +53,70 @@ it("creates a collection from the detail picker and shows it on the dashboard", 
 it("renames a collection from the dashboard modal", async () => {
   useCollectionStore
     .getState()
-    .setCollections([{ id: "c-night", name: "Nightstand", bookIds: ["1"] }]);
+    .setCollections([
+      {
+        id: "c-night",
+        name: "Nightstand",
+        bookIds: ["1"],
+      },
+    ]);
 
   const user = userEvent.setup();
+
   renderFlow(piranesi);
 
-  await user.click(screen.getAllByRole("button", { name: /Nightstand/ })[0]);
+  // Open the collection modal
+  await user.click(
+    screen.getAllByRole("button", { name: /Nightstand/ })[0],
+  );
 
-  const dialog = await screen.findByRole("dialog", { name: "Nightstand" });
+  // Find the modal
+  const dialog = await screen.findByRole("dialog", {
+    name: "Nightstand",
+  });
 
+  // Make sure the modal initially shows the old name
   expect(
-    within(dialog).getByRole("heading", { name: "Nightstand" }),
+    within(dialog).getByRole("heading", {
+      name: "Nightstand",
+    }),
   ).toBeInTheDocument();
 
-  await user.click(screen.getByRole("button", { name: "Rename collection" }));
+  // Start renaming
+  await user.click(
+    within(dialog).getByRole("button", {
+      name: "Rename collection",
+    }),
+  );
 
-  const input = screen.getByDisplayValue("Nightstand");
+  const input = within(dialog).getByDisplayValue("Nightstand");
 
   await user.clear(input);
   await user.type(input, "Bedside");
 
-  await user.click(screen.getByRole("button", { name: "Save" }));
+  // Save
+  await user.click(
+    within(dialog).getByRole("button", {
+      name: "Save",
+    }),
+  );
+
+  // IMPORTANT:
+  // The collection has changed, so find the updated dialog again.
+  const renamedDialog = await screen.findByRole("dialog", {
+    name: "Bedside",
+  });
 
   expect(
-    await within(dialog).findByRole("heading", { name: "Bedside" }),
+    within(renamedDialog).getByRole("heading", {
+      name: "Bedside",
+    }),
   ).toBeInTheDocument();
 
-  expect(useCollectionStore.getState().collections[0].name).toBe("Bedside");
+  // Verify the actual store state too
+  expect(useCollectionStore.getState().collections[0].name).toBe(
+    "Bedside",
+  );
 });
 
 it("adds a second book from another detail page and removes one from the modal", async () => {
