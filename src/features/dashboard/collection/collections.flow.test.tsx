@@ -29,9 +29,7 @@ beforeEach(() => {
   useCollectionStore.getState().setCollections([]);
 });
 
-async function openPickerMenu(
-  user: ReturnType<typeof userEvent.setup>,
-) {
+async function openPickerMenu(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByText("Add to collection"));
   const newCollection = await screen.findByText("New collection");
   return newCollection.parentElement!.parentElement as HTMLElement;
@@ -53,33 +51,41 @@ it("creates a collection from the detail picker and shows it on the dashboard", 
 });
 
 it("renames a collection from the dashboard modal", async () => {
-  useCollectionStore.getState().setCollections([
-    { id: "c-night", name: "Nightstand", bookIds: ["1"] },
-  ]);
+  useCollectionStore
+    .getState()
+    .setCollections([{ id: "c-night", name: "Nightstand", bookIds: ["1"] }]);
+
   const user = userEvent.setup();
   renderFlow(piranesi);
 
   await user.click(screen.getAllByRole("button", { name: /Nightstand/ })[0]);
+
+  const dialog = await screen.findByRole("dialog", { name: "Nightstand" });
+
   expect(
-    await screen.findByRole("heading", { name: "Nightstand" }),
+    within(dialog).getByRole("heading", { name: "Nightstand" }),
   ).toBeInTheDocument();
 
   await user.click(screen.getByRole("button", { name: "Rename collection" }));
+
   const input = screen.getByDisplayValue("Nightstand");
+
   await user.clear(input);
   await user.type(input, "Bedside");
+
   await user.click(screen.getByRole("button", { name: "Save" }));
 
   expect(
-    await screen.findByRole("heading", { name: "Bedside" }),
+    await within(dialog).findByRole("heading", { name: "Bedside" }),
   ).toBeInTheDocument();
+
   expect(useCollectionStore.getState().collections[0].name).toBe("Bedside");
 });
 
 it("adds a second book from another detail page and removes one from the modal", async () => {
-  useCollectionStore.getState().setCollections([
-    { id: "c-night", name: "Nightstand", bookIds: ["1"] },
-  ]);
+  useCollectionStore
+    .getState()
+    .setCollections([{ id: "c-night", name: "Nightstand", bookIds: ["1"] }]);
   const user = userEvent.setup();
   const view = renderFlow(hobbit);
 
