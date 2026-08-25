@@ -83,7 +83,7 @@ export async function removeBookFromCollection(
 // DELETE COLLECTION
 // ─────────────────────────────────────────────
 export async function deleteCollection(collectionId: string): Promise<void> {
-  await apiFetch<void>(`/collections/${collectionId}/delete/`, {
+  await apiFetch<void>(`/collections/${collectionId}/update/`, {
     method: "DELETE",
   });
 }
