@@ -62,7 +62,6 @@ export default function Auth() {
           password: data.password,
           password2: data.password2!,
         });
-        // No auto-login on signup yet — surface a clear next step instead.
         setAuthInfo("Account created — you can sign in now.");
         setIsLogin(true);
         reset();
@@ -75,33 +74,6 @@ export default function Auth() {
       setAuthError(message);
     }
   }
-
-  const quickLoginHandler = async () => {
-    setAuthError("");
-
-    const username = import.meta.env.VITE_DEV_USERNAME;
-    const password = import.meta.env.VITE_DEV_PASSWORD;
-
-    if (!username || !password) {
-      setAuthError("Dev credentials are not configured.");
-      return;
-    }
-
-    try {
-      setMode("admin");
-
-      await adminLogin.mutateAsync({ username, password });
-
-      navigate("/dashboard");
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Dev login failed. Please try again.";
-
-      setAuthError(message);
-    }
-  };
 
   return (
     <main className="flex min-h-screen items-center justify-center p-6">
@@ -238,17 +210,6 @@ export default function Auth() {
                 ? "Sign In"
                 : "Create Account"}
           </button>
-
-          {import.meta.env.DEV && (
-            <button
-              type="button"
-              disabled={isPending}
-              onClick={quickLoginHandler}
-              className="w-full rounded-xl border border-dashed border-[var(--border)] py-2 text-xs text-[var(--text-muted)] disabled:opacity-60"
-            >
-              {adminLogin.isPending ? "Signing in..." : "Dev quick login"}
-            </button>
-          )}
         </form>
 
         <div className="text-center text-sm text-[var(--text-secondary)]">
