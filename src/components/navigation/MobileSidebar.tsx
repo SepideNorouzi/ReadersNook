@@ -54,18 +54,7 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        <button
-          aria-label="Close menu"
-          onClick={onClose}
-          className="
-            absolute right-4 top-4 z-10
-            flex h-9 w-9 items-center justify-center
-            rounded-full text-[var(--text-secondary)]
-            hover:bg-[var(--stone-100)]
-          "
-        >
-          <X size={18} />
-        </button>
+
 
         {/* onNavigate closes the drawer the instant a link is clicked —
            no need to watch the route with useEffect. */}
