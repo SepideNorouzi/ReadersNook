@@ -1,13 +1,14 @@
-import { Menu, User } from "lucide-react";
+import { Menu, UserRound } from "lucide-react";
 import { NavLink } from "react-router";
-import { useProfile } from "../../features/profile/useProfile"; // ← adjust to your real hook
+
+import { useAuth } from "../../auth/hooks/useAuth";
 
 interface MobileNavbarProps {
   onMenuClick: () => void;
 }
 
 export default function MobileNavbar({ onMenuClick }: MobileNavbarProps) {
-  const { data: profile } = useProfile();
+  const { user, userLoading } = useAuth();
 
   return (
     <header className="absolute inset-x-0 top-0 z-20 lg:hidden">
@@ -53,26 +54,28 @@ export default function MobileNavbar({ onMenuClick }: MobileNavbarProps) {
             flex
             h-10
             w-10
+            shrink-0
             items-center
             justify-center
             overflow-hidden
             rounded-full
             border
             border-white/30
+            bg-white/15
             transition-transform
             hover:scale-105
           "
         >
-          {profile?.avatarUrl ? (
+          {userLoading ? (
+            <div className="h-full w-full animate-pulse rounded-full bg-white/20" />
+          ) : user?.avatarUrl ? (
             <img
-              src={profile.avatarUrl}
+              src={user.avatarUrl}
               alt=""
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-white/15">
-              <User size={18} className="text-white" />
-            </div>
+            <UserRound size={18} className="text-white" />
           )}
         </NavLink>
       </nav>
