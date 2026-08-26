@@ -1,16 +1,20 @@
 import { Menu } from "lucide-react";
 
-export default function MobileNavbar() {
+interface MobileNavbarProps {
+  onMenuClick: () => void;
+}
+
+export default function MobileNavbar({ onMenuClick }: MobileNavbarProps) {
   return (
     <header
-  className="
-    absolute
-    inset-x-0
-    top-0
-    z-50
-    lg:hidden
-  "
->
+      className="
+        absolute
+        inset-x-0
+        top-0
+        z-20
+        lg:hidden
+      "
+    >
       <nav
         className="
           mx-4
@@ -27,9 +31,9 @@ export default function MobileNavbar() {
           backdrop-blur-md
         "
       >
-        {/* Menu */}
         <button
           aria-label="Open menu"
+          onClick={onMenuClick}
           className="
             flex
             h-10
@@ -44,12 +48,10 @@ export default function MobileNavbar() {
           <Menu size={22} className="text-white" />
         </button>
 
-        {/* Logo */}
         <h1 className="text-sm font-medium tracking-wide text-white">
           The Reader's Nook
         </h1>
 
-        {/* Spacer */}
         <div className="h-10 w-10" />
       </nav>
     </header>
