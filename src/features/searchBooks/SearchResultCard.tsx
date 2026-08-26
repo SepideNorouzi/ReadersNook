@@ -30,8 +30,12 @@ export default function SearchResultCard({ result }: Props) {
     try {
       const book = await bookFromSearchResult(result);
       await addBook(book);
-    } catch {
-      setErrorMessage("Couldn't add this book. Please try again.");
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Couldn't add this book. Please try again.",
+      );
     } finally {
       setIsHydrating(false);
     }

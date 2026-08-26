@@ -1,4 +1,3 @@
-import { X } from "lucide-react";
 import { useEffect } from "react";
 import SidebarContent from "./SidebarContent";
 
@@ -54,8 +53,6 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-
-
         {/* onNavigate closes the drawer the instant a link is clicked —
            no need to watch the route with useEffect. */}
         <SidebarContent variant="mobile" onNavigate={onClose} />

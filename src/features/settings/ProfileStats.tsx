@@ -11,17 +11,12 @@ interface Props {
 export default function ProfileStats({ books }: Props) {
   const read = books.filter((b) => b.status === "read").length;
   const current = books.filter((b) => b.status === "current").length;
-
-  const pagesTurned = books.reduce((sum, b) => {
-    if (b.status === "read") return sum + b.totalPages;
-    if (b.status === "current") return sum + b.currentPage;
-    return sum;
-  }, 0);
+  const tbr = books.filter((b) => b.status === "tbr").length;
 
   const stats = [
     { label: "Books Read", value: read, icon: BookOpen },
     { label: "Currently Reading", value: current, icon: BookMarked },
-    { label: "Pages Turned", value: pagesTurned.toLocaleString(), icon: LibraryIcon },
+    { label: "To Be Read", value: tbr, icon: LibraryIcon },
   ];
 
   return (
