@@ -24,7 +24,9 @@ export default function TBRCard({ className }: Props) {
     <Card
       className={`
         flex
-        h-full
+        h-[440px]
+        sm:h-[480px]
+        lg:h-full
         min-h-0
         flex-col
 
@@ -48,10 +50,7 @@ export default function TBRCard({ className }: Props) {
       {/* Header */}
       <div className="mb-3 flex shrink-0 items-center justify-between lg:mb-5">
         <div className="flex items-center gap-2">
-          <SquarePen
-            size={14}
-            className="text-[var(--brown-700)] lg:size-4"
-          />
+          <SquarePen size={14} className="text-[var(--brown-700)] lg:size-4" />
 
           <h2 className="font-heading text-sm font-semibold text-[var(--text)] sm:text-[15px] lg:text-lg">
             <span className="lg:hidden">To Read</span>
