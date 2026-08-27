@@ -13,7 +13,7 @@ export default function Settings() {
 
   if (isLoading) {
     return (
-      <main className="p-10">
+      <main className="p-10 pt-20 md:pt-0">
         <p className="text-[var(--text-muted)]">Loading your profile...</p>
       </main>
     );
@@ -21,14 +21,14 @@ export default function Settings() {
 
   if (!user) {
     return (
-      <main className="p-10">
+      <main className="p-10 pt-20 md:pt-0">
         <p className="text-[var(--text-muted)]">Couldn't load profile.</p>
       </main>
     );
   }
 
   return (
-    <main className="flex flex-col gap-6 p-10">
+    <main className="flex flex-col gap-6 p-10 pt-20 md:pt-0">
       <ProfileHeader user={user} />
       <ProfileStats books={books} />
       <SettingsActions />
