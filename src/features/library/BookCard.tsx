@@ -14,7 +14,12 @@ export default function BookCard({ book }: { book: Book }) {
   const status = STATUS_OPTIONS.find((s) => s.value === book.status)!;
 
   return (
-    <Link to={`/book/${book.id}`} className="group block">
+    // active: gives touch devices real tap feedback, since the hover: classes
+    // below only fire for pointer/mouse input and can "stick" on iOS after a tap.
+    <Link
+      to={`/book/${book.id}`}
+      className="group block active:scale-[0.98] transition-transform"
+    >
       <Card
         className="
           flex flex-col overflow-hidden p-0
@@ -30,7 +35,7 @@ export default function BookCard({ book }: { book: Book }) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
-          <span className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-stone-700 backdrop-blur-sm">
+          <span className="hidden absolute top-3 left-3 md:flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-stone-700 backdrop-blur-sm">
             <span className={`h-1.5 w-1.5 rounded-full ${status.dot}`} />
             {status.label}
           </span>

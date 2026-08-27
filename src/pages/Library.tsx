@@ -26,14 +26,15 @@ export default function Library() {
 
   if (isLoading) {
     return (
-      <main className="p-10">
+      // mobile-first padding: 16px on phones, 24px at sm, back to 40px at lg
+      <main className="p-4 sm:p-6 lg:p-10">
         <p className="text-[var(--text-muted)]">Loading your library...</p>
       </main>
     );
   }
 
   return (
-    <main className="flex flex-col gap-8 p-10">
+    <main className="flex flex-col gap-8 p-4 sm:p-6 lg:p-10">
       <div className="flex items-center gap-4">
         <div>
           <h1 className="font-heading text-2xl font-semibold text-[var(--text)]">
@@ -50,7 +51,10 @@ export default function Library() {
       {filteredBooks.length === 0 ? (
         <p className="text-[var(--text-muted)]">No books match this filter.</p>
       ) : (
-        <div className="grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+        // grid-cols-2 is the mobile baseline (always 2 flexible columns, never overflows).
+        // From sm: (640px) up, we hand off to the original auto-fill/minmax pattern,
+        // which needs that extra width to actually produce multiple columns.
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
           {filteredBooks.map((book) => (
             <BookCard key={book.id} book={book} />
           ))}
