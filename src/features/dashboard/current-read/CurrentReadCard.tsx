@@ -36,9 +36,6 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
         rounded-[22px]
         sm:rounded-[28px]
 
-        border
-        border-[var(--border)]
-
         bg-gradient-to-b
         from-white
         to-[var(--surface-hover)]

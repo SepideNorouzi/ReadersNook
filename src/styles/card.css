@@ -1,6 +1,5 @@
 .stamp-card {
   position: relative;
-  border: 1px solid var(--border);
 
   /* Soft paper-like background */
   background-color: var(--surface);
