@@ -1,0 +1,91 @@
+.stamp-card {
+  position: relative;
+  border: 1px solid var(--border);
+
+  /* Soft paper-like background */
+  background-color: var(--surface);
+
+  /*
+    These control the stamp effect.
+    Increase --stamp-radius if you want even larger circles.
+  */
+  --stamp-radius: 7px;
+  --stamp-spacing: 16px;
+  --stamp-color: var(--bg-secondary);
+}
+
+/* Horizontal perforations */
+.stamp-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  border-radius: inherit;
+
+  background:
+    /* Top */
+    radial-gradient(
+      circle at 8px 0,
+      var(--stamp-color) 0 var(--stamp-radius),
+      transparent calc(var(--stamp-radius) + 0.5px)
+    )
+    repeat-x,
+
+    /* Bottom */
+    radial-gradient(
+      circle at 8px 100%,
+      var(--stamp-color) 0 var(--stamp-radius),
+      transparent calc(var(--stamp-radius) + 0.5px)
+    )
+    repeat-x;
+
+  background-size:
+    var(--stamp-spacing) 10px,
+    var(--stamp-spacing) 10px;
+
+  background-position:
+    top,
+    bottom;
+
+  background-repeat:
+    repeat-x,
+    repeat-x;
+}
+
+/* Vertical perforations */
+.stamp-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  border-radius: inherit;
+
+  background:
+    /* Left */
+    radial-gradient(
+      circle at 0 8px,
+      var(--stamp-color) 0 var(--stamp-radius),
+      transparent calc(var(--stamp-radius) + 0.5px)
+    )
+    repeat-y,
+
+    /* Right */
+    radial-gradient(
+      circle at 100% 8px,
+      var(--stamp-color) 0 var(--stamp-radius),
+      transparent calc(var(--stamp-radius) + 0.5px)
+    )
+    repeat-y;
+
+  background-size:
+    10px var(--stamp-spacing),
+    10px var(--stamp-spacing);
+
+  background-position:
+    left,
+    right;
+
+  background-repeat:
+    repeat-y,
+    repeat-y;
+}

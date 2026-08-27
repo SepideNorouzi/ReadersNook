@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { type HTMLAttributes, type ReactNode } from "react";
+import "../../styles/card.css";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
@@ -10,7 +11,7 @@ export default function Card({ children, className, ...rest }: Props) {
     <div
       {...rest}
       className={clsx(
-        "rounded-3xl bg-white p-6 shadow-sm border border-[#E6DDCF] transition-all hover:shadow-lg",
+        "stamp-card rounded-3xl bg-white p-6 shadow-sm transition-all hover:shadow-lg",
         className,
       )}
     >
