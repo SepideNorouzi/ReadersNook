@@ -11,7 +11,7 @@ export default function Card({ children, className, ...rest }: Props) {
     <div
       {...rest}
       className={clsx(
-        "stamp-card rounded-3xl bg-white p-6 shadow-sm transition-all hover:shadow-lg",
+        "stamp-card rounded-3xl p-6 shadow-sm transition-all hover:shadow-lg",
         className,
       )}
     >
