@@ -16,10 +16,6 @@ export default function HeroActionsMenu({ book, status, onStatusChange }: Props)
   const [visible, setVisible] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // Mount on open, THEN flip the transition class a frame later.
-  // If you toggle the class in the same tick as mounting, the browser
-  // paints the "settled" state immediately and there's nothing to
-  // transition from — you'd get an instant snap instead of a slide.
   useEffect(() => {
     if (open) {
       const raf = requestAnimationFrame(() => setVisible(true));
@@ -41,8 +37,7 @@ export default function HeroActionsMenu({ book, status, onStatusChange }: Props)
 
   function close() {
     setVisible(false);
-    // Unmount only after the exit transition has had time to play —
-    // the mirror image of the open effect above.
+    // Unmount only after the exit transition has had time to play
     setTimeout(() => {
       setOpen(false);
       triggerRef.current?.focus();
