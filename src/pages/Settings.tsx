@@ -28,7 +28,7 @@ export default function Settings() {
   }
 
   return (
-    <main className="flex flex-col gap-6 p-10 pt-20 md:pt-0">
+    <main className="flex flex-col gap-6 p-10 pt-20 md:pt-8">
       <ProfileHeader user={user} />
       <ProfileStats books={books} />
       <SettingsActions />
