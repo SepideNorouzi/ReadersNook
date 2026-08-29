@@ -4,6 +4,7 @@ import { MoreHorizontal, X } from "lucide-react";
 import type { Book, BookStatus } from "../../../types/book";
 import CollectionPicker from "../collection/CollectionPicker";
 import StatusBadge from "./StatusBadge";
+import { createPortal } from "react-dom";
 
 interface Props {
   book: Book;
@@ -61,51 +62,46 @@ export default function HeroActionsMenu({ book, status, onStatusChange }: Props)
         <MoreHorizontal className="h-4 w-4 text-stone-600" />
       </button>
 
-      {open && (
-        <div className="fixed inset-0 z-[200]" role="dialog" aria-modal="true">
-          <div
-            onClick={close}
-            className={`
-              absolute inset-0 bg-black/40 backdrop-blur-sm
-              transition-opacity duration-200
-              ${visible ? "opacity-100" : "opacity-0"}
-            `}
-          />
-
-          <div
-            className={`
-              absolute inset-x-0 bottom-0
-              rounded-t-3xl bg-white
-              px-5 pb-8 pt-3
-              shadow-[0_-20px_50px_rgba(35,23,17,0.25)]
-              transition-transform duration-200 ease-out
-              ${visible ? "translate-y-0" : "translate-y-full"}
-            `}
-          >
-            <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-stone-200" />
-
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-serif text-lg text-brown-900">Options</h2>
-              <button
-                onClick={close}
-                aria-label="Close"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-stone-500 transition-colors hover:bg-stone-100"
-              >
-                <X className="h-4 w-4" />
-              </button>
+        {open &&
+        createPortal(                                // wrap in a portal...
+          <div className="fixed inset-0 z-[200]" role="dialog" aria-modal="true">
+            <div
+              onClick={close}
+              className={`
+                absolute inset-0 bg-black/40 backdrop-blur-sm
+                transition-opacity duration-200
+                ${visible ? "opacity-100" : "opacity-0"}
+              `}
+            />
+            <div
+              className={`
+                absolute inset-x-0 bottom-0
+                rounded-t-3xl bg-white
+                px-5 pb-8 pt-3
+                shadow-[0_-20px_50px_rgba(35,23,17,0.25)]
+                transition-transform duration-200 ease-out
+                ${visible ? "translate-y-0" : "translate-y-full"}
+              `}
+            >
+              <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-stone-200" />
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="font-serif text-lg text-brown-900">Options</h2>
+                <button onClick={close} aria-label="Close" className="flex h-8 w-8 items-center justify-center rounded-full text-stone-500 transition-colors hover:bg-stone-100">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Row label="Status">
+                  <StatusBadge value={status} onChange={onStatusChange} />
+                </Row>
+                <Row label="Add to Collection">
+                  <CollectionPicker book={book} />
+                </Row>
+              </div>
             </div>
-
-            <div className="flex flex-col gap-3">
-              <Row label="Status">
-                <StatusBadge value={status} onChange={onStatusChange} />
-              </Row>
-              <Row label="Add to Collection">
-                <CollectionPicker book={book} />
-              </Row>
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body                                // ...directly into <body>
+        )}
     </>
   );
 }
