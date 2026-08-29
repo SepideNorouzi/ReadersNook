@@ -6,12 +6,14 @@ from .views import (
     BookDetailAPIView,
     BookListAPIView,
     BookUpdateAPIView,
+    CollectionDetailAPIView,
     QuoteCreateAPIView,
     QuoteListAPIView,
     QuoteUpdateAPIView,
     CollectionListAPIView,
     CollectionCreateAPIView,
     CollectionUpdateDeleteAPIView,
+    CollectionAddRemoveBooksAPIView,
     AchievementCreateAPIView,
 )
 
@@ -28,8 +30,8 @@ urlpatterns = [
     path("books/<int:pk>/aesthetic_photos/create/", AestheticPhotoCreateAPIView.as_view(), name="aesthetic-photo-create"),
     path("collections/" , CollectionListAPIView.as_view() , name="collection-list"),
     path("collections/create/" , CollectionCreateAPIView.as_view() , name="collection-create"),
+    path("collections/<int:pk>/" , CollectionDetailAPIView.as_view() , name="collection-detail"),
     path("collections/<int:pk>/update/" , CollectionUpdateDeleteAPIView.as_view() , name="collection-update"),
+    path("collections/<int:pk>/books/<int:book_pk>/" , CollectionAddRemoveBooksAPIView.as_view() , name="collection-add-books"),
     path("achievement/create/" , AchievementCreateAPIView.as_view() , name="achievement-create"),
-
-
 ]

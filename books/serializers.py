@@ -57,11 +57,22 @@ class BookSerializer(serializers.ModelSerializer):
 
         return attrs
 
+
+class ShortBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ("id" , "title" , "author" , "cover_url" , "current_page" , "total_pages" , "status")
+
 class AestheticPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AestheticPhoto
         fields = ("id", "book", "image_url", "caption" , "order")
         read_only_fields = ("id", "created_at")
+
+
+class AestheticPhotoCreateSerializer(AestheticPhotoSerializer):
+    class Meta(AestheticPhotoSerializer.Meta):
+        read_only_fields = AestheticPhotoSerializer.Meta.read_only_fields + ("book",)
 
 
 class BookDetailSerializer(BookSerializer):
@@ -106,9 +117,32 @@ class CollectionSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+class ShortCollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collection
+        fields = ["id","name", "description"]
+        read_only_fields = ("id",)
+
+
+
+class CollectionDetailSerializer(serializers.ModelSerializer):
+    books = ShortBookSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Collection
+        fields = ["id","name", "description", "books", "created_by" , "created_at", "updated_at"]
+        read_only_fields = ["id", "created_by" ,"created_at", "updated_at"]
+
+
 class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Achievement
         fields = '__all__'
         read_only_fields = ("id",)
+
+
+class DetailMessageSerializer(serializers.Serializer):
+    """Simple ``{"detail": "..."}`` body used by membership endpoints."""
+
+    detail = serializers.CharField()
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import AestheticPhoto, Book, Quote
+from .models import AestheticPhoto, Book, Collection, Quote
 
 
 @admin.register(Book)
@@ -19,3 +19,11 @@ class QuoteAdmin(admin.ModelAdmin):
 @admin.register(AestheticPhoto)
 class AestheticPhotoAdmin(admin.ModelAdmin):
     list_display = ("book", "caption", "order")
+
+
+@admin.register(Collection)
+class CollectionAdmin(admin.ModelAdmin):
+    list_display = ("name", "created_by", "created_at")
+    list_filter = ("created_at",)
+    search_fields = ("name", "description", "created_by__username")
+    filter_horizontal = ("books",)
