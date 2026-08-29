@@ -18,7 +18,7 @@ export default function MobileNavbar({
     <header
       className={
         pinned
-          ? "sticky top-0 z-[1] h-0 w-full overflow-visible lg:hidden"
+          ? "absolute top-0 z-[1] h-0 w-full overflow-visible lg:hidden"
           : "absolute inset-x-0 top-0 z-20 lg:hidden"
       }
     >
