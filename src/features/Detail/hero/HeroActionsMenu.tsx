@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { MoreHorizontal, X } from "lucide-react";
+import { createPortal } from "react-dom";
+import { Bookmark, FolderPlus, MoreHorizontal, X } from "lucide-react";
 
 import type { Book, BookStatus } from "../../../types/book";
 import CollectionPicker from "../collection/CollectionPicker";
 import StatusBadge from "./StatusBadge";
-import { createPortal } from "react-dom";
 
 interface Props {
   book: Book;
@@ -25,8 +25,6 @@ export default function HeroActionsMenu({ book, status, onStatusChange }: Props)
     setVisible(false);
   }, [open]);
 
-  // Lock the page behind the sheet — otherwise the hero (h-screen on
-  // lg, but still tall on mobile) scrolls underneath it.
   useEffect(() => {
     if (!open) return;
     const original = document.body.style.overflow;
@@ -38,7 +36,6 @@ export default function HeroActionsMenu({ book, status, onStatusChange }: Props)
 
   function close() {
     setVisible(false);
-    // Unmount only after the exit transition has had time to play
     setTimeout(() => {
       setOpen(false);
       triggerRef.current?.focus();
@@ -62,8 +59,8 @@ export default function HeroActionsMenu({ book, status, onStatusChange }: Props)
         <MoreHorizontal className="h-4 w-4 text-stone-600" />
       </button>
 
-        {open &&
-        createPortal(                                // wrap in a portal...
+      {open &&
+        createPortal(
           <div className="fixed inset-0 z-[200]" role="dialog" aria-modal="true">
             <div
               onClick={close}
@@ -73,43 +70,60 @@ export default function HeroActionsMenu({ book, status, onStatusChange }: Props)
                 ${visible ? "opacity-100" : "opacity-0"}
               `}
             />
+
             <div
               className={`
-                absolute inset-x-0 bottom-0
-                rounded-t-3xl bg-white
-                px-5 pb-8 pt-3
-                shadow-[0_-20px_50px_rgba(35,23,17,0.25)]
+                absolute inset-x-0 top-0
+                pt-[max(0.75rem,env(safe-area-inset-top))]
+                rounded-b-3xl bg-[var(--surface)]
+                px-5 pb-6
+                shadow-[var(--shadow-lg)]
                 transition-transform duration-200 ease-out
-                ${visible ? "translate-y-0" : "translate-y-full"}
+                ${visible ? "translate-y-0" : "-translate-y-full"}
               `}
             >
-              <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-stone-200" />
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="font-serif text-lg text-brown-900">Options</h2>
-                <button onClick={close} aria-label="Close" className="flex h-8 w-8 items-center justify-center rounded-full text-stone-500 transition-colors hover:bg-stone-100">
+                <button
+                  onClick={close}
+                  aria-label="Close"
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-secondary)]"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
+
               <div className="flex flex-col gap-3">
-                <Row label="Status">
+                <Row icon={Bookmark} label="Status">
                   <StatusBadge value={status} onChange={onStatusChange} />
                 </Row>
-                <Row label="Add to Collection">
+                <Row icon={FolderPlus} label="Add to Collection">
                   <CollectionPicker book={book} />
                 </Row>
               </div>
             </div>
           </div>,
-          document.body                                // ...directly into <body>
+          document.body
         )}
     </>
   );
 }
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({
+  icon: Icon,
+  label,
+  children,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl border border-stone-200 bg-stone-50/60 px-4 py-3">
-      <span className="text-sm font-medium text-stone-700">{label}</span>
+    <div className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3">
+      <span className="flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)]">
+        <Icon className="h-4 w-4 text-[var(--brown-400)]" />
+        {label}
+      </span>
       {children}
     </div>
   );

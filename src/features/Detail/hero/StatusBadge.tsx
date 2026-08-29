@@ -78,7 +78,7 @@ export default function StatusBadge({ value, onChange }: Props) {
             border-stone-200
             bg-white
             shadow-xl
-            z-0
+            z-30
           "
         >
           {STATUS_OPTIONS.map((status) => (
