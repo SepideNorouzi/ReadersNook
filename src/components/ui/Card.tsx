@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { type HTMLAttributes, type ReactNode } from "react";
-import "../../styles/card.css";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
