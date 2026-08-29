@@ -1,6 +1,7 @@
 import { useUpdateBook } from "../../../hooks/useBooks";
-import type { Book } from "../../../types/book";
+import type { Book, BookStatus } from "../../../types/book";
 import CollectionPicker from "../collection/CollectionPicker";
+import HeroActionsMenu from "./HeroActionsMenu";
 import StatusBadge from "./StatusBadge";
 
 interface Props {
@@ -9,6 +10,10 @@ interface Props {
 
 export default function HeroContent({ book }: Props) {
   const updateBook = useUpdateBook();
+
+  const handleStatusChange = (status: BookStatus) => {
+    updateBook.mutate({ id: book.id, changes: { status } });
+  };
 
   return (
     <section
@@ -52,19 +57,19 @@ export default function HeroContent({ book }: Props) {
           >
             {book.author}
           </p>
-          <div className="flex flex-wrap items-center gap-2">
-            <StatusBadge
-              value={book.status}
-              onChange={(status) =>
-                updateBook.mutate({
-                  id: book.id,
-                  changes: {
-                    status,
-                  },
-                })
-              }
-            />
+          {/* Desktop: both pickers inline, unchanged */}
+          <div className="hidden lg:flex flex-wrap items-center gap-2">
+            <StatusBadge value={book.status} onChange={handleStatusChange} />
             <CollectionPicker book={book} />
+          </div>
+
+          {/* Mobile: collapsed into the "..." sheet */}
+          <div className="lg:hidden">
+            <HeroActionsMenu
+              book={book}
+              status={book.status}
+              onStatusChange={handleStatusChange}
+            />
           </div>
         </div>
 
