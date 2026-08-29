@@ -5,13 +5,23 @@ import { useAuth } from "../../auth/hooks/useAuth";
 
 interface MobileNavbarProps {
   onMenuClick: () => void;
+  pinned?: boolean;
 }
 
-export default function MobileNavbar({ onMenuClick }: MobileNavbarProps) {
+export default function MobileNavbar({
+  onMenuClick,
+  pinned = false,
+}: MobileNavbarProps) {
   const { user, userLoading } = useAuth();
 
   return (
-    <header className="absolute inset-x-0 top-0 z-20 lg:hidden">
+    <header
+      className={
+        pinned
+          ? "sticky top-0 z-[1] h-0 w-full overflow-visible lg:hidden"
+          : "absolute inset-x-0 top-0 z-20 lg:hidden"
+      }
+    >
       <nav
         className="
           mx-4
