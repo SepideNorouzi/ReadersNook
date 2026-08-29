@@ -65,7 +65,7 @@ export default function BookDetail() {
         aria-label="Go to Dashboard"
         className="
         hidden
-    fixed
+    absolute
     top-10
     right-10
     z-[100]
