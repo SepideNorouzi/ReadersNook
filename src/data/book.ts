@@ -1,6 +1,12 @@
 import type { Book } from "../types/book";
-import img1 from "../assets/hero.jpg";
 import { aestheticPhotos } from "./aesthetic";
+import img1 from "../assets/hero.jpg";
+import acomaf from "../assets/covers/acomaf.jpg";
+import acotar from "../assets/covers/acotar.jpg";
+import com from "../assets/covers/com.jpg";
+import chamber from "../assets/covers/chamber.jpg";
+import sorcerer from "../assets/covers/sorcerer.jpg";
+import tog from "../assets/covers/tog.jpg";
 
 const imagesByBookId = aestheticPhotos.reduce<Record<string, string[]>>(
   (acc, photo) => {
@@ -79,7 +85,7 @@ export const books: Book[] = [
     author: "Sarah J. Maas",
     summary:
       "A huntress is dragged into a treacherous faerie realm after killing a wolf in the woods, and finds her fate entangled with the immortal Fae lord who claims her as payment.",
-    coverUrl: "https://covers.openlibrary.org/b/isbn/9781619634442-L.jpg",
+    coverUrl: acotar,
     currentPage: 432,
     totalPages: 432,
     status: "read",
@@ -91,7 +97,7 @@ export const books: Book[] = [
     author: "Sarah J. Maas",
     summary:
       "Haunted by what she survived beneath the mountain, a newly transformed Fae woman is drawn into a dangerous bargain with the enigmatic High Lord of the Night Court.",
-    coverUrl: "https://covers.openlibrary.org/b/isbn/9781635575583-L.jpg",
+    coverUrl: acomaf,
     currentPage: 340,
     totalPages: 626,
     status: "current",
@@ -105,7 +111,7 @@ export const books: Book[] = [
     author: "Sarah J. Maas",
     summary:
       "A legendary assassin is pulled from a labor camp to compete for her freedom as the king's champion, only to find someone is hunting the other competitors.",
-    coverUrl: "https://covers.openlibrary.org/b/isbn/9781619630345-L.jpg",
+    coverUrl: tog,
     currentPage: 0,
     totalPages: 404,
     status: "tbr",
@@ -117,7 +123,7 @@ export const books: Book[] = [
     author: "Sarah J. Maas",
     summary:
       "Now serving as the king's reluctant champion, an assassin secretly works against the crown while a deadly conspiracy closes in around everyone she loves.",
-    coverUrl: "https://covers.openlibrary.org/b/isbn/9781619630628-L.jpg",
+    coverUrl: com,
     currentPage: 418,
     totalPages: 418,
     status: "read",
@@ -131,7 +137,7 @@ export const books: Book[] = [
     author: "J.K. Rowling",
     summary:
       "An orphaned boy discovers on his eleventh birthday that he's a wizard, and is whisked off to a magical school where an old mystery awaits him.",
-    coverUrl: "https://covers.openlibrary.org/b/isbn/9780590353427-L.jpg",
+    coverUrl: sorcerer,
     currentPage: 150,
     totalPages: 309,
     status: "current",
@@ -143,7 +149,7 @@ export const books: Book[] = [
     author: "J.K. Rowling",
     summary:
       "A hidden chamber and a mysterious voice in the walls threaten Hogwarts as a young wizard uncovers a decades-old secret tied to the school's founding.",
-    coverUrl: "https://covers.openlibrary.org/b/isbn/9780439064873-L.jpg",
+    coverUrl: chamber,
     currentPage: 0,
     totalPages: 341,
     status: "tbr",
