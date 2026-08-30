@@ -1,4 +1,5 @@
 import hero from "../../assets/hero.jpg";
+import hero1 from "../../assets/hero1.jpg";
 import useScrollFade from "../../hooks/useScrollFade";
 
 export default function AppHeader() {
@@ -7,67 +8,97 @@ export default function AppHeader() {
   return (
     <section
       ref={fadeRef}
-      className="sticky top-0 z-0 h-[180px] overflow-hidden sm:h-[220px] lg:h-[320px] xl:h-[360px]"
+      className="
+    sticky
+    top-0
+    z-0
+    h-[240px]
+    overflow-hidden
+
+    sm:h-[260px]
+
+    lg:h-[320px]
+
+    xl:h-[360px]
+  "
     >
-      <img
-        src={hero}
-        alt="Books on a shelf"
-        className="absolute inset-0 h-full w-full object-cover"
+<img
+  src={hero1}
+  alt="Books on a shelf"
+  className="
+    absolute
+    inset-0
+    h-full
+    w-full
+    object-cover
+    object-center
+
+    lg:hidden
+  "
+/>
+
+<img
+  src={hero}
+  alt="Books on a shelf"
+  className="
+    absolute
+    inset-0
+    h-full
+    w-full
+    object-cover
+    object-center
+
+    hidden
+    lg:block
+  "
+/>
+
+      <div
+        className="
+      absolute
+      inset-0
+      bg-gradient-to-r
+      from-black/35
+      via-black/10
+      to-black/40
+    "
       />
 
       <div
         className="
-absolute
-inset-0
+      hidden
+      lg:block
+      absolute
+      top-8
+      right-6
+      max-w-[320px]
+      text-right
+      text-white
 
-bg-gradient-to-r
-
-from-black/35
-via-black/10
-to-black/40
-"
-      />
-      <div
-        className="
-        hidden 
-        lg:block
-absolute
-
-top-8
-right-6
-
-max-w-[320px]
-
-text-right
-text-white
-
-lg:top-12
-lg:right-12
-lg:max-w-md
-"
+      lg:top-12
+      lg:right-12
+      lg:max-w-md
+    "
       >
         <h2
           className="
-text-2xl
-font-heading
-
-sm:text-2xl
-lg:text-4xl
-"
+        text-2xl
+        font-hero
+        sm:text-2xl
+        lg:text-6xl
+      "
         >
           Escape Into Stories
         </h2>
 
         <p
           className="
-mt-2
-text-sm
-
-sm:text-base
-lg:text-lg
-
-text-white/90
-"
+        mt-2
+        text-sm
+        sm:text-base
+        lg:text-lg
+        text-white/90
+      "
         >
           Build your own cozy digital library.
         </p>
