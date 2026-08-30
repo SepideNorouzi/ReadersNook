@@ -13,9 +13,17 @@ export default function TBRCard({ className }: Props) {
   if (isLoading) {
     return (
       <Card
-        className={`flex h-full items-center justify-center ${className ?? ""}`}
+        className={`
+          flex
+          items-center
+          justify-center
+
+          ${className ?? ""}
+        `}
       >
-        <p className="text-sm text-[var(--text-secondary)]">Loading...</p>
+        <p className="text-sm text-[var(--text-secondary)]">
+          Loading...
+        </p>
       </Card>
     );
   }
@@ -24,11 +32,13 @@ export default function TBRCard({ className }: Props) {
     <Card
       className={`
         flex
-        h-[440px]
-        sm:h-[480px]
-        lg:h-full
         min-h-0
         flex-col
+
+        max-h-[440px]
+        sm:max-h-[480px]
+        lg:h-full
+        lg:max-h-full
 
         rounded-[22px]
         sm:rounded-[28px]
@@ -47,7 +57,10 @@ export default function TBRCard({ className }: Props) {
       {/* Header */}
       <div className="mb-3 flex shrink-0 items-center justify-between lg:mb-5">
         <div className="flex items-center gap-2">
-          <SquarePen size={14} className="text-[var(--brown-700)] lg:size-4" />
+          <SquarePen
+            size={14}
+            className="text-[var(--brown-700)] lg:size-4"
+          />
 
           <h2 className="font-heading text-sm font-semibold text-[var(--text)] sm:text-[15px] lg:text-lg">
             <span className="lg:hidden">To Read</span>
@@ -62,13 +75,14 @@ export default function TBRCard({ className }: Props) {
 
             px-2
             py-0.5
+
             sm:px-2.5
             sm:py-1
 
             text-[10px]
             sm:text-[11px]
-            font-medium
 
+            font-medium
             text-[var(--text-secondary)]
           "
         >
@@ -76,6 +90,7 @@ export default function TBRCard({ className }: Props) {
         </span>
       </div>
 
+      {/* Content */}
       {books.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center px-2">
           <BookOpen
@@ -98,21 +113,27 @@ export default function TBRCard({ className }: Props) {
               h-full
               overflow-y-auto
               overflow-x-hidden
+
               p-0.5
+
               scrollbar-hidden
             "
           >
             <TbrBookGrid books={books} />
           </div>
 
+          {/* Bottom fade */}
           <div
             className="
               pointer-events-none
+
               absolute
               bottom-0
               left-0
               right-0
+
               h-8
+
               bg-gradient-to-t
               from-[var(--surface)]
               to-transparent
