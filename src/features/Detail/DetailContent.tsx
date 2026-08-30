@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Book } from "../../types/book";
 
 import HeroContent from "./hero/HeroContent";
@@ -11,21 +12,33 @@ interface Props {
 }
 
 export default function DetailContent({ book }: Props) {
+  const [aestheticImages, setAestheticImages] = useState(
+    book.aestheticImages
+  );
+
+  function handleRemoveImage(url: string) {
+    setAestheticImages((prev) =>
+      prev.filter((image) => image !== url)
+    );
+  }
+
   return (
     <div
       className="
-      min-w-0
-
-      pb-24
-
-      lg:pl-40
+        min-w-0
+        pb-24
+        lg:pl-40
       "
     >
       <HeroContent book={book} />
       <BookStats book={book} />
       <BookSummary book={book} />
       <QuoteSec book={book} />
-      <Aesthetic images={book.aestheticImages} />
+
+      <Aesthetic
+        images={aestheticImages}
+        onRemoveImage={handleRemoveImage}
+      />
     </div>
   );
 }

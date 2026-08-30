@@ -9,9 +9,10 @@ interface LocalPhoto {
 
 interface Props {
   images: string[];
+  onRemoveImage?: (url: string) => void;
 }
 
-export default function Aesthetic({ images }: Props) {
+export default function Aesthetic({ images, onRemoveImage }: Props) {
   const [localPhotos, setLocalPhotos] = useState<LocalPhoto[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -286,59 +287,60 @@ lg:rounded-[18px]
               <div
                 key={`${url}-${index}`}
                 className="
-                group
-                relative
-                aspect-square
-                origin-center
-                rotate-[var(--tilt)]
-                overflow-hidden
-                rounded-lg
-sm:rounded-xl
-lg:rounded-[18px]
-                bg-white
-                shadow-[0_10px_24px_rgba(35,23,17,0.16)]
-                transition-all
-                duration-500
-                ease-out
-                hover:z-10
-                hover:rotate-0
-                hover:scale-[1.06]
-                hover:shadow-[0_20px_45px_rgba(35,23,17,0.24)]
-              "
+      group
+      relative
+      aspect-square
+      origin-center
+      rotate-[var(--tilt)]
+      overflow-hidden
+      rounded-lg
+      sm:rounded-xl
+      lg:rounded-[18px]
+      bg-white
+      shadow-[0_10px_24px_rgba(35,23,17,0.16)]
+      transition-all
+      duration-500
+      ease-out
+      hover:z-10
+      hover:rotate-0
+      hover:scale-[1.06]
+      hover:shadow-[0_20px_45px_rgba(35,23,17,0.24)]
+    "
               >
                 <img src={url} alt="" className="h-full w-full object-cover" />
+
                 <button
-                  onClick={() => handleRemoveLocalPhoto(photo.id)}
+                  onClick={() => onRemoveImage?.(url)}
                   className="
-    absolute
-    right-2
-    top-2
-    z-20
+        absolute
+        right-2
+        top-2
+        z-20
 
-    flex
-    h-7
-    w-7
-    items-center
-    justify-center
+        flex
+        h-7
+        w-7
+        items-center
+        justify-center
 
-    rounded-full
-    bg-white/90
-    backdrop-blur-md
-    text-stone-700
-    shadow-lg
+        rounded-full
+        bg-white/90
+        backdrop-blur-md
+        text-stone-700
+        shadow-lg
 
-    opacity-0
-    scale-90
+        opacity-0
+        scale-90
 
-    transition-all
-    duration-300
+        transition-all
+        duration-300
 
-    group-hover:opacity-100
-    group-hover:scale-100
+        group-hover:opacity-100
+        group-hover:scale-100
 
-    hover:bg-red-500
-    hover:text-white
-  "
+        hover:bg-red-500
+        hover:text-white
+      "
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
