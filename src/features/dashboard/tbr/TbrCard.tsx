@@ -17,6 +17,11 @@ export default function TBRCard({ className }: Props) {
           flex
           items-center
           justify-center
+          overflow-hidden
+          rounded-[22px]
+          sm:rounded-[28px]
+
+          shadow-[0_8px_24px_rgba(35,23,17,0.07)]
 
           ${className ?? ""}
         `}
@@ -34,6 +39,7 @@ export default function TBRCard({ className }: Props) {
         flex
         min-h-0
         flex-col
+        overflow-hidden
 
         max-h-[440px]
         sm:max-h-[480px]
@@ -46,6 +52,9 @@ export default function TBRCard({ className }: Props) {
         bg-gradient-to-b
         from-white
         to-[var(--surface-hover)]
+
+        shadow-[0_8px_28px_rgba(35,23,17,0.08)]
+        sm:shadow-[0_10px_32px_rgba(35,23,17,0.09)]
 
         p-3.5
         sm:p-4
@@ -107,7 +116,7 @@ export default function TBRCard({ className }: Props) {
           </p>
         </div>
       ) : (
-        <div className="relative min-h-0 flex-1 overflow-hidden">
+        <div className="relative min-h-0 flex-1 overflow-hidden rounded-[16px] sm:rounded-[20px]">
           <div
             className="
               h-full
@@ -115,6 +124,7 @@ export default function TBRCard({ className }: Props) {
               overflow-x-hidden
 
               p-0.5
+              pb-3
 
               scrollbar-hidden
             "
@@ -122,21 +132,21 @@ export default function TBRCard({ className }: Props) {
             <TbrBookGrid books={books} />
           </div>
 
-          {/* Bottom fade */}
+          {/* Soft bottom fade */}
           <div
             className="
               pointer-events-none
-
               absolute
+              inset-x-0
               bottom-0
-              left-0
-              right-0
-
-              h-8
+              h-10
 
               bg-gradient-to-t
-              from-[var(--surface)]
+              from-[var(--surface-hover)]
+              via-[var(--surface-hover)]/70
               to-transparent
+
+              opacity-90
             "
           />
         </div>

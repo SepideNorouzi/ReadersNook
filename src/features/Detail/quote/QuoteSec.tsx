@@ -10,7 +10,14 @@ export default function QuoteSec({ book }: Props) {
   return (
     <section
       className="
-        px-15
+         px-5
+        pb-16
+
+        sm:px-8
+        sm:pb-15
+
+        lg:px-12
+        lg:pb-0
       "
     >
       <div className="mx-auto max-w-6xl">
