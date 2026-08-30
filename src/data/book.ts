@@ -1,6 +1,5 @@
 import type { Book } from "../types/book";
 import { aestheticPhotos } from "./aesthetic";
-import img1 from "../assets/hero.jpg";
 import acomaf from "../assets/covers/acomaf.jpg";
 import acotar from "../assets/covers/acotar.jpg";
 import com from "../assets/covers/com.jpg";
@@ -45,7 +44,7 @@ const createBook = ({
 
   coverUrl,
 
-  aestheticImages: imagesByBookId[id] ?? [img1],
+  aestheticImages: imagesByBookId[id] ?? [],
 
   currentPage,
   totalPages,
