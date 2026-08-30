@@ -248,43 +248,36 @@ lg:rounded-[18px]
                   onClick={() => handleRemoveLocalPhoto(photo.id)}
                   className="
     absolute
-    right-1
-top-1
+    right-2
+    top-2
+    z-20
 
-sm:right-2
-sm:top-2
-
-h-5
-w-5
-
-sm:h-7
-sm:w-7
     flex
+    h-7
+    w-7
     items-center
     justify-center
+
     rounded-full
     bg-white/90
     backdrop-blur-md
     text-stone-700
     shadow-lg
+
     opacity-0
     scale-90
+
     transition-all
     duration-300
+
     group-hover:opacity-100
     group-hover:scale-100
+
     hover:bg-red-500
     hover:text-white
   "
                 >
-                  <Trash2
-                    className="
-        h-3
-        w-3
-        lg:h-4
-        lg:w-4
-    "
-                  />
+                  <Trash2 className="h-4 w-4" />
                 </button>
               </div>
             ))}
@@ -313,11 +306,42 @@ lg:rounded-[18px]
                 hover:shadow-[0_20px_45px_rgba(35,23,17,0.24)]
               "
               >
-                <img
-                  src={url}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
+                <img src={url} alt="" className="h-full w-full object-cover" />
+                <button
+                  onClick={() => handleRemoveLocalPhoto(photo.id)}
+                  className="
+    absolute
+    right-2
+    top-2
+    z-20
+
+    flex
+    h-7
+    w-7
+    items-center
+    justify-center
+
+    rounded-full
+    bg-white/90
+    backdrop-blur-md
+    text-stone-700
+    shadow-lg
+
+    opacity-0
+    scale-90
+
+    transition-all
+    duration-300
+
+    group-hover:opacity-100
+    group-hover:scale-100
+
+    hover:bg-red-500
+    hover:text-white
+  "
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
               </div>
             ))}
           </div>
