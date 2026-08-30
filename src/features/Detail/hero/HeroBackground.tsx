@@ -1,26 +1,29 @@
-
-
 interface Props {
   image: string;
   gradient: string;
+  progress: number;
 }
 
-export default function HeroBackground({ image, gradient }: Props) {
+export default function HeroBackground({
+  image,
+  gradient,
+  progress,
+}: Props) {
   return (
     <div
       className="
-      relative
+        relative
 
-      h-full
-      w-full
+        h-full
+        w-full
 
-      lg:w-[340px]
+        lg:w-[340px]
 
-      overflow-hidden
+        overflow-hidden
 
-      rounded-b-[36px]
-      lg:rounded-b-none
-      lg:rounded-r-[36px]
+        rounded-b-[36px]
+        lg:rounded-b-none
+        lg:rounded-r-[36px]
       "
       style={{
         background: gradient,
@@ -31,29 +34,29 @@ export default function HeroBackground({ image, gradient }: Props) {
         alt=""
         aria-hidden
         className="
-        absolute
-        inset-0
+          absolute
+          inset-0
 
-        h-full
-        w-full
+          h-full
+          w-full
 
-        object-cover
+          object-cover
 
-        scale-[1.6]
-
-        blur-[70px]
-
-        opacity-35
+          blur-[70px]
         "
+        style={{
+          transform: `scale(${1.6 - progress * 0.12})`,
+          opacity: 0.35 - progress * 0.05,
+        }}
       />
 
       <div
         className="
-        absolute
-        inset-0
+          absolute
+          inset-0
 
-        bg-white/10
-        backdrop-blur-md
+          bg-white/10
+          backdrop-blur-md
         "
       />
     </div>
