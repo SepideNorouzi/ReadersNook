@@ -27,16 +27,18 @@ export default function SidebarContent({
       <div className="flex items-center gap-3">
         <div
           className={`
-            flex items-center justify-center
-            rounded-2xl
-            bg-gradient-to-br
-            from-[var(--brown-900)]
-            via-[var(--brown-700)]
-            to-[var(--brown-500)]
-            text-white
-            shadow-[0_12px_30px_rgba(54,35,27,.28),inset_0_1px_1px_rgba(255,255,255,.18)]
-            ${isMobile ? "h-10 w-10" : "h-12 w-12"}
-          `}
+  flex items-center justify-center
+  rounded-2xl
+  bg-gradient-to-br
+  ${
+    isMobile
+      ? "from-[var(--brown-900)] via-[var(--brown-700)] to-[var(--brown-500)]"
+      : "from-[var(--sidebar-accent-start)] to-[var(--sidebar-accent-end)]"
+  }
+  text-white
+  shadow-[0_12px_30px_rgba(54,35,27,.28),inset_0_1px_1px_rgba(255,255,255,.18)]
+  ${isMobile ? "h-10 w-10" : "h-12 w-12"}
+`}
         >
           <BookOpen size={isMobile ? 18 : 22} />
         </div>
@@ -72,18 +74,20 @@ export default function SidebarContent({
               to={path}
               onClick={onNavigate}
               className={`
-                group relative flex items-center gap-4 rounded-2xl
-                transition-all duration-200 ease-out
-                focus-visible:outline-none focus-visible:ring-2
-                focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2
-                focus-visible:ring-offset-[var(--bg)]
-                ${isMobile ? "px-3 py-2.5" : "px-4 py-3"}
-                ${
-                  active
-                    ? "bg-gradient-to-r from-[var(--brown-900)] to-[var(--brown-800)] text-white shadow-[var(--shadow)]"
-                    : "text-[var(--text-secondary)] hover:shadow-[rgba(54,35,27,.08)] hover:translate-x-0.5"
-                }
-              `}
+  group relative flex items-center gap-4 rounded-2xl
+  transition-all duration-200 ease-out
+  focus-visible:outline-none focus-visible:ring-2
+  focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2
+  focus-visible:ring-offset-[var(--bg)]
+  ${isMobile ? "px-3 py-2.5" : "px-4 py-3"}
+  ${
+    active
+      ? isMobile
+        ? "bg-gradient-to-r from-[var(--brown-900)] to-[var(--brown-800)] text-white shadow-[var(--shadow)]"
+        : "bg-white/[0.06] text-[var(--sidebar-text)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+      : "text-[var(--text-secondary)] hover:translate-x-0.5"
+  }
+`}
             >
               {active && (
                 <span
