@@ -1,0 +1,45 @@
+.hero-title {
+  display: inline-block;
+
+  font-weight: 400;
+  line-height: 1;
+
+  color: white;
+
+  text-shadow:
+    0 2px 5px rgba(60, 35, 20, 0.28),
+    0 5px 18px rgba(212, 169, 94, 0.18);
+
+  background: linear-gradient(
+    110deg,
+    #ffffff 0%,
+    #ffffff 35%,
+    var(--gold-light) 45%,
+    #fff1c7 50%,
+    var(--gold-light) 55%,
+    #ffffff 65%,
+    #ffffff 100%
+  );
+
+  background-size: 250% 100%;
+  background-position: 150% 0;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  animation: hero-shimmer 5s ease-in-out infinite;
+}
+
+@keyframes hero-shimmer {
+  0%,
+  55% {
+    background-position: 150% 0;
+  }
+
+  75%,
+  100% {
+    background-position: -50% 0;
+  }
+}

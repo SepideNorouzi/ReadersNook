@@ -44,7 +44,7 @@ export default function SidebarContent({
         </div>
         <div>
           <h1
-            className={`font-heading font-semibold text-[var(--text)] ${
+            className={`font-heading font-bold text-[var(--text)] ${
               isMobile ? "text-base" : "text-lg"
             }`}
           >

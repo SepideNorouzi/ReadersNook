@@ -11,7 +11,7 @@ export default function DashboardHeader() {
           lg:text-4xl
 
           font-heading
-          font-semibold
+          font-bold
           text-[var(--text)]
         "
       >

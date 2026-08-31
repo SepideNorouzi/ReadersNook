@@ -1,5 +1,6 @@
 import illustration from "../../assets/hero.png";
 import useScrollFade from "../../hooks/useScrollFade";
+import "../../styles/headerEffects.css";
 
 export default function AppHeader() {
   const fadeRef = useScrollFade();
@@ -8,36 +9,37 @@ export default function AppHeader() {
     <section
       ref={fadeRef}
       className="
-    sticky
-    top-0
-    z-0
-    h-[240px]
-    overflow-hidden
+        sticky
+        top-0
+        z-0
+        h-[240px]
+        overflow-hidden
 
-    sm:h-[260px]
+        sm:h-[260px]
 
-    lg:h-[320px]
+        lg:h-[320px]
 
-    xl:h-[360px]
-  "
+        xl:h-[360px]
+      "
     >
       <div
         className="
-      absolute
-      left-17
-      bottom-13
+          absolute
+          right-10
+          bottom-8
 
-      h-35
-      w-35
+          h-35
+          w-35
 
-      sm:right-8
-      sm:h-52
-      sm:w-52
+          sm:right-8
+          sm:h-52
+          sm:w-52
 
-      lg:left-17
-      lg:h-70
-      lg:w-70
-    "
+          lg:left-17
+          lg:bottom-13
+          lg:h-70
+          lg:w-70
+        "
       >
         <img
           src={illustration}
@@ -48,50 +50,58 @@ export default function AppHeader() {
 
       <div
         className="
-      absolute
-      inset-0
-      bg-gradient-to-r
-      from-black/35
-      via-black/10
-      to-black/40
-    "
+          pointer-events-none
+          absolute
+          inset-0
+
+          lg:bg-[linear-gradient(to_right,transparent_0%,transparent_40%,rgba(0,0,0,0.1)_62%,rgba(0,0,0,0.4)_100%)]
+
+          bg-[linear-gradient(to_top,transparent_0%,transparent_10%,rgba(0,0,0,0.1)_62%,rgba(0,0,0,0.4)_100%)]
+        "
       />
 
       <div
         className="
-      hidden
-      lg:block
-      absolute
-      top-8
-      right-6
-      max-w-[320px]
-      text-right
-      text-white
+          absolute
+          right-6
+          top-8
+          max-w-[320px]
+          text-right
 
-      lg:top-12
-      lg:right-12
-      lg:max-w-md
-    "
+          lg:right-12
+          lg:top-12
+          lg:max-w-md
+        "
       >
         <h2
           className="
-        text-2xl
-        font-hero
-        sm:text-2xl
-        lg:text-6xl
-      "
+            hero-title
+            font-hero
+            text-3xl
+
+            sm:text-4xl
+
+            lg:text-6xl
+          "
         >
           Escape Into Stories
         </h2>
 
         <p
           className="
-        mt-2
-        text-sm
-        sm:text-base
-        lg:text-lg
-        text-white/90
-      "
+            mt-2
+            font-serif
+            text-sm
+            font-medium
+            leading-relaxed
+            tracking-wide
+            text-[var(--burgundy-dark)]
+
+            sm:text-base
+
+            lg:mt-3
+            lg:text-sm
+          "
         >
           Build your own cozy digital library.
         </p>
