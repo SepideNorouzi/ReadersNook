@@ -4,6 +4,7 @@ import SettingsActions from "../features/settings/SettingsActions";
 
 import { useBooks } from "../hooks/useBooks";
 import { useAuth } from "../auth/hooks/useAuth";
+import ReadingGoalSettings from "../features/settings/ReadingGoal";
 
 export default function Settings() {
   const { user, userLoading } = useAuth();
@@ -31,6 +32,9 @@ export default function Settings() {
     <main className="flex flex-col gap-6 p-10 pt-20 md:pt-8">
       <ProfileHeader user={user} />
       <ProfileStats books={books} />
+
+      <ReadingGoalSettings />
+
       <SettingsActions />
     </main>
   );
