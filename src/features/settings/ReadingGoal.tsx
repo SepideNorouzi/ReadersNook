@@ -65,30 +65,6 @@ export default function ReadingGoalSettings() {
           <Plus size={18} />
         </button>
       </div>
-
-      <input
-        type="number"
-        min={1}
-        max={365}
-        value={goal}
-        onChange={(e) => {
-          const value = Number(e.target.value);
-
-          if (!Number.isNaN(value) && value >= 1 && value <= 365) {
-            setGoal(value);
-            setReadingGoal(value);
-          }
-        }}
-        className="
-          w-full rounded-xl
-          border border-[var(--border)]
-          bg-[var(--surface)]
-          px-4 py-3
-          text-[var(--text)]
-          outline-none
-          focus:border-[var(--brown-500)]
-        "
-      />
     </Card>
   );
 }
