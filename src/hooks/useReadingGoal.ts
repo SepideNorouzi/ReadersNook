@@ -1,22 +1,20 @@
-import { useMemo } from "react";
+import { useReadingGoalStore } from "../store/readingGoalStore";
 import { useBooks } from "./useBooks";
 
-/** Keep in sync with achievements YEARLY_GOAL. */
-export const YEARLY_GOAL = 10;
-
 export function useReadingGoal() {
-  const { data: books = [], isLoading, error } = useBooks();
+  const { data: books = [], isLoading: booksLoading } = useBooks();
 
-  return useMemo(() => {
-    const booksRead = books.filter((book) => book.status === "read").length;
-    const progress = Math.min((booksRead / YEARLY_GOAL) * 100, 100);
+  const yearlyGoal = useReadingGoalStore((state) => state.readingGoal);
 
-    return {
-      booksRead,
-      yearlyGoal: YEARLY_GOAL,
-      progress,
-      isLoading,
-      error,
-    };
-  }, [books, isLoading, error]);
+  const booksRead = books.filter((book) => book.status === "read").length;
+
+  const progress =
+    yearlyGoal > 0 ? Math.min((booksRead / yearlyGoal) * 100, 100) : 0;
+
+  return {
+    booksRead,
+    yearlyGoal,
+    progress,
+    isLoading: booksLoading,
+  };
 }

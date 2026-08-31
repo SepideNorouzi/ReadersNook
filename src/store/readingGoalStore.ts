@@ -1,22 +1,21 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 interface ReadingGoalState {
   readingGoal: number;
   setReadingGoal: (goal: number) => void;
+  resetReadingGoal: () => void;
 }
 
-export const useReadingGoalStore = create<ReadingGoalState>()(
-  persist(
-    (set) => ({
-      readingGoal: 12,
+const DEFAULT_READING_GOAL = 12;
 
-      setReadingGoal: (goal) => {
-        set({ readingGoal: goal });
-      },
-    }),
-    {
-      name: "reading-goal",
-    },
-  ),
-);
+export const useReadingGoalStore = create<ReadingGoalState>((set) => ({
+  readingGoal: DEFAULT_READING_GOAL,
+
+  setReadingGoal: (goal) => {
+    set({ readingGoal: goal });
+  },
+
+  resetReadingGoal: () => {
+    set({ readingGoal: DEFAULT_READING_GOAL });
+  },
+}));

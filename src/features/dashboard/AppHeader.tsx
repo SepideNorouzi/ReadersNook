@@ -1,5 +1,4 @@
-import hero from "../../assets/hero.jpg";
-import hero1 from "../../assets/hero1.jpg";
+import illustration from "../../assets/hero.png";
 import useScrollFade from "../../hooks/useScrollFade";
 
 export default function AppHeader() {
@@ -22,36 +21,30 @@ export default function AppHeader() {
     xl:h-[360px]
   "
     >
-<img
-  src={hero1}
-  alt="Books on a shelf"
-  className="
-    absolute
-    inset-0
-    h-full
-    w-full
-    object-cover
-    object-center
+      <div
+        className="
+      absolute
+      left-17
+      bottom-13
 
-    lg:hidden
-  "
-/>
+      h-35
+      w-35
 
-<img
-  src={hero}
-  alt="Books on a shelf"
-  className="
-    absolute
-    inset-0
-    h-full
-    w-full
-    object-cover
-    object-center
+      sm:right-8
+      sm:h-52
+      sm:w-52
 
-    hidden
-    lg:block
-  "
-/>
+      lg:left-17
+      lg:h-70
+      lg:w-70
+    "
+      >
+        <img
+          src={illustration}
+          alt="Books on a shelf"
+          className="h-full w-full object-contain"
+        />
+      </div>
 
       <div
         className="

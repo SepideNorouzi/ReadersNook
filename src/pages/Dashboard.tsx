@@ -31,7 +31,6 @@ export default function Dashboard() {
           lg:pt-10
           lg:pb-10
 
-          shadow-[var(--shadow-lg)]
         "
       >
         <button
