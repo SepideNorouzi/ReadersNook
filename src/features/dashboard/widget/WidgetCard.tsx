@@ -1,4 +1,4 @@
-import hero from "../../../assets/hero.jpg";
+import widget from "../../../assets/oo.jpg";
 
 interface WidgetCardProps {
   className?: string;
@@ -19,7 +19,7 @@ export default function WidgetCard({ className }: WidgetCardProps) {
       `}
     >
       <img
-        src={hero}
+        src={widget}
         alt="Reading corner"
         className="
           h-full
