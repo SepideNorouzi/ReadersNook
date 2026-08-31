@@ -46,7 +46,18 @@ export default function Library() {
         </div>
       </div>
 
-      <LibraryFilters active={filter} onChange={setFilter} counts={counts} />
+  <div
+  className="
+    rounded-[20px]
+    border
+    border-[var(--brown-200)]
+    bg-[var(--surface)]
+    p-2
+    shadow-[var(--shadow-sm)]
+  "
+>
+  <LibraryFilters active={filter} onChange={setFilter} counts={counts} />
+</div>
 
       {filteredBooks.length === 0 ? (
         <p className="text-[var(--text-muted)]">No books match this filter.</p>
