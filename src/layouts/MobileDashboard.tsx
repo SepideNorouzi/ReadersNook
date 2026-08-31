@@ -20,6 +20,20 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
           ${isSidebarOpen ? "overflow-y-hidden" : "overflow-y-auto"}
         `}
       >
+        {!pinNavbar && (
+          <div
+            aria-hidden
+            className="
+              pointer-events-none
+              absolute
+              inset-x-0
+              top-0
+              z-10
+              h-24
+              bg-[linear-gradient(180deg,#1c130eb3_0%,#1c130e96_25%,#3b281f78_50%,#3b281f32_75%,transparent_100%)]
+            "
+          />
+        )}
         <MobileNavbar
           onMenuClick={() => setIsSidebarOpen(true)}
           pinned={pinNavbar}

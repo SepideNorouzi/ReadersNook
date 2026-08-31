@@ -62,6 +62,9 @@ export default function AppHeader() {
 
       <div
         className="
+        hidden
+
+          lg:block
           absolute
           right-6
           top-8
@@ -77,11 +80,11 @@ export default function AppHeader() {
           className="
             hero-title
             font-hero
-            text-3xl
+            text-xl
 
             sm:text-4xl
 
-            lg:text-6xl
+            lg:text-7xl
           "
         >
           Escape Into Stories

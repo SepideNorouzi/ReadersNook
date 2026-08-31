@@ -7,7 +7,7 @@ export default function Search() {
   const [query, setQuery] = useState("");
 
   return (
-    <main className="flex flex-col gap-8 p-8 pt-20 md:pt-10">
+    <main className="flex flex-col gap-8 p-8 pt-24 md:pt-10">
       <div>
         <h1 className="font-heading text-2xl font-semibold text-[var(--text)]">
           Search
