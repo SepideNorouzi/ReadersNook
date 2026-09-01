@@ -7,15 +7,7 @@ export default function Search() {
   const [query, setQuery] = useState("");
 
   return (
-    <main className="flex flex-col gap-8 p-8 pt-24 md:pt-10">
-      <div>
-        <h1 className="font-heading text-2xl font-semibold text-[var(--text)]">
-          Search
-        </h1>
-        <p className="mt-1 text-[var(--text-secondary)]">
-          Find your next read and add it to your library.
-        </p>
-      </div>
+    <main className="flex flex-col gap-8 p-8 pt-20 md:pt-20">
 
       <SearchBar onSearch={setQuery} />
 

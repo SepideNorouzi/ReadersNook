@@ -34,17 +34,7 @@ export default function Library() {
   }
 
   return (
-    <main className="flex flex-col gap-8 p-4 sm:p-6 lg:p-10 pt-24 md:pt-0">
-      <div className="flex items-center gap-4">
-        <div>
-          <h1 className="font-heading text-2xl font-semibold text-[var(--text)]">
-            Library
-          </h1>
-          <p className="text-sm text-[var(--text-secondary)]">
-            {counts.all} books in your collection
-          </p>
-        </div>
-      </div>
+    <main className="flex flex-col gap-8 p-4 sm:p-6 lg:p-20 pt-10 md:pt-0">
 
   <div
   className="
