@@ -40,3 +40,12 @@ export async function updateQuote(
   );
   return mapApiQuoteToQuote(apiQuote);
 }
+
+export async function deleteQuote(
+  bookId: string,
+  quoteId: string,
+): Promise<void> {
+  await apiFetch<void>(`/books/${bookId}/quotes/${quoteId}/delete/`, {
+    method: "DELETE",
+  });
+}
