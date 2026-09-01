@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createQuote, updateQuote } from "../../services/quotes";
+import { createQuote, updateQuote, deleteQuote } from "../../services/quotes";
 import type { QuoteChanges, QuoteDraft } from "../../types/quote";
 import { BOOKS_KEY, bookDetailKey } from "../book/bookRepo";
 
@@ -52,16 +52,13 @@ export const adminQuoteRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: async ({
+      mutationFn: ({
         bookId,
         quoteId,
       }: {
         bookId: string;
         quoteId: string;
-      }) => {
-        void bookId;
-        void quoteId;
-      },
+      }) => deleteQuote(bookId, quoteId),
       onSuccess: (_result, { bookId }) => {
         invalidateBookQueries(queryClient, bookId);
       },
