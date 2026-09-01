@@ -2,7 +2,6 @@ import ProfileHeader from "../features/settings/ProfileHeader";
 import ProfileStats from "../features/settings/ProfileStats";
 import SettingsActions from "../features/settings/SettingsActions";
 import ReadingGoalSettings from "../features/settings/ReadingGoal";
-import AddedQuotes from "../features/settings/AddedQuotes";
 
 import { useBooks } from "../hooks/useBooks";
 import { useAuth } from "../auth/hooks/useAuth";
@@ -59,9 +58,6 @@ export default function Settings() {
             <SettingsActions />
           </div>
         </section>
-
-        {/* Added quotes */}
-        <AddedQuotes books={books} />
       </div>
     </main>
   );
