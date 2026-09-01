@@ -7,31 +7,30 @@ export default function Dashboard() {
   return (
     <>
       <AppHeader />
-
       <div
         className="
-          relative z-10
-          -mt-8
-          sm:-mt-10
+    relative z-10
 
-          rounded-t-[1.75rem]
-          sm:rounded-t-[2.5rem]
+    -mt-5
+    sm:-mt-15
 
-          bg-[linear-gradient(165deg,var(--brown-100)_0%,var(--surface)_30%,var(--bg-secondary)_65%,var(--brown-200)_100%)]
+    rounded-t-[1.75rem]
+    sm:rounded-t-[2.5rem]
 
-          px-4
-          pt-6
-          pb-24
+    bg-[linear-gradient(165deg,var(--brown-100)_0%,var(--surface)_30%,var(--bg-secondary)_65%,var(--brown-200)_100%)]
 
-          sm:px-6
-          sm:pt-8
-          sm:pb-12
+    px-4
+    pt-6
+    pb-24
 
-          lg:px-10
-          lg:pt-10
-          lg:pb-10
+    sm:px-6
+    sm:pt-8
+    sm:pb-12
 
-        "
+    lg:px-6
+    lg:pt-10
+    lg:pb-10
+  "
       >
         <button
           type="button"

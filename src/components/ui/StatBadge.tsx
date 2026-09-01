@@ -1,63 +1,123 @@
-import type { LucideIcon } from "lucide-react";
-
-interface Props {
-  icon: LucideIcon;
-  value: number | string;
+export default function StatBadge({
+  icon: Icon,
+  value,
+  label,
+}: {
+  icon: any;
+  value: number;
   label: string;
-}
-
-export default function StatBadge({ icon: Icon, value, label }: Props) {
+}) {
   return (
     <div
       className="
-        flex
-        shrink-0
-        items-center
-        gap-2
+        group
 
-        rounded-full
+        flex
+        h-[78px]
+        w-[118px]
+
+        sm:h-[82px]
+        sm:w-[132px]
+
+        flex-col
+
+        justify-center
+
+        rounded-2xl
 
         border
-        border-[var(--border)]
+        border-white/40
 
-        bg-white/10
+        bg-white/35
 
         px-3
-        py-2
 
-        backdrop-blur-sm
+        backdrop-blur-md
 
-        transition-all
-        duration-300
+        shadow-[0_8px_30px_rgba(60,40,30,0.08)]
 
-        hover:bg-white/20
+        transition-transform
+
+        hover:-translate-y-1
       "
     >
-      <Icon size={16} strokeWidth={1.7} className="text-[var(--brown-500)]" />
 
-      <div className="leading-none">
-        <p
+      {/* Top row */}
+
+      <div
+        className="
+          flex
+
+          items-center
+
+          justify-center
+
+          gap-2
+        "
+      >
+
+        <div
           className="
-            text-sm
-            font-semibold
+            flex
+
+            h-7
+            w-7
+
+            items-center
+
+            justify-center
+
+            rounded-lg
+
+            bg-white/50
+
+            text-[var(--brown-700)]
+          "
+        >
+          <Icon size={15}/>
+        </div>
+
+
+        <span
+          className="
+            text-lg
+
+            font-bold
+
+            leading-none
+
             text-[var(--text)]
           "
         >
           {value}
-        </p>
+        </span>
 
-        <p
-          className="
-            mt-1
-            text-[9px]
-            uppercase
-            tracking-[0.14em]
-            text-[var(--text-muted)]
-          "
-        >
-          {label}
-        </p>
       </div>
+
+
+      {/* Label */}
+
+      <span
+        className="
+          mt-2
+
+          text-center
+
+          whitespace-nowrap
+
+          text-[9px]
+
+          uppercase
+
+          tracking-[0.16em]
+
+          text-[var(--text-secondary)]
+        "
+      >
+        {label}
+      </span>
+
+
     </div>
   );
 }

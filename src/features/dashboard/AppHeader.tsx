@@ -1,6 +1,11 @@
-import illustration from "../../assets/hero.png";
+import { BookOpen, Flame, Quote, Folder, UserRound } from "lucide-react";
 
-import { BookOpen, Flame, Quote, Folder } from "lucide-react";
+import { NavLink } from "react-router";
+import { navItems } from "../../components/navigation/NavItem";
+import { useLocation } from "react-router";
+
+import { useAuth } from "../../auth/hooks/useAuth";
+import hero from "../../assets/hero.png";
 
 import useScrollFade from "../../hooks/useScrollFade";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
@@ -11,6 +16,8 @@ import "../../styles/headerEffects.css";
 
 export default function AppHeader() {
   const fadeRef = useScrollFade();
+  const { user, userLoading } = useAuth();
+  const location = useLocation();
 
   const stats = useDashboardStats();
 
@@ -18,26 +25,25 @@ export default function AppHeader() {
     <section
       ref={fadeRef}
       className="
-        sticky
-        top-0
-        z-0
+   sticky
+   top-0
+   z-0
 
-        h-[260px]
+   h-[300px]
 
-        overflow-hidden
+   sm:h-[360px]
 
-        sm:h-[300px]
+   lg:h-[430px]
 
-        lg:h-[360px]
+   xl:h-[530px]
 
-        xl:h-[420px]
-      "
+   overflow-hidden
+ "
     >
-
       {/* ================= Hero Background ================= */}
 
       <img
-        src={illustration}
+        src={hero}
         alt="Reading scene"
         className="
           absolute
@@ -59,6 +65,206 @@ export default function AppHeader() {
         "
       />
 
+      {/* ================= Navigation ================= */}
+
+      <header
+        className="
+    absolute
+    inset-x-0
+    top-0
+    z-40
+  "
+      >
+        {/* Desktop */}
+
+        <nav
+          className="
+      hidden
+      lg:flex
+
+      h-20
+
+      items-center
+      justify-between
+
+      px-12
+      xl:px-16
+    "
+        >
+          {/* Logo */}
+
+          <div
+            className="
+        flex
+        items-center
+        gap-3
+      "
+          >
+            <div
+              className="
+          flex
+          h-10
+          w-10
+          items-center
+          justify-center
+          rounded-xl
+
+          bg-white/60
+          backdrop-blur-md
+
+          shadow-sm
+        "
+            >
+              <BookOpen size={22} />
+            </div>
+
+            <span
+              className="
+          font-heading
+          text-xl
+          font-bold
+          text-[var(--text)]
+        "
+            >
+              Reader's Nook
+            </span>
+          </div>
+
+          {/* Center navigation */}
+
+          <div
+            className="
+        flex
+        items-center
+        gap-8
+
+        rounded-2xl
+
+        bg-white/30
+
+        px-8
+        py-3
+
+        backdrop-blur-md
+      "
+          >
+            {navItems
+              .filter((item) =>
+                [
+                  "Home",
+                  "My Library",
+                  "Collections",
+                  "Search",
+                  "Quotes",
+                ].includes(item.label),
+              )
+              .map((item) => {
+                const active = location.pathname === item.path;
+
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={`
+          relative
+
+          text-sm
+
+          font-medium
+
+          transition-colors
+
+          ${active ? "text-[var(--text)]" : "text-[var(--text-secondary)]"}
+
+          hover:text-[var(--text)]
+        `}
+                  >
+                    {item.label}
+
+                    {active && (
+                      <span
+                        className="
+              absolute
+
+              left-1/2
+
+              -bottom-3
+
+              h-1
+
+              w-1
+
+              -translate-x-1/2
+
+              rounded-full
+
+              bg-[var(--text)]
+            "
+                      />
+                    )}
+                  </NavLink>
+                );
+              })}
+          </div>
+
+          {/* Right actions */}
+
+          <div
+            className="
+    flex
+    items-center
+    gap-5
+  "
+          >
+            <NavLink
+              to="/settings"
+              aria-label="Open settings"
+              className="
+      flex
+      h-10
+      w-10
+
+      overflow-hidden
+
+      rounded-full
+
+      bg-white/40
+
+      border
+      border-white/30
+
+      backdrop-blur-md
+
+      transition-transform
+
+      hover:scale-105
+
+      active:scale-95
+    "
+            >
+              {user?.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt="Profile"
+                  className="
+          h-full
+          w-full
+          object-cover
+        "
+                />
+              ) : (
+                <UserRound
+                  size={20}
+                  className="
+          m-auto
+          text-[var(--text)]
+        "
+                />
+              )}
+            </NavLink>
+          </div>
+        </nav>
+      </header>
 
       {/* ================= Overlay ================= */}
 
@@ -79,7 +285,6 @@ export default function AppHeader() {
         "
       />
 
-
       {/* ================= Desktop Message ================= */}
 
       <div
@@ -90,9 +295,9 @@ export default function AppHeader() {
 
           absolute
 
-          right-16
-
-          top-16
+          right-20
+top-36
+xl:right-28
 
           z-20
 
@@ -133,7 +338,6 @@ export default function AppHeader() {
           Build your own digital library✨
         </p>
       </div>
-
 
       {/* ================= Mobile Message ================= */}
 
@@ -179,72 +383,66 @@ export default function AppHeader() {
         </p>
       </div>
 
-
-
-      {/* ================= Stats ================= */}
+      {/* ================= Hero Stats ================= */}
 
       <div
         className="
-          absolute
+    absolute
 
-          z-30
+    z-30
 
-          bottom-6
 
-          left-1/2
+    left-1/2
+    -translate-x-1/2
 
-          -translate-x-1/2
 
-          lg:left-auto
+    bottom-10
 
-          lg:right-12
 
-          lg:bottom-10
+    w-auto
 
-          xl:right-16
-        "
+
+    sm:bottom-12
+
+
+    lg:right-24
+
+    lg:left-auto
+
+    lg:translate-x-0
+
+
+    lg:bottom-16
+
+
+    xl:right-32
+
+    xl:bottom-20
+  "
       >
         <div
           className="
-            flex
+   grid
+   grid-cols-2
+   gap-3
 
-            gap-2
-
-            overflow-x-auto
-
-            max-w-[calc(100vw-32px)]
-
-            scrollbar-none
-          "
+   sm:flex
+   sm:gap-4
+ "
         >
+          <StatBadge icon={BookOpen} value={stats.totalBooks} label="Books" />
 
-          <StatBadge
-            icon={BookOpen}
-            value={stats.totalBooks}
-            label="Books"
-          />
+          <StatBadge icon={Flame} value={stats.streak} label="Day Streak" />
 
-          <StatBadge
-            icon={Flame}
-            value={stats.streak}
-            label="Day Streak"
-          />
-
-          <StatBadge
-            icon={Quote}
-            value={stats.quotes}
-            label="Quotes"
-          />
+          <StatBadge icon={Quote} value={stats.quotes} label="Quotes" />
 
           <StatBadge
             icon={Folder}
             value={stats.collections}
             label="Collections"
           />
-
         </div>
       </div>
-
     </section>
   );
 }

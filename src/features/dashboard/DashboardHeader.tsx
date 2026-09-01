@@ -1,6 +1,12 @@
 export default function DashboardHeader() {
   return (
-    <header className="mb-6 sm:mb-8 lg:mb-10">
+    <header
+ className="
+   mb-8
+   sm:mb-10
+   lg:mb-12
+ "
+>
       <h1
         className="
           mb-3
@@ -8,7 +14,7 @@ export default function DashboardHeader() {
 
           text-xl
           sm:text-2xl
-          lg:text-4xl
+          lg:text-5xl
 
           font-heading
           font-bold
