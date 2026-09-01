@@ -144,48 +144,6 @@ export default function AppHeader() {
             </p>
       </div>
 
-      {/* ================= Mobile Message ================= */}
-
-      <div
-        className="
-          absolute
-
-          left-6
-          bottom-24
-
-          z-20
-
-          max-w-[260px]
-
-          lg:hidden
-        "
-      >
-        <h2
-          className="
-            hero-title
-            font-hero
-
-            text-3xl
-          "
-        >
-          Escape Into Stories
-        </h2>
-
-        <p
-          className="
-            mt-2
-
-            text-sm
-
-            font-serif
-
-            text-[var(--burgundy-dark)]
-          "
-        >
-          Build your own digital library✨
-        </p>
-      </div>
-
       {/* ================= Hero Stats ================= */}
 
       <div
@@ -196,23 +154,23 @@ export default function AppHeader() {
           left-1/2
           -translate-x-1/2
 
-          bottom-10
+          bottom-8
 
           sm:bottom-12
 
-          lg:right-24
+          lg:right-20
           lg:left-auto
           lg:translate-x-0
           lg:bottom-16
 
-          xl:right-32
-          xl:bottom-20
+          xl:right-18
+          xl:bottom-28
         "
       >
         <HeroStats
           stats={[
             { icon: BookOpen, value: stats.totalBooks, label: "Books" },
-            { icon: Flame, value: stats.streak, label: "Day streak" },
+            { icon: Flame, value: stats.streak, label: "streak" },
             { icon: Quote, value: stats.quotes, label: "Quotes" },
             { icon: Folder, value: stats.collections, label: "Collections" },
           ]}

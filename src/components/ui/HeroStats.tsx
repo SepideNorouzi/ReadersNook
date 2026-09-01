@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { LucideIcon } from "lucide-react";
 
 interface HeroStat {
@@ -12,75 +13,69 @@ interface HeroStatsProps {
 
 export default function HeroStats({ stats }: HeroStatsProps) {
   return (
-    <div
-      className="
-        inline-flex
-        items-stretch
-
-        divide-x
-        divide-black/5
-
-        overflow-hidden
-
-        rounded-2xl
-        border
-        border-white/50
-
-        bg-white/55
-        backdrop-blur-xl
-
-        shadow-[0_8px_30px_-8px_rgba(59,40,31,0.25)]
-      "
-    >
-      {stats.map(({ icon: Icon, value, label }) => (
-        <div
-          key={label}
-          className="
-            flex
-            flex-col
-            items-center
-            justify-center
-            gap-1.5
-
-            px-4
-            py-3
-
-            sm:px-6
-            sm:py-4
-          "
-        >
-          <Icon size={15} strokeWidth={2} className="text-[#ae794c]" />
-
-          <span
+    <div className="inline-flex items-center">
+      {stats.map(({ icon: Icon, value, label }, index) => (
+        <Fragment key={label}>
+          <div
             className="
-              text-lg
-              sm:text-2xl
+              flex
+              flex-col
+              items-center
+              justify-center
+              gap-1.5
 
-              font-bold
-              leading-none
-              tabular-nums
+              px-4
 
-              text-[#241812]
+              sm:px-8
             "
           >
-            {value}
-          </span>
+            <Icon size={15} strokeWidth={2} className="text-[#ae794c]" />
 
-          <span
-            className="
-              text-[9px]
-              sm:text-[10px]
+            <span
+              className="
+                text-xs
+                sm:text-xl
 
-              font-semibold
-              uppercase
-              tracking-[0.08em]
+                font-bold
+                leading-none
+                tabular-nums
 
-              text-[#8a7a6d]
-            "
-          >
-            {label}
-          </span>
-        </div>
+                text-[#241812]
+              "
+            >
+              {value}
+            </span>
+
+            <span
+              className="
+                text-[9px]
+                sm:text-[10px]
+
+                font-semibold
+                uppercase
+                tracking-[0.08em]
+
+                text-[#8a7a6d]
+              "
+            >
+              {label}
+            </span>
+          </div>
+
+          {index < stats.length - 1 && (
+            <span
+              aria-hidden="true"
+              className="
+                h-4
+                sm:h-8
+
+                w-px
+
+                bg-[#241812]/15
+              "
+            />
+          )}
+        </Fragment>
       ))}
     </div>
   );
