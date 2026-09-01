@@ -16,7 +16,7 @@ import "../../styles/headerEffects.css";
 
 export default function AppHeader() {
   const fadeRef = useScrollFade();
-  const { user, userLoading } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
 
   const stats = useDashboardStats();
