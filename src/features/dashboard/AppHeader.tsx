@@ -5,9 +5,7 @@ import hero from "../../assets/hero.png";
 import useScrollFade from "../../hooks/useScrollFade";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 
-import StatBadge from "../../components/ui/StatBadge";
-
-import "../../styles/headerEffects.css";
+import HeroStats from "../../components/ui/HeroStats";
 
 export default function AppHeader() {
   const fadeRef = useScrollFade();
@@ -200,8 +198,6 @@ export default function AppHeader() {
 
           bottom-10
 
-          w-auto
-
           sm:bottom-12
 
           lg:right-24
@@ -213,28 +209,14 @@ export default function AppHeader() {
           xl:bottom-20
         "
       >
-        <div
-          className="
-            grid
-            grid-cols-2
-            gap-3
-
-            sm:flex
-            sm:gap-4
-          "
-        >
-          <StatBadge icon={BookOpen} value={stats.totalBooks} label="Books" />
-
-          <StatBadge icon={Flame} value={stats.streak} label="Day Streak" />
-
-          <StatBadge icon={Quote} value={stats.quotes} label="Quotes" />
-
-          <StatBadge
-            icon={Folder}
-            value={stats.collections}
-            label="Collections"
-          />
-        </div>
+        <HeroStats
+          stats={[
+            { icon: BookOpen, value: stats.totalBooks, label: "Books" },
+            { icon: Flame, value: stats.streak, label: "Day streak" },
+            { icon: Quote, value: stats.quotes, label: "Quotes" },
+            { icon: Folder, value: stats.collections, label: "Collections" },
+          ]}
+        />
       </div>
     </section>
   );
