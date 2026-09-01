@@ -25,11 +25,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         }
 
 
+    
     def create(self, validated_data):
-        password2 = validated_data.pop("password2")
-        if validated_data["password"] != password2:
-            raise ValueError("password dont match")
-        return super().create(validated_data)
+        validated_data.pop("password2")
+        password = validated_data.pop("password")
+
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+
+        return user
         
 
 
