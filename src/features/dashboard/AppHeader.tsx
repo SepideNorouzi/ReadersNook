@@ -1,11 +1,6 @@
 import illustration from "../../assets/hero.png";
 
-import {
-  BookOpen,
-  Flame,
-  NotebookPen,
-  Folder,
-} from "lucide-react";
+import { BookOpen, Flame, Quote, Folder } from "lucide-react";
 
 import useScrollFade from "../../hooks/useScrollFade";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
@@ -14,12 +9,10 @@ import StatBadge from "../../components/ui/StatBadge";
 
 import "../../styles/headerEffects.css";
 
-
 export default function AppHeader() {
   const fadeRef = useScrollFade();
 
   const stats = useDashboardStats();
-
 
   return (
     <section
@@ -40,178 +33,123 @@ export default function AppHeader() {
         xl:h-[360px]
       "
     >
-
-
-      {/* Illustration */}
+      {/* ================= Illustration ================= */}
 
       <div
         className="
           absolute
+    right-10
+    bottom-8
+    h-35
+    w-35
 
-          right-10
-          bottom-8
+    sm:right-8
+    sm:h-52
+    sm:w-52
 
-          h-35
-          w-35
-
-
-          sm:right-8
-          sm:h-52
-          sm:w-52
-
-
-          lg:left-17
-          lg:bottom-13
-          lg:h-70
-          lg:w-70
+    lg:left-17
+    lg:bottom-13
+    lg:h-70
+    lg:w-70
         "
       >
-
         <div
           aria-hidden
           className="
-            pointer-events-none
-
-            absolute
-            left-1/2
-            top-1/2
-
-            -z-10
-
-            h-[85%]
-            w-[85%]
-
-            -translate-x-1/2
-            -translate-y-1/2
-
-            rounded-full
-
-            bg-[radial-gradient(circle,rgba(218,174,92,0.48)_0%,rgba(218,174,92,0.22)_40%,transparent_75%)]
-
-            blur-2xl
-          "
+      pointer-events-none
+      absolute
+      left-1/2
+      top-1/2
+      -z-10
+      h-[85%]
+      w-[85%]
+      -translate-x-1/2
+      -translate-y-1/2
+      rounded-full
+      bg-[radial-gradient(circle,rgba(218,174,92,0.48)_0%,rgba(218,174,92,0.22)_40%,transparent_75%)]
+      blur-2xl
+    "
         />
-
 
         <img
           src={illustration}
           alt="Books on a shelf"
           className="
-            relative
-            z-10
-
-            h-full
-            w-full
-
-            object-contain
+             relative
+      z-10
+      h-full
+      w-full
+      object-contain
           "
         />
-
       </div>
 
-
-
-      {/* Overlay */}
+      {/* ================= Overlay ================= */}
 
       <div
         className="
           pointer-events-none
-
-          absolute
-          inset-0
-
-          bg-[linear-gradient(to_right,rgba(28,19,14,0.45)_0%,rgba(28,19,14,0.18)_20%,transparent_42%,transparent_58%,rgba(59,40,31,0.18)_80%,rgba(59,40,31,0.45)_100%)]
+    absolute
+    inset-0
+    bg-[linear-gradient(to_right,rgba(28,19,14,0.45)_0%,rgba(28,19,14,0.18)_20%,transparent_42%,transparent_58%,rgba(59,40,31,0.18)_80%,rgba(59,40,31,0.45)_100%)]
         "
       />
 
-
-
-
-      {/* Main Content */}
+      {/* ================= Stats ================= */}
 
       <div
         className="
-          relative
-          z-20
-          flex
-          h-full
-          flex-col
-          justify-center
-          px-6
-          sm:px-8
-          lg:px-12
-          left-10
+          absolute
+
+          z-30
+
+
+          right-10
+
+          bottom-10
+
+
+          sm:right-8
+
+
+          lg:right-12
+
+          lg:bottom-20
+
+
+          xl:right-16
         "
       >
-
-
         <div
           className="
-            max-w-[420px]
+            flex
+
+            max-w-[calc(100vw-40px)]
+
+            gap-2
+
+            overflow-x-auto
+
+            scrollbar-none
+
+            pb-1
           "
         >
+          <StatBadge icon={BookOpen} value={stats.totalBooks} label="Books" />
 
-          {/* Stats */}
+          <StatBadge icon={Flame} value={stats.streak} label="Day Streak" />
 
-          <div
-            className="
-              mt-5
+          <StatBadge icon={Quote} value={stats.quotes} label="Quotes" />
 
-              flex
-
-              max-w-full
-
-              gap-2
-
-              overflow-x-auto
-
-              pb-1
-
-              scrollbar-none
-            "
-          >
-
-
-            <StatBadge
-              icon={BookOpen}
-              value={stats.totalBooks}
-              label="Books"
-            />
-
-
-            <StatBadge
-              icon={Flame}
-              value={stats.streak}
-              label="Day Streak"
-            />
-
-
-            <StatBadge
-              icon={NotebookPen}
-              value={stats.notes}
-              label="Notes"
-            />
-
-
-            <StatBadge
-              icon={Folder}
-              value={stats.collections}
-              label="Collections"
-            />
-
-
-          </div>
-
-
+          <StatBadge
+            icon={Folder}
+            value={stats.collections}
+            label="Collections"
+          />
         </div>
-
-
       </div>
 
-
-
-
-      {/* Desktop Right Message */}
+      {/* ================= Desktop Message ================= */}
 
       <div
         className="
@@ -225,12 +163,13 @@ export default function AppHeader() {
 
           top-15
 
+          z-20
+
           max-w-[320px]
 
           text-right
         "
       >
-
         <h2
           className="
             hero-title
@@ -239,16 +178,13 @@ export default function AppHeader() {
 
             text-xl
 
-
             sm:text-4xl
-
 
             lg:text-6xl
           "
         >
           Escape Into Stories
         </h2>
-
 
         <p
           className="
@@ -266,17 +202,12 @@ export default function AppHeader() {
 
             text-[var(--burgundy-dark)]
 
-
             sm:text-base
           "
         >
           Build your own digital library✨
         </p>
-
-
       </div>
-
-
     </section>
   );
 }

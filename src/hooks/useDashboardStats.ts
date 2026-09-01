@@ -2,25 +2,39 @@ import { useMemo } from "react";
 import { useBooks } from "./useBooks";
 import { useCollections } from "./useCollections";
 
+
 export function useDashboardStats() {
+
   const { data: books = [] } = useBooks();
-  const { collections = [] } = useCollections();
+
+  const {
+    collections = [],
+  } = useCollections();
+
 
   const stats = useMemo(() => {
+
+    const quotes = books.reduce(
+      (total, book) =>
+        total + (book.quotes?.length ?? 0),
+      0
+    );
+
+
     return {
+
       totalBooks: books.length,
 
-      readBooks: books.filter((book) => book.status === "read").length,
+      streak: 0,
+
+      quotes,
 
       collections: collections.length,
 
-      // Replace when notes store exists
-      notes: 0,
-
-      // Replace when streak store exists
-      streak: 0,
     };
+
   }, [books, collections]);
+
 
   return stats;
 }
