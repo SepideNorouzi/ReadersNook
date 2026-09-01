@@ -19,7 +19,8 @@ export default function HeroContent({ book }: Props) {
     <section
       className="
         px-6
-        pt-27
+        pt-[108px]
+        sm:px-8
         lg:px-10
         lg:pt-20
       "
@@ -28,9 +29,11 @@ export default function HeroContent({ book }: Props) {
         <h1
           className="
             lg:mt-4
+            lg:pt-4
+            lg:pb-4
             font-serif
             text-4xl
-            lg:text-7xl
+            lg:text-6xl
             text-brown-900
           "
         >

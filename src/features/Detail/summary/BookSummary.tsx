@@ -1,4 +1,5 @@
 import type { Book } from "../../../types/book";
+import SectionHeading from "../SectionHeading";
 
 interface Props {
   book: Book;
@@ -8,9 +9,14 @@ export default function BookSummary({ book }: Props) {
   return (
     <section
       className="
-      px-6
-      lg:pt-5
-      pb-20
+        px-6
+        pt-8
+        pb-20
+
+        sm:px-8
+
+        lg:px-10
+        lg:pt-15
       "
     >
       <div
@@ -25,28 +31,7 @@ export default function BookSummary({ book }: Props) {
         shadow-sm
         "
       >
-        <p
-          className="
-          mb-3
-          text-xs
-          uppercase
-          tracking-[0.3em]
-          text-stone-500
-          "
-        >
-          About the Book
-        </p>
-
-        <h2
-          className="
-                font-serif
-                text-2xl
-                text-brown-900
-                sm:text-3xl
-              "
-        >
-          Summary
-        </h2>
+        <SectionHeading eyebrow="About the Book" title="Summary" />
 
         <div
           className="

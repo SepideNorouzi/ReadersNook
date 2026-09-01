@@ -1,6 +1,7 @@
 import type { Book } from "../../../types/book";
 
 import QuoteEmbla from "./QuoteEmbla";
+import SectionHeading from "../SectionHeading";
 
 interface Props {
   book: Book;
@@ -10,43 +11,19 @@ export default function QuoteSec({ book }: Props) {
   return (
     <section
       className="
-         px-5
+        px-6
+        pt-4
         pb-16
 
         sm:px-8
-        sm:pb-15
 
-        lg:px-12
+        lg:px-10
+        lg:pt-6
         lg:pb-0
       "
     >
-      <div className="mx-auto max-w-6xl">
-        {/* Heading */}
-        <div>
-          <p
-            className="
-              text-xs
-              uppercase
-              tracking-[0.3em]
-              text-stone-500
-            "
-          >
-            Favorite Passages
-          </p>
-
-          <h2
-             className="
-                font-serif
-                text-2xl
-                text-brown-900
-                sm:text-3xl
-              "
-          >
-            Quotes
-          </h2>
-
-        
-        </div>
+      <div className="max-w-3xl">
+        <SectionHeading eyebrow="Favorite Passages" title="Quotes" />
 
         {/* Embla Carousel */}
         <div className="mt-5">

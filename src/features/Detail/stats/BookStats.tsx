@@ -14,6 +14,7 @@ export default function BookStats({ book }: Props) {
     <>
       <section
         className="
+        pt-3
           px-6
           lg:mb-0
           mb-4
