@@ -29,7 +29,7 @@ export default function HeroStats({ stats }: HeroStatsProps) {
               sm:px-8
             "
           >
-            <Icon size={15} strokeWidth={2} className="text-[#ae794c]" />
+            <Icon size={18} strokeWidth={2} className="text-[#ae794c]" />
 
             <span
               className="
