@@ -110,14 +110,14 @@ export default function Aesthetic({
                 mt-2
                 max-w-[260px]
 
-                text-[9px]
+                text-[10px]
                 font-semibold
                 uppercase
                 tracking-[0.2em]
 
                 text-[var(--gold)]
 
-                lg:text-[11px]
+                sm:text-[11px]
               "
             >
               The colors, places and moments this book reminds you of.
@@ -229,8 +229,8 @@ export default function Aesthetic({
                     w-5
                     text-[var(--gold)]
 
-                    lg:h-11
-                    lg:w-11
+                    lg:h-6
+                    lg:w-6
                   "
                 />
               </span>
@@ -293,9 +293,11 @@ export default function Aesthetic({
                 />
 
                 <button
+                  type="button"
                   onClick={() =>
                     handleRemoveLocalPhoto(photo.id)
                   }
+                  aria-label="Remove photo"
                   className="
                     absolute
                     right-2
@@ -303,8 +305,8 @@ export default function Aesthetic({
                     z-20
 
                     flex
-                    h-7
-                    w-7
+                    h-8
+                    w-8
                     items-center
                     justify-center
 
@@ -315,19 +317,24 @@ export default function Aesthetic({
 
                     text-stone-700
 
-                    shadow-lg
+                    opacity-100
+                    scale-100
 
-                    opacity-0
-                    scale-90
+                    shadow-lg
 
                     transition-all
                     duration-300
 
-                    group-hover:opacity-100
-                    group-hover:scale-100
-
                     hover:bg-red-500
                     hover:text-white
+
+                    sm:h-7
+                    sm:w-7
+                    sm:opacity-0
+                    sm:scale-90
+
+                    sm:group-hover:opacity-100
+                    sm:group-hover:scale-100
                   "
                 >
                   <Trash2 className="h-4 w-4" />
@@ -372,7 +379,9 @@ export default function Aesthetic({
                 />
 
                 <button
+                  type="button"
                   onClick={() => onRemoveImage?.(url)}
+                  aria-label="Remove photo"
                   className="
                     absolute
                     right-2
@@ -380,8 +389,8 @@ export default function Aesthetic({
                     z-20
 
                     flex
-                    h-7
-                    w-7
+                    h-8
+                    w-8
                     items-center
                     justify-center
 
@@ -392,19 +401,24 @@ export default function Aesthetic({
 
                     text-stone-700
 
-                    shadow-lg
+                    opacity-100
+                    scale-100
 
-                    opacity-0
-                    scale-90
+                    shadow-lg
 
                     transition-all
                     duration-300
 
-                    group-hover:opacity-100
-                    group-hover:scale-100
-
                     hover:bg-red-500
                     hover:text-white
+
+                    sm:h-7
+                    sm:w-7
+                    sm:opacity-0
+                    sm:scale-90
+
+                    sm:group-hover:opacity-100
+                    sm:group-hover:scale-100
                   "
                 >
                   <Trash2 className="h-4 w-4" />
@@ -422,7 +436,9 @@ export default function Aesthetic({
               inset-x-2
               bottom-0
 
-              h-20
+              h-14
+              sm:h-16
+              lg:h-20
 
               rounded-b-[5px]
 

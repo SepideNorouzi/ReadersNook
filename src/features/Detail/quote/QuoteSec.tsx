@@ -35,26 +35,17 @@ export default function QuoteSec({ book }: Props) {
           </p>
 
           <h2
-            className="
-              mt-3
-              font-serif
-              text-4xl
-              text-brown-900
-            "
+             className="
+                font-serif
+                text-2xl
+                text-brown-900
+                sm:text-3xl
+              "
           >
             Quotes
           </h2>
 
-          <p
-            className="
-              mt-3
-              max-w-xl
-              text-stone-500
-            "
-          >
-            Memorable passages, beautiful lines, and thoughts that stay with you
-            long after closing the book.
-          </p>
+        
         </div>
 
         {/* Embla Carousel */}
