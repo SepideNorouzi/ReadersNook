@@ -10,68 +10,106 @@ interface Props {
 export default function BookStats({ book }: Props) {
   const [openModal, setOpenModal] = useState(false);
 
+  const progress =
+    book.totalPages > 0
+      ? Math.min(100, Math.round((book.currentPage / book.totalPages) * 100))
+      : 0;
+
   return (
     <>
       <section
         className="
-        pt-3
-          px-6
-          lg:mb-0
-          mb-4
+          px-5
+          pt-4
+          sm:px-6
+
+          lg:pt-6
         "
       >
         <div
           className="
+            w-full
             max-w-3xl
-            pr-8
-            pl-8
+
+            overflow-hidden
+
+            rounded-[24px]
+            sm:rounded-[30px]
+
+            border
+            border-[var(--brown-300)]/40
+
+            bg-gradient-to-br
+            from-[var(--brown-50)]
+            via-[var(--gold-light)]/70
+            to-white
+
+            px-4
+            py-3.5
+
+            shadow-[0_8px_28px_rgba(35,23,17,0.07)]
+
+            sm:px-6
+            sm:py-4
+
+            lg:px-8
           "
         >
           <div
             className="
-    mt-6
+              flex
+              w-full
+              items-center
 
-    flex
-    items-start
-    justify-between
+              overflow-x-auto
 
-    gap-4
-  "
+              [-ms-overflow-style:none]
+              [scrollbar-width:none]
+              [&::-webkit-scrollbar]:hidden
+            "
           >
             {/* Rating */}
-
-            <div>
+            <div
+              className="
+                flex
+                min-w-0
+                flex-1
+                flex-col
+                items-center
+                gap-1
+                text-center
+              "
+            >
               <p
                 className="
-                  lg:text-sm
-                  text-[12px]
-                  font-medium
+                  text-[9px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.16em]
                   text-[var(--gold)]
+
+                  sm:text-[10px]
+                  sm:tracking-[0.18em]
                 "
               >
                 Rating
               </p>
 
-              <div
-                className="
-                  mt-3
-                  flex
-                  items-center
-                  gap-1
-                "
-              >
+              <div className="flex items-center gap-0.5">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <Star
                     key={index}
                     className={`
-                      lg:h-5
-                      lg:w-5
                       h-3
                       w-3
+
+                      sm:h-3.5
+                      sm:w-3.5
+
                       ${
                         index < book.rating
-                          ? "fill-amber-400 text-amber-400"
-                          : "text-stone-300"
+                          ? "fill-[var(--gold)] text-[var(--gold)]"
+                          : "text-[var(--brown-300)]"
                       }
                     `}
                   />
@@ -79,45 +117,66 @@ export default function BookStats({ book }: Props) {
               </div>
             </div>
 
-            {/* Pages */}
+            {/* Divider */}
+            <div
+              className="
+                mx-2
+                h-8
+                w-px
+                shrink-0
+                bg-[var(--brown-300)]/50
 
-            <div>
+                sm:mx-4
+                sm:h-10
+              "
+            />
+
+            {/* Pages */}
+            <div
+              className="
+                flex
+                min-w-0
+                flex-1
+                flex-col
+                items-center
+                gap-1
+                text-center
+              "
+            >
               <p
                 className="
-                  lg:text-sm
-                  text-[12px]
-                  font-medium
+                  text-[9px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.16em]
                   text-[var(--gold)]
+
+                  sm:text-[10px]
+                  sm:tracking-[0.18em]
                 "
               >
                 Pages
               </p>
 
-              <div
-                className="
-                  mt-2
-
-                  flex
-                  items-center
-                  gap-2
-                "
-              >
+              <div className="flex items-center gap-1.5">
                 <BookOpen
                   className="
-                    lg:h-5
-                      lg:w-5
-                      h-3
-                      w-3
-                    text-stone-500
+                    h-3.5
+                    w-3.5
+                    text-[var(--brown-700)]
+
+                    sm:h-4
+                    sm:w-4
                   "
                 />
 
                 <span
                   className="
-                    lg:text-lg
-                    text-[15px]
-                    font-semibold
+                    text-sm
+                    font-bold
                     text-brown-900
+
+                    sm:text-base
                   "
                 >
                   {book.totalPages}
@@ -126,64 +185,119 @@ export default function BookStats({ book }: Props) {
             </div>
 
             {/* Current Reading */}
-
             {book.status === "current" && (
-              <div>
-                <p
+              <>
+                {/* Divider */}
+                <div
                   className="
-                    lg:text-sm
-                  text-[12px]
-                    font-medium
-                    text-[var(--gold)]
+                    mx-2
+                    h-8
+                    w-px
+                    shrink-0
+                    bg-[var(--brown-300)]/50
+
+                    sm:mx-4
+                    sm:h-10
                   "
-                >
-                  Current Page
-                </p>
+                />
 
                 <div
                   className="
-                    mt-2
-
                     flex
+                    min-w-0
+                    flex-1
+                    flex-col
                     items-center
-                    gap-2
+                    gap-1
+                    text-center
                   "
                 >
-                  <span
+                  <p
                     className="
-                      lg:text-lg
-                    text-[15px]
+                      text-[9px]
                       font-semibold
-                      text-brown-900
+                      uppercase
+                      tracking-[0.16em]
+                      text-[var(--gold)]
+
+                      sm:text-[10px]
+                      sm:tracking-[0.18em]
                     "
                   >
-                    {book.currentPage} / {book.totalPages}
-                  </span>
+                    Reading
+                  </p>
 
-                  <button
-                    onClick={() => setOpenModal(true)}
-                    className="
-                      rounded-full
-
-                      p-2
-
-                      transition
-
-                      hover:bg-stone-200
-                    "
-                  >
-                    <Pencil
+                  <div className="flex items-center gap-1.5">
+                    <span
                       className="
-                        lg:h-4
-                      lg:w-4
-                      h-3
-                      w-3
-                        text-stone-500
+                        text-sm
+                        font-bold
+                        text-brown-900
+
+                        sm:text-base
                       "
+                    >
+                      {book.currentPage}
+
+                      <span
+                        className="
+                          text-[10px]
+                          font-medium
+                          text-[var(--text-muted)]
+
+                          sm:text-xs
+                        "
+                      >
+                        {" "}
+                        / {book.totalPages}
+                      </span>
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => setOpenModal(true)}
+                      aria-label="Edit current page"
+                      className="
+                        shrink-0
+                        rounded-full
+                        p-1
+                        text-[var(--brown-700)]
+                        transition
+
+                        hover:bg-white/60
+                        hover:text-[var(--brown-900)]
+                      "
+                    >
+                      <Pencil className="h-3 w-3" />
+                    </button>
+                  </div>
+
+                  <div
+                    className="
+                      h-1
+                      w-10
+                      overflow-hidden
+                      rounded-full
+                      bg-white/70
+
+                      sm:w-14
+                    "
+                  >
+                    <div
+                      className="
+                        h-full
+                        rounded-full
+                        bg-gradient-to-r
+                        from-[var(--gold)]
+                        to-[var(--brown-500)]
+                        transition-all
+                        duration-500
+                      "
+                      style={{ width: `${progress}%` }}
                     />
-                  </button>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>
