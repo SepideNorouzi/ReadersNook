@@ -1,5 +1,8 @@
+import type { ReactNode } from "react";
+import DesktopNavbar from "../components/navigation/DesktopNavbar";
+
 interface DesktopLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function DesktopLayout({
@@ -8,6 +11,8 @@ export default function DesktopLayout({
   return (
     <main
       className="
+        relative
+
         h-screen
         w-screen
         overflow-hidden
@@ -18,6 +23,10 @@ export default function DesktopLayout({
         to-[var(--bg)]
       "
     >
+      {/* Floating desktop navbar */}
+      <DesktopNavbar />
+
+      {/* Pages */}
       <section
         className="
           h-full
