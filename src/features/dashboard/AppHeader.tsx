@@ -6,7 +6,6 @@ import useScrollFade from "../../hooks/useScrollFade";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 
 import StatBadge from "../../components/ui/StatBadge";
-import DesktopNavbar from "../../components/navigation/DesktopNavbar";
 
 import "../../styles/headerEffects.css";
 
