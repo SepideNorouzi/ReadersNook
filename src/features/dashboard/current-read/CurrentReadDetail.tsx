@@ -5,115 +5,35 @@ interface Props {
 }
 
 export default function CurrentReadDetails({ book }: Props) {
+  const percentage = Math.round(
+    (book.currentPage / book.totalPages) * 100
+  );
+
   return (
     <>
-      {/* ======================= MOBILE ======================= */}
+      {/* ================= MOBILE ================= */}
+      <div className="flex flex-1 flex-col justify-center gap-3 lg:hidden">
 
-      <div className="space-y-2 lg:hidden">
+        {/* Title */}
         <div>
           <h4
             className="
               line-clamp-2
-
               font-heading
-              text-[12px]
-              font-semibold
-              leading-snug
-
-              text-[var(--text)]
-            "
-          >
-            {book.title}
-          </h4>
-
-          <p
-            className="
-              mt-1
-
-              line-clamp-1
-
-              text-xs
-
-              text-[var(--text-secondary)]
-            "
-          >
-            {book.author}
-          </p>
-        </div>
-
-        {/* Compact Current Section */}
-        <div
-          className="
-    flex
-    items-center
-    justify-between
-
-    rounded-xl
-    border
-    border-[var(--border)]
-
-    bg-[var(--stone-100)]
-
-    px-2
-    py-2
-  "
-        >
-          <p
-            className="
-      text-[8px]
-      uppercase
-      tracking-[0.18em]
-
-      text-[var(--text-muted)]
-    "
-          >
-            Current
-          </p>
-
-          <p
-            className="
-      shrink-0
-
-      text-[8px]
-      font-medium
-
-      text-[var(--text)]
-    "
-          >
-            {book.currentPage} / {book.totalPages}
-          </p>
-        </div>
-      </div>
-
-      {/* ======================= DESKTOP ======================= */}
-
-      <div className="hidden space-y-4 lg:block">
-        {/* Book Info */}
-
-        <div>
-          <h4
-            className="
-              line-clamp-2
-
-              font-heading
-              text-base
-              font-semibold
-              leading-snug
-
-              text-[var(--text)]
-            "
-          >
-            {book.title}
-          </h4>
-
-          <p
-            className="
-              mt-1
-
-              line-clamp-1
-
               text-sm
+              font-semibold
+              leading-snug
+              text-[var(--text)]
+            "
+          >
+            {book.title}
+          </h4>
 
+          <p
+            className="
+              mt-1
+              line-clamp-1
+              text-xs
               text-[var(--text-secondary)]
             "
           >
@@ -121,53 +41,177 @@ export default function CurrentReadDetails({ book }: Props) {
           </p>
         </div>
 
-        {/* Divider */}
 
-        <div className="h-px bg-[var(--border)]" />
+        {/* Progress */}
+        <div className="space-y-1">
 
-        {/* Current Reading */}
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+            "
+          >
+            <span
+              className="
+                text-[9px]
+                uppercase
+                tracking-[0.15em]
+                text-[var(--text-muted)]
+              "
+            >
+              Progress
+            </span>
 
+            <span
+              className="
+                text-[10px]
+                font-medium
+                text-[var(--text)]
+              "
+            >
+              {percentage}%
+            </span>
+          </div>
+
+
+          <div
+            className="
+              h-1.5
+              overflow-hidden
+              rounded-full
+              bg-[var(--stone-300)]
+            "
+          >
+            <div
+              className="
+                h-full
+                rounded-full
+                bg-[var(--brown-700)]
+                transition-all
+              "
+              style={{
+                width: `${percentage}%`,
+              }}
+            />
+          </div>
+
+        </div>
+
+
+        {/* Current page */}
         <div
           className="
-    flex
-    items-center
-    justify-between
+            flex
+            items-center
+            justify-between
 
-    rounded-xl
-    border
-    border-[var(--border)]
+            rounded-xl
+            border
+            border-[var(--border)]
 
-    bg-[var(--stone-100)]
+            bg-[var(--stone-100)]
 
-    px-2
-    py-2
-  "
+            px-3
+            py-2
+          "
         >
-          <p
+          <span
             className="
-              text-[10px]
+              text-[9px]
               uppercase
-              tracking-[0.18em]
-
+              tracking-[0.15em]
               text-[var(--text-muted)]
             "
           >
             Current
-          </p>
+          </span>
 
-          <p
+          <span
             className="
-              shrink-0
-
-              text-[11px]
-              font-medium
-
+              text-xs
+              font-semibold
               text-[var(--text)]
             "
           >
             {book.currentPage} / {book.totalPages}
+          </span>
+        </div>
+
+      </div>
+
+
+      {/* ================= DESKTOP ================= */}
+
+      <div className="hidden space-y-4 lg:block">
+
+        <div>
+          <h4
+            className="
+              line-clamp-2
+              font-heading
+              text-base
+              font-semibold
+              leading-snug
+              text-[var(--text)]
+            "
+          >
+            {book.title}
+          </h4>
+
+          <p
+            className="
+              mt-1
+              text-sm
+              text-[var(--text-secondary)]
+            "
+          >
+            {book.author}
           </p>
         </div>
+
+
+        <div className="h-px bg-[var(--border)]" />
+
+
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+
+            rounded-xl
+            border
+            border-[var(--border)]
+
+            bg-[var(--stone-100)]
+
+            px-2
+            py-2
+          "
+        >
+          <span
+            className="
+              text-[10px]
+              uppercase
+              tracking-[0.18em]
+              text-[var(--text-muted)]
+            "
+          >
+            Current
+          </span>
+
+          <span
+            className="
+              text-[11px]
+              font-medium
+              text-[var(--text)]
+            "
+          >
+            {book.currentPage} / {book.totalPages}
+          </span>
+        </div>
+
       </div>
     </>
   );

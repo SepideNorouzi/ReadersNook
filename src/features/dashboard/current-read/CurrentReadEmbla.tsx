@@ -39,33 +39,35 @@ export default function CurrentReadEmbla({
 
   return (
     <>
-      {/* Carousel */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {books.map((book) => (
             <div
               key={book.id}
-              className="flex min-w-0 flex-[0_0_100%] justify-center"
+              className="
+                flex
+                min-w-0
+                flex-[0_0_100%]
+                justify-center
+              "
             >
               <div className="relative">
-                {/* Glow */}
                 <div
                   className="
                     absolute
                     inset-0
                     scale-105
-                    rounded-[28px]
+                    rounded-[24px]
                     bg-[radial-gradient(circle,var(--gold-light),transparent_70%)]
                     opacity-30
                     blur-xl
                   "
                 />
 
-                {/* Frame */}
                 <div
                   className="
                     relative
-                    rounded-[26px]
+                    rounded-[22px]
                     border
                     border-[var(--border)]
                     bg-gradient-to-b
@@ -77,18 +79,16 @@ export default function CurrentReadEmbla({
                   <img
                     src={book.coverUrl}
                     alt={book.title}
-                    onClick={() => {
-                      navigate(`/book/${book.id}`);
-                    }}
+                    onClick={() => navigate(`/book/${book.id}`)}
                     className="
                       aspect-[3/4]
-                      w-28
-                      rounded-[16px]
+                      w-[88px]
+                      rounded-[14px]
                       object-cover
                       shadow-[0_8px_18px_rgba(0,0,0,.18)]
 
-                      sm:w-36
-                      sm:rounded-[18px]
+                      sm:w-32
+
                       lg:w-32
                       xl:w-36
                     "
@@ -100,7 +100,6 @@ export default function CurrentReadEmbla({
         </div>
       </div>
 
-      {/* Dots */}
       <div className="mt-3 flex justify-center gap-2 lg:mt-6">
         {books.map((_, index) => (
           <button

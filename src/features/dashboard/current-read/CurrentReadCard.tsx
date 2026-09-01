@@ -92,18 +92,52 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
 
       {hasBooks ? (
         <>
-          <CurrentReadEmbla
-            books={books}
-            currentIndex={currentIndex}
-            onSelect={setCurrentIndex}
-          />
+          {/* MOBILE HERO */}
+<div
+  className="
+    flex
+    items-center
+    gap-4
 
-          {/* Bottom */}
-          <div className="mt-auto space-y-3 pt-1 lg:space-y-2 lg:pt-2">
-            <CurrentReadProgress book={currentBook} />
+    lg:hidden
+  "
+>
 
-            <CurrentReadDetails book={currentBook} />
-          </div>
+  {/* Cover */}
+  <div className="shrink-0">
+    <CurrentReadEmbla
+      books={books}
+      currentIndex={currentIndex}
+      onSelect={setCurrentIndex}
+    />
+  </div>
+
+
+  {/* Details */}
+  <CurrentReadDetails book={currentBook} />
+
+</div>
+
+
+
+{/* DESKTOP */}
+<div className="hidden lg:block">
+
+  <CurrentReadEmbla
+    books={books}
+    currentIndex={currentIndex}
+    onSelect={setCurrentIndex}
+  />
+
+  <div className="mt-auto space-y-2 pt-2">
+
+    <CurrentReadProgress book={currentBook} />
+
+    <CurrentReadDetails book={currentBook} />
+
+  </div>
+
+</div>
         </>
       ) : (
         /* Empty state */
