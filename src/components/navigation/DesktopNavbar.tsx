@@ -4,7 +4,7 @@ import { NavLink, useLocation } from "react-router";
 import { navItems } from "./NavItem";
 import { useAuth } from "../../auth/hooks/useAuth";
 
-import "../../styles/desktopNav.css"
+import "../../styles/desktopNav.css";
 
 export default function DesktopNavbar() {
   const { user } = useAuth();
@@ -17,26 +17,26 @@ export default function DesktopNavbar() {
   );
 
   return (
-<nav
-  className="
-    absolute
-    inset-x-0
-    top-0
-    z-40
+    <nav
+      className="
+        absolute
+        inset-x-0
+        top-0
+        z-40
 
-    hidden
-    lg:flex
+        hidden
+        lg:flex
 
-    h-20
+        h-20
 
-    items-center
-    justify-between
+        items-center
+        justify-between
 
-    px-12
-    xl:px-16
-  "
->
-      {/* ================= Logo ================= */}
+        px-12
+        xl:px-16
+      "
+    >
+      {/* ================= Logo / Dashboard ================= */}
 
       <NavLink
         to="/dashboard"
@@ -54,15 +54,28 @@ export default function DesktopNavbar() {
             items-center
             justify-center
 
-            rounded-xl
+            rounded-2xl
 
-            bg-white/60
-            backdrop-blur-md
+            bg-gradient-to-br
+            from-[var(--sidebar-accent-start)]
+            to-[var(--sidebar-accent-end)]
 
-            shadow-sm
+            text-white
+
+            shadow-[0_12px_30px_rgba(54,35,27,.28),inset_0_1px_1px_rgba(255,255,255,.18)]
+
+            transition-all
+            duration-200
+            ease-out
+
+            hover:-translate-y-0.5
+            hover:shadow-[0_14px_34px_rgba(54,35,27,.34),inset_0_1px_1px_rgba(255,255,255,.2)]
+
+            active:translate-y-0
+            active:scale-95
           "
         >
-          <BookOpen size={22} />
+          <BookOpen size={20} />
         </div>
 
         <span
@@ -87,7 +100,9 @@ export default function DesktopNavbar() {
             <NavLink
               key={item.path}
               to={item.path}
-              className={`desktop-navbar__link${active ? " desktop-navbar__link--active" : ""}`}
+              className={`desktop-navbar__link${
+                active ? " desktop-navbar__link--active" : ""
+              }`}
             >
               {item.label}
             </NavLink>
