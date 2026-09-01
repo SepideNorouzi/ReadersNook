@@ -95,33 +95,55 @@ export default function AppHeader() {
           text-right
         "
       >
-        <h2
-          className="
-            hero-title
-            font-hero
+            {/* Main title */}
+            <h1
+              className="
+                font-hero
 
-            text-5xl
-            xl:text-6xl
-          "
-        >
-          Escape Into Stories
-        </h2>
+                text-[2.65rem]
+                leading-[0.9]
 
-        <p
-          className="
-            mt-3
+                tracking-[-0.035em]
 
-            text-base
+                text-[#211914]
 
-            font-serif
-            leading-relaxed
-            tracking-wide
+                sm:text-[3rem]
 
-            text-[var(--burgundy-dark)]
-          "
-        >
-          Build your own digital library✨
-        </p>
+                lg:max-w-[480px]
+                lg:text-[4.2rem]
+
+                xl:text-[4.6rem]
+              "
+            >
+              Escape into{" "}
+              <span className="text-[#ae794c]">
+                Stories
+              </span>
+            </h1>
+
+            {/* Description */}
+            <p
+              className="
+                mt-4
+
+                max-w-[330px]
+
+                font-serif
+
+                text-[14px]
+                leading-6
+
+                text-[#675a52]
+
+                lg:mt-5
+                lg:max-w-[355px]
+                lg:text-[15px]
+              "
+            >
+              Build your own digital library and
+              <br className="hidden lg:block" />
+              track your reading journey.
+            </p>
       </div>
 
       {/* ================= Mobile Message ================= */}

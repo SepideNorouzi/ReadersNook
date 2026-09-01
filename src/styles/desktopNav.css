@@ -1,181 +1,55 @@
-/* =========================================================
-   Floating active navigation notch
-   ========================================================= */
-
-.desktop-navbar {
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  z-index: 40;
-
-  display: none;
-
-  height: 5rem;
-
-  align-items: center;
-  justify-content: space-between;
-
-  padding-inline: 3rem;
-}
-
-@media (min-width: 1024px) {
-  .desktop-navbar {
-    display: flex;
-  }
-}
-
-@media (min-width: 1280px) {
-  .desktop-navbar {
-    padding-inline: 4rem;
-  }
-}
-
-
-/* =========================================================
-   Center navigation container
-   ========================================================= */
-
 .desktop-navbar__links {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 2rem;
 
-  padding: 0.5rem 0.75rem;
-
+  padding: 0.75rem 2rem;
   border-radius: 1.25rem;
 
   background: rgb(255 255 255 / 30%);
-
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
 
-
-/* =========================================================
-   Individual navigation item
-   ========================================================= */
-
 .desktop-navbar__link {
   position: relative;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 5rem;
-  height: 3rem;
-
-  padding-inline: 1rem;
-
-  border-radius: 1rem;
+  padding-block: 0.5rem;
 
   color: var(--text-secondary);
-
   font-size: 0.875rem;
   font-weight: 500;
-
   text-decoration: none;
 
-  transition:
-    color 180ms ease,
-    background-color 180ms ease;
+  transition: color 200ms ease;
 }
 
 .desktop-navbar__link:hover {
   color: var(--text);
 }
 
-
-/* =========================================================
-   ACTIVE ITEM
-   ========================================================= */
-
 .desktop-navbar__link--active {
   color: var(--text);
 }
 
-
-/* ---------------------------------------------------------
-   The notch
-
-   The active link itself doesn't get a background.
-
-   Instead, the two pseudo-elements extend upward and
-   visually merge into the navbar's surrounding surface,
-   leaving a circular indentation between them.
-   --------------------------------------------------------- */
-
-.desktop-navbar__link--active::before,
-.desktop-navbar__link--active::after {
+.desktop-navbar__link::after {
   content: "";
-
   position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.5rem;
 
-  top: -0.5rem;
-
-  width: 1.25rem;
-  height: 1.25rem;
-
-  background: transparent;
-
-  pointer-events: none;
-}
-
-
-/* Left side of the notch */
-.desktop-navbar__link--active::before {
-  left: -0.6rem;
-
-  border-radius: 0 100% 0 0;
-
-  box-shadow:
-    0.55rem -0.55rem 0 0 var(--nav-surface);
-}
-
-
-/* Right side of the notch */
-.desktop-navbar__link--active::after {
-  right: -0.6rem;
-
-  border-radius: 100% 0 0 0;
-
-  box-shadow:
-    -0.55rem -0.55rem 0 0 var(--nav-surface);
-}
-
-
-/* =========================================================
-   Small floating circle above the notch
-   ========================================================= */
-
-.desktop-navbar__link--active .desktop-navbar__dot {
-  position: absolute;
-
-  left: 50%;
-  top: -0.95rem;
-
-  width: 1rem;
-  height: 1rem;
-
-  transform: translateX(-50%);
-
+  height: 2px;
   border-radius: 9999px;
 
-  background: var(--surface);
+  background: var(--gold);
 
-  box-shadow: var(--shadow-sm);
+  transform: scaleX(0);
+  transform-origin: center;
 
-  z-index: 3;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-
-/* =========================================================
-   Color bridge used for the notch
-
-   This variable is deliberately configurable so the effect
-   can match the navbar surface in both light and dark mode.
-   ========================================================= */
-
-:root {
-  --nav-surface: var(--surface);
+.desktop-navbar__link--active::after {
+  transform: scaleX(1);
 }

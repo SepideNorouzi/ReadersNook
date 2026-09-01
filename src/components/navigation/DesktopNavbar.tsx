@@ -4,6 +4,8 @@ import { NavLink, useLocation } from "react-router";
 import { navItems } from "./NavItem";
 import { useAuth } from "../../auth/hooks/useAuth";
 
+import "../../styles/desktopNav.css"
+
 export default function DesktopNavbar() {
   const { user } = useAuth();
   const location = useLocation();
@@ -77,22 +79,7 @@ export default function DesktopNavbar() {
 
       {/* ================= Center Navigation ================= */}
 
-      <div
-        className="
-          flex
-          items-center
-          gap-8
-
-          rounded-2xl
-
-          bg-white/30
-
-          px-8
-          py-3
-
-          backdrop-blur-md
-        "
-      >
+      <div className="desktop-navbar__links">
         {desktopNavItems.map((item) => {
           const active = location.pathname === item.path;
 
@@ -100,44 +87,9 @@ export default function DesktopNavbar() {
             <NavLink
               key={item.path}
               to={item.path}
-              className={`
-                relative
-
-                text-sm
-                font-medium
-
-                transition-colors
-
-                ${
-                  active
-                    ? "text-[var(--text)]"
-                    : "text-[var(--text-secondary)]"
-                }
-
-                hover:text-[var(--text)]
-              `}
+              className={`desktop-navbar__link${active ? " desktop-navbar__link--active" : ""}`}
             >
               {item.label}
-
-              {active && (
-                <span
-                  className="
-                    absolute
-
-                    left-1/2
-                    -bottom-3
-
-                    h-1
-                    w-1
-
-                    -translate-x-1/2
-
-                    rounded-full
-
-                    bg-[var(--text)]
-                  "
-                />
-              )}
             </NavLink>
           );
         })}
