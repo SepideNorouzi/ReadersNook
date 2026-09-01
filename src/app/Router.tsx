@@ -12,6 +12,7 @@ import Auth from "../pages/Auth";
 import ProtectedRoutes from "../auth/components/ProtectedRoutes";
 import RedirectIfAuthenticated from "../auth/components/RedirectAuthenticated";
 import Intro from "../pages/Intro";
+import Quotes from "../pages/Quotes";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
           { path: "/library", element: <Library /> },
           { path: "/search", element: <Search /> },
           { path: "/settings", element: <Settings /> },
+          { path: "/quotes", element: <Quotes /> },
         ],
       },
       {

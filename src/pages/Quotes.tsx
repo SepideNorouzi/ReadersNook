@@ -1,13 +1,10 @@
 import { Quote as QuoteIcon, Trash2 } from "lucide-react";
 import { useDeleteQuote } from "../hooks/useQuotes";
-import type { Book } from "../types/book";
 import Card from "../components/ui/Card";
+import { useBooks } from "../hooks/useBooks";
 
-interface Props {
-  books: Book[];
-}
-
-export default function AddedQuotes({ books }: Props) {
+export default function Quotes() {
+  const { data: books = [], isLoading: booksLoading } = useBooks();
   const deleteQuote = useDeleteQuote();
 
   const quotes = books.flatMap((book) =>
