@@ -3,7 +3,6 @@ import {
   Library,
   Search,
   Settings,
-  Folder,
   Quote,
 } from "lucide-react";
 
@@ -20,13 +19,6 @@ export const navItems = [
     label: "My Library",
     path: "/library",
     subtitle: "My Personal Library",
-  },
-
-  {
-    icon: Folder,
-    label: "Collections",
-    path: "/collections",
-    subtitle: "Book Collections",
   },
 
   {
