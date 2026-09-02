@@ -161,7 +161,7 @@ export default function BookCard({ book }: { book: Book }) {
         </div>
 
         {/* Body */}
-        <div className="flex flex-col gap-2 p-3.5">
+        <div className="flex min-h-[110px] flex-col gap-2 p-3.5">
           <div className="min-w-0">
             <h3
               className="
