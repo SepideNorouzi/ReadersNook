@@ -9,104 +9,208 @@ interface Props {
 export default function QuoteItem({ quote }: Props) {
   return (
     <>
-      {/* ======================= MOBILE ======================= */}
+      {/* ================= MOBILE ================= */}
 
       <div className="flex h-full min-h-0 flex-col justify-between lg:hidden">
-        <blockquote
-          className="
-            line-clamp-4
-            text-left
-            font-heading
-            text-[12px]
-            italic
-            leading-relaxed
-            text-[var(--text)]
-            sm:text-[13px]
-          "
-        >
-          {quote.text}
-        </blockquote>
-
-        <div className="mt-3 flex justify-end sm:mt-4">
-          <span
-            className="
-              max-w-full
-              truncate
-              rounded-xl
-              border
-              border-[var(--border)]
-              bg-[var(--stone-100)]
-              px-2
-              py-1
-              text-[8px]
-              font-medium
-              text-[var(--brown-700)]
-              sm:text-[10px]
-            "
-          >
-            ✨ {quote.bookTitle}
-          </span>
-        </div>
-      </div>
-
-      {/* ======================= DESKTOP ======================= */}
-
-      <div className="hidden h-full flex-col justify-between lg:flex">
         <div>
           <span
             className="
-              mb-2
               block
 
-              font-heading
+              font-serif
               text-5xl
               leading-none
 
-              text-[var(--brown-700)]
+              text-[var(--brown-600)]
+
+              drop-shadow-[0_0_8px_rgba(207,162,71,0.18)]
             "
           >
-            ❝
+            “
           </span>
 
           <blockquote
             className="
-              max-w-[30ch]
+              mt-2
 
-              text-left
+              line-clamp-4
+
+              max-w-[34ch]
 
               font-heading
-              text-lg
+              text-[13px]
+              font-semibold
               italic
-              leading-relaxed
+              leading-[1.65]
 
-              text-[var(--text)]
+              text-[var(--brown-900)]
+
+              drop-shadow-[0_1px_2px_rgba(255,255,255,0.35)]
+
+              sm:text-[14px]
             "
           >
             {quote.text}
           </blockquote>
         </div>
 
-        <div className="mt-6 flex justify-center">
-          <span
+        <div className="mt-4">
+          <div
             className="
-              rounded-full
+              mb-3
+              h-px
 
-              border
-              border-[var(--border)]
+              bg-gradient-to-r
+              from-[var(--gold)]/60
+              via-[var(--orange)]/25
+              to-transparent
+            "
+          />
 
-              bg-[var(--stone-100)]
+          <p
+            className="
+              text-[9px]
+              uppercase
+              tracking-[0.16em]
 
-              px-3.5
-              py-1.5
-              text-[10px]
-              lg:text-[12px]
-              font-medium
+              text-[var(--brown-500)]
+            "
+          >
+            From your library
+          </p>
+
+          <p
+            className="
+              mt-1
+              max-w-[80%]
+              truncate
+
+              font-heading
+              text-xs
+              font-semibold
 
               text-[var(--brown-700)]
             "
           >
-            ✨ {quote.bookTitle}
+            {quote.bookTitle}
+          </p>
+        </div>
+      </div>
+
+      {/* ================= DESKTOP ================= */}
+
+      <div className="hidden h-full min-h-0 flex-col justify-between lg:flex">
+        <div>
+          <span
+            className="
+              block
+
+              font-serif
+              text-8xl
+              leading-[0.65]
+
+              text-[var(--brown-600)]
+
+              drop-shadow-[0_0_10px_rgba(207,162,71,0.18)]
+            "
+          >
+            “
           </span>
+
+          <blockquote
+            className="
+              mt-5
+
+              max-w-[28ch]
+
+              font-heading
+              text-xl
+              font-semibold
+              italic
+              leading-[1.65]
+
+              text-[var(--brown-900)]
+
+              drop-shadow-[0_1px_2px_rgba(255,255,255,0.35)]
+            "
+          >
+            {quote.text}
+          </blockquote>
+        </div>
+
+        <div className="mt-6">
+          <div
+            className="
+              mb-4
+              h-px
+
+              bg-gradient-to-r
+              from-[var(--gold)]/55
+              via-[var(--orange)]/25
+              to-transparent
+            "
+          />
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <p
+                className="
+                  text-[9px]
+                  uppercase
+                  tracking-[0.18em]
+
+                  text-[var(--brown-500)]
+                "
+              >
+                From your library
+              </p>
+
+              <p
+                className="
+                  mt-1
+                  max-w-[24ch]
+                  truncate
+
+                  font-heading
+                  text-sm
+                  font-semibold
+
+                  text-[var(--brown-700)]
+                "
+              >
+                {quote.bookTitle}
+              </p>
+            </div>
+
+            <div
+              className="
+                flex
+                h-10
+                w-10
+                shrink-0
+                items-center
+                justify-center
+
+                rounded-full
+
+                border
+                border-[rgba(207,162,71,0.25)]
+
+                bg-gradient-to-br
+                from-[var(--gold-light)]
+                to-[var(--orange-light)]
+
+                text-[var(--brown-700)]
+
+                shadow-[
+                  0_6px_16px_rgba(164,125,93,0.12),
+                  0_0_12px_rgba(207,162,71,0.10)
+                ]
+              "
+            >
+              ✦
+            </div>
+          </div>
         </div>
       </div>
     </>
