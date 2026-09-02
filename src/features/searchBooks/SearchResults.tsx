@@ -1,6 +1,6 @@
+import { BookApiError } from "../../types/searchResults";
 import { useSearchBooks } from "../../hooks/useSearchBooks";
 import SearchResultCard from "./SearchResultCard";
-import { BookApiError } from "../../types/searchResults";
 
 type Props = {
   query: string;
@@ -9,53 +9,96 @@ type Props = {
 export default function SearchResults({ query }: Props) {
   const trimmed = query.trim();
   const { data: results, isLoading, isError, error } = useSearchBooks(query);
-  const isRateLimited = error instanceof BookApiError && error.status === 429;
 
-  // 1. Idle — nothing searched yet. This is the resting state of the
-  // page on first load, distinct from "searched and found nothing."
+  const isRateLimited =
+    error instanceof BookApiError && error.status === 429;
+
   if (!trimmed) {
     return (
-      <p className="text-sm text-[var(--text-muted)]">
-        Start typing to search for a book.
-      </p>
+      <div
+        className="
+          flex min-h-40
+          items-center justify-center
+          rounded-[22px]
+          border border-dashed
+          border-[var(--brown-200)]
+          bg-[var(--surface)]/60
+          px-6
+          text-center
+        "
+      >
+        <div>
+          <p className="text-sm font-medium text-[var(--text)]">
+            Start exploring
+          </p>
+          <p className="mt-1 text-xs text-[var(--text-muted)]">
+            Search for a title or author to discover new books.
+          </p>
+        </div>
+      </div>
     );
   }
 
-  // 2. Loading — a real request is in flight.
   if (isLoading) {
     return (
-      <p className="text-sm text-[var(--text-muted)]">
+      <p className="px-1 text-xs text-[var(--text-muted)]">
         Searching for &quot;{trimmed}&quot;...
       </p>
     );
   }
 
-  // 3. Error — the network call itself failed (bad response, offline, etc).
   if (isError) {
     return (
-      <p className="text-sm text-red-600">
-        {isRateLimited
-          ? "The book search service is temporarily rate limited. This isn't specific to you — try again in a moment."
-          : "Something went wrong. Please try again."}
-      </p>
+      <div
+        className="
+          rounded-[18px]
+          border border-[var(--orange)]/20
+          bg-[var(--orange)]/5
+          px-4 py-3
+        "
+      >
+        <p className="text-xs text-[var(--orange)]">
+          {isRateLimited
+            ? "The search service is temporarily rate limited. Try again in a moment."
+            : "Something went wrong while searching. Please try again."}
+        </p>
+      </div>
     );
   }
 
-  // 4. Empty — request succeeded, the search API just has nothing matching.
-  if (!results || results.length === 0) {
+  if (!results?.length) {
     return (
-      <p className="text-sm text-[var(--text-muted)]">
-        No books found for &quot;{trimmed}&quot;.
-      </p>
+      <div
+        className="
+          flex min-h-32
+          items-center justify-center
+          rounded-[22px]
+          border
+          border-[var(--brown-200)]
+          bg-[var(--surface)]/70
+          px-6
+          text-center
+        "
+      >
+        <p className="text-xs text-[var(--text-muted)]">
+          No books found for &quot;{trimmed}&quot;.
+        </p>
+      </div>
     );
   }
 
-  // 5. Success — the actual results grid. Each card is now fully
-  // self-contained: it fetches its own "already saved" state and
-  // owns its own add-book mutation. This component's only job is
-  // fetching search results and laying the cards out.
   return (
-    <div className="grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
+    <div
+      className="
+        grid
+        grid-cols-2
+        gap-4
+        sm:grid-cols-3
+        sm:gap-5
+        lg:grid-cols-4
+        lg:gap-6
+      "
+    >
       {results.map((result) => (
         <SearchResultCard key={result.id} result={result} />
       ))}
