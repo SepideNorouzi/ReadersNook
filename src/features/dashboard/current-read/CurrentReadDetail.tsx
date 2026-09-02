@@ -20,7 +20,7 @@ export default function CurrentReadDetails({ book }: Props) {
               min-w-0
 
               font-heading
-              text-sm
+              text-lg
               font-semibold
               leading-snug
 
@@ -160,7 +160,7 @@ export default function CurrentReadDetails({ book }: Props) {
               line-clamp-2
 
               font-heading
-              text-base
+              text-xl
               font-semibold
               leading-snug
 
