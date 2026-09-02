@@ -14,7 +14,7 @@ export default function Settings() {
 
   if (isLoading) {
     return (
-      <main className="p-6 pt-24 md:p-10 md:pt-8">
+      <main className="p-6 pt-20 md:p-10 md:pt-8">
         <p className="text-[var(--text-muted)]">
           Loading your profile...
         </p>
@@ -33,7 +33,7 @@ export default function Settings() {
   }
 
   return (
-    <main className="p-6 pt-24 md:p-10 md:pt-8">
+    <main className="p-6 pt-24 md:p-10 md:pt-24">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         {/* Profile */}
         <ProfileHeader user={user} />
