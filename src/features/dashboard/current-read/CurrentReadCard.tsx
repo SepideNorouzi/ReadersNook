@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Bookmark, BookMarked } from "lucide-react";
@@ -37,10 +38,13 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
 
           bg-[linear-gradient(135deg,var(--brown-600)_0%,var(--brown-700)_48%,var(--brown-800)_100%)]
 
+          border
+          border-[rgba(207,162,71,0.16)]
+
           p-4
           lg:p-6
 
-          shadow-[var(--shadow-lg)]
+          shadow-[var(--shadow-premium)]
 
           ${className ?? ""}
         `}
@@ -56,6 +60,9 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
   return (
     <Card
       className={`
+        relative
+        isolate
+
         flex
         h-fit
         w-full
@@ -69,15 +76,22 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
 
         bg-[linear-gradient(135deg,var(--brown-600)_0%,var(--brown-700)_48%,var(--brown-800)_100%)]
 
+        border
+        border-[rgba(207,162,71,0.18)]
+
         p-3.5
         sm:p-4
         lg:p-6
 
         transition-all
         duration-300
+        ease-out
 
-        hover:-translate-y-1
-        hover:shadow-[var(--shadow-lg)]
+        shadow-[var(--shadow-premium)]
+
+        hover:-translate-y-1.5
+        hover:border-[rgba(207,162,71,0.28)]
+        hover:shadow-[var(--shadow-premium-hover)]
 
         ${className ?? ""}
       `}
@@ -207,7 +221,6 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
             "
           >
             <BookMarked size={18} className="lg:hidden" />
-
             <BookMarked size={22} className="hidden lg:block" />
           </div>
 
@@ -272,3 +285,4 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
     </Card>
   );
 }
+
