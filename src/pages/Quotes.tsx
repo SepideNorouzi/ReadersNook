@@ -28,7 +28,7 @@ export default function Quotes() {
   };
 
   return (
-    <main className="w-full p-4 pt-10 sm:p-6 lg:p-12 lg:pt-20">
+    <main className="w-full p-4 pt-20 sm:p-6 lg:p-12 lg:pt-20">
       <div className="mx-auto max-w-5xl">
         {isLoading ? (
           <QuotesGrid />

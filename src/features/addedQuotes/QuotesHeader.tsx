@@ -36,6 +36,8 @@ export default function QuotesHeader({ count }: Props) {
 
           <h1
             className="
+            hidden
+            lg:block
               font-heading
               text-2xl
               font-semibold
