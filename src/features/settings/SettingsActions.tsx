@@ -1,11 +1,10 @@
+import { LogIn, LogOut, Moon } from "lucide-react";
 import { useState } from "react";
-import { LogOut, LogIn, Moon } from "lucide-react"; // add LogIn
-import { useNavigate } from "react-router"; // adjust if you use a different router setup
-
-import { useModeStore } from "../../store/modeStore";
-import { useAuth } from "../../auth/hooks/useAuth";
+import { useNavigate } from "react-router";
 
 import Card from "../../components/ui/Card";
+import { useAuth } from "../../auth/hooks/useAuth";
+import { useModeStore } from "../../store/modeStore";
 
 export default function SettingsActions() {
   const [darkMode, setDarkMode] = useState(false);
@@ -22,10 +21,10 @@ export default function SettingsActions() {
       if (isAuthenticated) {
         setMode("admin");
         navigate("/dashboard");
-        return;
+      } else {
+        navigate("/auth");
       }
 
-      navigate("/auth");
       return;
     }
 
@@ -38,50 +37,101 @@ export default function SettingsActions() {
     const next = !darkMode;
 
     setDarkMode(next);
-
     document.documentElement.classList.toggle("dark", next);
   };
 
   return (
-    <Card className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-medium text-[var(--text)] flex w-full items-center gap-3 mb-2">
-            <Moon />
-            <span className="font-medium">Night Mode</span>
-          </h2>
+    <Card
+      className="
+        rounded-[20px]
+        border border-[var(--brown-200)]
+        bg-[var(--surface)]
+        p-4
+        sm:p-5
+      "
+    >
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <div
+            className="
+              flex h-10 w-10 shrink-0
+              items-center justify-center
+              rounded-xl
+              bg-[var(--brown-100)]
+              text-[var(--brown-700)]
+            "
+          >
+            <Moon size={18} />
+          </div>
 
-          <p className="text-sm text-[var(--text-secondary)]">
-            Switch to the dark appearance.
-          </p>
+          <div className="min-w-0">
+            <h3 className="text-sm font-medium text-[var(--text)]">
+              Night Mode
+            </h3>
+
+            <p className="mt-0.5 text-xs text-[var(--text-secondary)]">
+              Switch to the dark appearance.
+            </p>
+          </div>
         </div>
 
         <button
+          type="button"
           onClick={toggleDarkMode}
+          aria-label="Toggle dark mode"
+          aria-pressed={darkMode}
           className={`
-            flex h-8 w-14 items-center rounded-full
-            p-1 transition
-            ${darkMode ? "bg-[var(--brown-600)]" : "bg-[var(--stone-300)]"}
+            flex h-7 w-12 shrink-0
+            items-center rounded-full
+            p-1
+            transition-colors
+            ${
+              darkMode
+                ? "bg-[var(--brown-600)]"
+                : "bg-[var(--stone-300)]"
+            }
           `}
         >
           <span
             className={`
-              h-6 w-6 rounded-full bg-white transition-transform
-              ${darkMode ? "translate-x-6" : ""}
+              h-5 w-5 rounded-full bg-white
+              shadow-sm
+              transition-transform
+              ${darkMode ? "translate-x-5" : ""}
             `}
           />
         </button>
       </div>
 
-      <div className="border-t border-[var(--border)] pt-5">
-        <button
-          onClick={handleAuthAction}
-          className="flex w-full items-center gap-3 rounded-xl p-3 text-red-600 transition-colors hover:bg-red-50"
-        >
-          {isDemo ? <LogIn size={18} /> : <LogOut size={18} />}
-          <span className="font-medium">{isDemo ? "Sign In" : "Log Out"}</span>
-        </button>
-      </div>
+      <div className="my-4 h-px bg-[var(--border)]" />
+
+      <button
+        type="button"
+        onClick={handleAuthAction}
+        className={`
+          flex w-full
+          items-center gap-3
+          rounded-xl
+          px-3 py-2.5
+          text-sm font-medium
+          transition-colors
+          ${
+            isDemo
+              ? `
+                text-[var(--brown-700)]
+                hover:bg-[var(--brown-50)]
+              `
+              : `
+                text-[var(--orange)]
+                hover:bg-[var(--orange-light)]
+              `
+          }
+        `}
+      >
+        {isDemo ? <LogIn size={17} /> : <LogOut size={17} />}
+
+        <span>{isDemo ? "Sign In" : "Log Out"}</span>
+      </button>
     </Card>
   );
 }
