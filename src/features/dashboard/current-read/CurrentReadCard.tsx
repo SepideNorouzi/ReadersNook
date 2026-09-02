@@ -12,9 +12,7 @@ interface CurrentReadProps {
   className?: string;
 }
 
-export default function CurrentReadingCard({
-  className,
-}: CurrentReadProps) {
+export default function CurrentReadingCard({ className }: CurrentReadProps) {
   const { books, isLoading } = useCurrentRead();
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -61,10 +59,7 @@ export default function CurrentReadingCard({
         aria-hidden="true"
         className="
           pointer-events-none absolute left-[8%] right-[8%] top-0 z-20 h-px
-          bg-gradient-to-r
-          from-transparent
-          via-[var(--gold-light)]
-          to-transparent
+          bg-gradient-to-r from-transparent via-[var(--gold-light)] to-transparent
           opacity-90 blur-[0.4px]
         "
       />
@@ -73,10 +68,7 @@ export default function CurrentReadingCard({
         aria-hidden="true"
         className="
           pointer-events-none absolute bottom-[10%] left-0 top-[10%] z-20 w-px
-          bg-gradient-to-b
-          from-transparent
-          via-[var(--orange)]
-          to-transparent
+          bg-gradient-to-b from-transparent via-[var(--orange)] to-transparent
           opacity-45 blur-[0.5px]
         "
       />
@@ -85,22 +77,22 @@ export default function CurrentReadingCard({
         aria-hidden="true"
         className="
           pointer-events-none absolute bottom-[10%] right-0 top-[10%] z-20 w-px
-          bg-gradient-to-b
-          from-transparent
-          via-[var(--gold)]
-          to-transparent
+          bg-gradient-to-b from-transparent via-[var(--gold)] to-transparent
           opacity-50 blur-[0.5px]
         "
       />
 
-      <div className="relative z-10 flex h-full min-w-0 flex-col">
+      {/* Content */}
+      <div className="relative z-10 flex min-w-0 flex-col">
+        {/* Header */}
         <header className="mb-4 flex w-full shrink-0 items-center justify-between lg:mb-5">
           <div className="flex min-w-0 items-center gap-2">
             <Bookmark
               size={14}
+              strokeWidth={2.2}
               className="
-                hidden shrink-0 text-[var(--gold)] lg:block
-                group-hover:drop-shadow-[0_0_8px_rgba(207,162,71,0.4)]
+                shrink-0 text-[var(--gold)]
+                drop-shadow-[0_0_8px_rgba(207,162,71,0.18)]
               "
             />
 
@@ -128,7 +120,7 @@ export default function CurrentReadingCard({
         {hasBooks ? (
           <>
             {/* Mobile */}
-            <div className="flex h-fit w-full min-w-0 lg:hidden">
+            <div className="w-full min-w-0 lg:hidden">
               <div className="flex w-full min-w-0 items-center gap-3.5 sm:gap-4">
                 <div className="w-[92px] shrink-0 sm:w-[104px]">
                   <CurrentReadEmbla
@@ -159,12 +151,11 @@ export default function CurrentReadingCard({
             </div>
           </>
         ) : (
-          <div className="flex h-fit w-full flex-col items-center justify-center gap-3 py-4 text-center">
+          <div className="flex w-full flex-col items-center justify-center gap-3 py-4 text-center">
             <div
               className="
                 flex h-11 w-11 items-center justify-center
-                rounded-full
-                border border-[rgba(207,162,71,0.14)]
+                rounded-full border border-[rgba(207,162,71,0.14)]
                 bg-[var(--brown-500)]/30
                 text-[var(--gold-light)]
                 shadow-[0_0_18px_rgba(207,162,71,0.08)]
@@ -189,8 +180,7 @@ export default function CurrentReadingCard({
               type="button"
               onClick={() => navigate("/search")}
               className="
-                rounded-full
-                bg-[var(--gold)]
+                rounded-full bg-[var(--gold)]
                 px-4 py-1.5
                 text-xs font-medium text-[var(--brown-900)]
                 transition-all duration-200
