@@ -8,7 +8,7 @@ export default function Search() {
   const [query, setQuery] = useState("");
 
   return (
-    <main className="flex flex-col gap-7 p-4 pt-10 sm:p-6 lg:p-12 lg:pt-10">
+    <main className="flex flex-col gap-7 p-4 pt-20 sm:p-6 lg:p-12 lg:pt-20">
       <section className="mx-auto w-full max-w-4xl">
         <div className="mb-5">
           <div className="mb-2 flex items-center gap-2">
@@ -20,10 +20,6 @@ export default function Search() {
               Discover
             </span>
           </div>
-
-          <h1 className="font-heading text-2xl font-semibold text-[var(--text)] sm:text-3xl">
-            Find your next read
-          </h1>
 
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
             Search by title, author, or whatever book has taken over your
