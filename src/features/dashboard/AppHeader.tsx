@@ -162,9 +162,8 @@ export default function AppHeader() {
 
     py-3
 
-    [mask-image:linear-gradient(to_bottom,transparent_40%,black_40%)]
-    [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_18%)]
-    [-webkit-mask-image:linear-gradient(to_top,transparent_0%,black_18%)]
+[mask-image:linear-gradient(to_bottom,transparent_0%,black_20%,black_80%,transparent_100%)]
+[-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_20%,black_80%,transparent_100%)]
 
     sm:bottom-12
     sm:py-4
