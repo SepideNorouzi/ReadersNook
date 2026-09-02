@@ -53,7 +53,7 @@ export default function DashboardGrid() {
   // Mobile
   return (
     <div className="flex flex-col gap-3.5 sm:gap-4">
-      <CurrentReadingCard className="min-h-[300px] sm:min-h-[320px]" />
+      <CurrentReadingCard />
 
       <ProgressCard className="min-h-[200px]" />
 
