@@ -13,7 +13,25 @@ interface HeroStatsProps {
 
 export default function HeroStats({ stats }: HeroStatsProps) {
   return (
-    <div className="inline-flex items-center">
+    <div
+      className="
+        inline-flex
+        items-center
+
+        rounded-2xl
+        border
+        border-white/25
+
+        bg-white/10
+        backdrop-blur-sm
+
+        px-2
+        py-2
+
+        sm:px-3
+        sm:py-2.5
+      "
+    >
       {stats.map(({ icon: Icon, value, label }, index) => (
         <Fragment key={label}>
           <div
