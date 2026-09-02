@@ -1,4 +1,5 @@
 import { BookOpen, SquarePen } from "lucide-react";
+import { useNavigate } from "react-router";
 import Card from "../../../components/ui/Card";
 import { useTBRBooks } from "../../../hooks/useTbr";
 import TbrBookGrid from "./TbrBookGrid";
@@ -9,6 +10,7 @@ interface Props {
 
 export default function TBRCard({ className }: Props) {
   const { books, isLoading } = useTBRBooks();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -27,12 +29,7 @@ export default function TBRCard({ className }: Props) {
           border
           border-[rgba(207,162,71,0.16)]
 
-          bg-[linear-gradient(
-            145deg,
-            var(--surface)_0%,
-            var(--bg-secondary)_55%,
-            var(--surface-hover)_100%
-          )]
+          bg-[linear-gradient(145deg,var(--surface)_0%,var(--bg-secondary)_55%,var(--surface-hover)_100%)]
 
           shadow-[var(--shadow-premium)]
 
@@ -46,18 +43,7 @@ export default function TBRCard({ className }: Props) {
             absolute
             inset-0
 
-            bg-[
-              radial-gradient(
-                circle_at_100%_0%,
-                rgba(207,162,71,0.12),
-                transparent_30%
-              ),
-              radial-gradient(
-                circle_at_0%_100%,
-                rgba(185,109,69,0.08),
-                transparent_28%
-              )
-            ]
+            bg-[radial-gradient(circle_at_100%_0%,rgba(207,162,71,0.12),transparent_30%),radial-gradient(circle_at_0%_100%,rgba(185,109,69,0.08),transparent_28%)]
           "
         />
 
@@ -91,12 +77,7 @@ export default function TBRCard({ className }: Props) {
         border
         border-[rgba(207,162,71,0.18)]
 
-        bg-[linear-gradient(
-          145deg,
-          var(--surface)_0%,
-          var(--surface-hover)_54%,
-          var(--bg-secondary)_100%
-        )]
+        bg-[linear-gradient(145deg,var(--surface)_0%,var(--surface-hover)_54%,var(--bg-secondary)_100%)]
 
         shadow-[var(--shadow-premium)]
 
@@ -115,10 +96,7 @@ export default function TBRCard({ className }: Props) {
         ${className ?? ""}
       `}
     >
-      {/* ====================================================== */}
-      {/* Ambient light                                         */}
-      {/* ====================================================== */}
-
+      {/* Ambient light */}
       <div
         aria-hidden="true"
         className="
@@ -127,25 +105,7 @@ export default function TBRCard({ className }: Props) {
           inset-0
           z-0
 
-          bg-[
-            radial-gradient(
-              circle_at_100%_0%,
-              rgba(207,162,71,0.13),
-              transparent_28%
-            ),
-            radial-gradient(
-              circle_at_0%_100%,
-              rgba(185,109,69,0.08),
-              transparent_26%
-            ),
-            linear-gradient(
-              145deg,
-              rgba(255,255,255,0.04),
-              transparent_36%,
-              transparent_72%,
-              rgba(35,23,17,0.04)
-            )
-          ]
+          bg-[radial-gradient(circle_at_100%_0%,rgba(207,162,71,0.13),transparent_28%),radial-gradient(circle_at_0%_100%,rgba(185,109,69,0.08),transparent_26%),linear-gradient(145deg,rgba(255,255,255,0.04),transparent_36%,transparent_72%,rgba(35,23,17,0.04))]
 
           transition-all
           duration-700
@@ -155,7 +115,6 @@ export default function TBRCard({ className }: Props) {
       />
 
       {/* Fine inner frame */}
-
       <div
         aria-hidden="true"
         className="
@@ -169,15 +128,11 @@ export default function TBRCard({ className }: Props) {
           border
           border-black/[0.025]
 
-          shadow-[
-            inset_0_1px_0_rgba(255,255,255,0.65),
-            inset_0_-1px_0_rgba(35,23,17,0.04)
-          ]
+          shadow-[inset_0_1px_0_rgba(255,255,255,0.65),inset_0_-1px_0_rgba(35,23,17,0.04)]
         "
       />
 
       {/* Decorative top highlight */}
-
       <div
         aria-hidden="true"
         className="
@@ -206,13 +161,9 @@ export default function TBRCard({ className }: Props) {
         "
       />
 
-      {/* ====================================================== */}
-      {/* CONTENT                                               */}
-      {/* ====================================================== */}
-
+      {/* CONTENT */}
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
-        {/* ================= HEADER ================= */}
-
+        {/* HEADER */}
         <div className="mb-3 flex shrink-0 items-center justify-between lg:mb-5">
           <div className="flex min-w-0 items-center gap-2">
             <div
@@ -284,15 +235,7 @@ export default function TBRCard({ className }: Props) {
             </div>
           </div>
 
-          <div
-            className="
-              flex
-              shrink-0
-              items-center
-              gap-1.5
-            "
-          >
-
+          <div className="flex shrink-0 items-center gap-1.5">
             <span
               className="
                 rounded-full
@@ -321,22 +264,11 @@ export default function TBRCard({ className }: Props) {
           </div>
         </div>
 
-        {/* ================= CONTENT ================= */}
-
+        {/* CONTENT */}
         {books.length === 0 ? (
-          <div
-            className="
-              flex
-              flex-1
-              flex-col
-              items-center
-              justify-center
-              px-2
-            "
-          >
+          <div className="flex flex-1 flex-col items-center justify-center gap-3 px-2">
             <div
               className="
-                mb-3
                 flex
                 h-12
                 w-12
@@ -350,11 +282,7 @@ export default function TBRCard({ className }: Props) {
 
                 bg-[var(--bg-secondary)]
 
-                shadow-[
-                  inset_0_1px_0_rgba(255,255,255,0.55),
-                  0_8px_20px_rgba(35,23,17,0.06),
-                  0_0_18px_rgba(207,162,71,0.05)
-                ]
+                shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_8px_20px_rgba(35,23,17,0.06),0_0_18px_rgba(207,162,71,0.05)]
 
                 lg:h-16
                 lg:w-16
@@ -370,33 +298,61 @@ export default function TBRCard({ className }: Props) {
               />
             </div>
 
-            <p
+            <div>
+              <p
+                className="
+                  text-center
+                  text-xs
+                  font-medium
+                  text-[var(--text)]
+
+                  lg:text-sm
+                "
+              >
+                Your shelf is empty.
+              </p>
+
+              <p
+                className="
+                  mt-1
+                  max-w-[220px]
+                  text-center
+                  text-[11px]
+                  leading-relaxed
+                  text-[var(--text-muted)]
+
+                  lg:text-xs
+                "
+              >
+                Add a few books you'd love to read.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate("/search")}
               className="
-                text-center
+                rounded-full
+                bg-[var(--gold)]
+
+                px-4
+                py-1.5
+
                 text-xs
                 font-medium
-                text-[var(--text)]
+                text-[var(--brown-900)]
+
+                transition-all
+                duration-200
+
+                hover:bg-[var(--gold-light)]
+                hover:shadow-[0_6px_18px_rgba(207,162,71,0.18)]
 
                 lg:text-sm
               "
             >
-              Your shelf is empty.
-            </p>
-
-            <p
-              className="
-                mt-1
-                max-w-[220px]
-                text-center
-                text-[11px]
-                leading-relaxed
-                text-[var(--text-muted)]
-
-                lg:text-xs
-              "
-            >
-              Add a few books you'd love to read.
-            </p>
+              Browse books
+            </button>
           </div>
         ) : (
           <div
@@ -414,10 +370,7 @@ export default function TBRCard({ className }: Props) {
 
               bg-[rgba(255,255,255,0.22)]
 
-              shadow-[
-                inset_0_1px_0_rgba(255,255,255,0.55),
-                inset_0_-1px_0_rgba(35,23,17,0.025)
-              ]
+              shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(35,23,17,0.025)]
 
               backdrop-blur-[2px]
 
@@ -428,7 +381,6 @@ export default function TBRCard({ className }: Props) {
             "
           >
             {/* Inner ambient shelf glow */}
-
             <div
               aria-hidden="true"
               className="
@@ -453,7 +405,6 @@ export default function TBRCard({ className }: Props) {
             />
 
             {/* Scroll area */}
-
             <div
               className="
                 relative
@@ -476,7 +427,6 @@ export default function TBRCard({ className }: Props) {
             </div>
 
             {/* Top fade */}
-
             <div
               className="
                 pointer-events-none
@@ -496,7 +446,6 @@ export default function TBRCard({ className }: Props) {
             />
 
             {/* Bottom fade */}
-
             <div
               className="
                 pointer-events-none

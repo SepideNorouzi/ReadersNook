@@ -3,9 +3,10 @@ import type { Book } from "../../../types/book";
 
 interface Props {
   book: Book;
+  isNext?: boolean;
 }
 
-export default function TBRBookItem({ book }: Props) {
+export default function TBRBookItem({ book, isNext = false }: Props) {
   return (
     <Link
       to={`/book/${book.id}`}
@@ -19,15 +20,8 @@ export default function TBRBookItem({ book }: Props) {
       "
     >
       {/* Cover */}
-
-      <div
-        className="
-          relative
-          overflow-visible
-        "
-      >
+      <div className="relative overflow-visible">
         {/* Ambient glow */}
-
         <div
           aria-hidden="true"
           className="
@@ -38,11 +32,7 @@ export default function TBRBookItem({ book }: Props) {
 
             rounded-[18px]
 
-            bg-[radial-gradient(
-              circle,
-              rgba(207,162,71,0.20),
-              transparent_68%
-            )]
+            bg-[radial-gradient(circle,rgba(207,162,71,0.20),transparent_68%)]
 
             opacity-0
             blur-xl
@@ -54,8 +44,33 @@ export default function TBRBookItem({ book }: Props) {
           "
         />
 
-        {/* Book frame */}
+        {/* Contact shadow — grounds the cover when it lifts on hover */}
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            inset-x-[12%]
+            -bottom-1
+            z-0
 
+            h-2
+
+            rounded-full
+
+            bg-[rgba(35,23,17,0.20)]
+
+            opacity-0
+            blur-[5px]
+
+            transition-opacity
+            duration-400
+
+            group-hover:opacity-100
+          "
+        />
+
+        {/* Book frame */}
         <div
           className="
             relative
@@ -72,22 +87,16 @@ export default function TBRBookItem({ book }: Props) {
 
             bg-[var(--stone-100)]
 
-            shadow-[
-              0_8px_18px_rgba(35,23,17,0.10),
-              0_2px_5px_rgba(35,23,17,0.06)
-            ]
+            shadow-[0_8px_18px_rgba(35,23,17,0.10),0_2px_5px_rgba(35,23,17,0.06)]
 
             transition-all
             duration-400
             ease-out
 
             group-hover:-translate-y-1
+            group-hover:-rotate-1
             group-hover:border-[rgba(207,162,71,0.32)]
-            group-hover:shadow-[
-              0_16px_28px_rgba(35,23,17,0.15),
-              0_6px_12px_rgba(35,23,17,0.07),
-              0_0_18px_rgba(207,162,71,0.10)
-            ]
+            group-hover:shadow-[0_16px_28px_rgba(35,23,17,0.15),0_6px_12px_rgba(35,23,17,0.07),0_0_18px_rgba(207,162,71,0.10)]
           "
         >
           <img
@@ -108,7 +117,6 @@ export default function TBRBookItem({ book }: Props) {
           />
 
           {/* Fine glass highlight */}
-
           <div
             aria-hidden="true"
             className="
@@ -126,7 +134,6 @@ export default function TBRBookItem({ book }: Props) {
           />
 
           {/* Bottom warm reflection */}
-
           <div
             aria-hidden="true"
             className="
@@ -145,10 +152,40 @@ export default function TBRBookItem({ book }: Props) {
             "
           />
         </div>
+
+        {/* "Next" tag — the book at the front of the queue */}
+        {isNext && (
+          <span
+            className="
+              absolute
+              -left-1.5
+              -top-1.5
+              z-20
+
+              rounded-full
+              border
+              border-[rgba(248,237,203,0.5)]
+
+              bg-[var(--gold)]
+
+              px-1.5
+              py-[1px]
+
+              text-[7px]
+              font-semibold
+              text-[var(--brown-900)]
+
+              shadow-[0_2px_6px_rgba(207,162,71,0.35)]
+
+              sm:text-[8px]
+            "
+          >
+            Next
+          </span>
+        )}
       </div>
 
       {/* Title */}
-
       <p
         className="
           mt-1.5

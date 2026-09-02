@@ -19,8 +19,8 @@ export default function TBRBookGrid({ books }: Props) {
         lg:gap-4
       "
     >
-      {books.map((book) => (
-        <TBRBookItem key={book.id} book={book} />
+      {books.map((book, index) => (
+        <TBRBookItem key={book.id} book={book} isNext={index === 0} />
       ))}
     </div>
   );
