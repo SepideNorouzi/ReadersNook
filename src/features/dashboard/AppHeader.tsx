@@ -81,11 +81,15 @@ export default function AppHeader() {
           absolute
 
           right-20
-          top-36
+          top-24
+
+          md:top-20
 
           lg:right-20
+          lg:top-28
 
           xl:right-28
+          xl:top-36
 
           z-20
 
@@ -170,14 +174,16 @@ export default function AppHeader() {
           sm:py-4
 
           md:inset-x-auto
-          md:right-20
-          md:bottom-16
+          md:right-10
+          md:bottom-20
 
           md:bg-transparent
           md:backdrop-blur-none
           md:py-0
           md:[mask-image:none]
           md:[-webkit-mask-image:none]
+
+          lg:bottom-16
 
           xl:right-18
           xl:bottom-28
@@ -195,4 +201,3 @@ export default function AppHeader() {
     </section>
   );
 }
-
