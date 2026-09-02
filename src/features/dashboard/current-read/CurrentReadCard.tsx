@@ -19,7 +19,27 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   if (isLoading) {
-    return <Card>Loading...</Card>;
+    <Card
+  className={`
+    flex
+    items-center
+    justify-center
+    self-start
+
+    rounded-[22px]
+    sm:rounded-[28px]
+
+    bg-gradient-to-br
+    from-[var(--brown-700)]
+    to-[var(--brown-900)]
+
+    lg:self-auto
+
+    ${className ?? ""}
+  `}
+>
+  <p className="text-sm text-white/60">Loading...</p>
+</Card>
   }
 
   const hasBooks = books.length > 0;
@@ -28,94 +48,115 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
   return (
     <Card
       className={`
-        flex
-        h-full
-        min-h-0
-        flex-col
+  flex
+  min-h-0
+  flex-col
+  self-start
+  overflow-hidden
 
-        rounded-[22px]
-        sm:rounded-[28px]
+  rounded-[22px]
+  sm:rounded-[28px]
 
-        bg-gradient-to-b
-        from-white
-        to-[var(--surface-hover)]
+  bg-gradient-to-br
+  from-[var(--brown-700)]
+  to-[var(--brown-900)]
 
-        p-3
-        sm:p-4
-        lg:p-6
+  p-3.5
+  sm:p-4
+  lg:p-6
 
-        transition-all
-        duration-300
+  transition-all
+  duration-300
 
-        hover:-translate-y-1
-        hover:shadow-[var(--shadow-lg)]
+  lg:self-auto
 
-        ${className ?? ""}
-      `}
+  hover:-translate-y-1
+  hover:shadow-[var(--shadow-lg)]
+
+  ${className ?? ""}
+`}
     >
       {/* Header */}
-      <header className="mb-3 flex shrink-0 items-center justify-between lg:mb-5">
-        <div className="flex items-center gap-2">
-          <Bookmark size={13} className="text-[var(--brown-500)]" />
-          <h3 className="font-heading text-sm font-semibold text-[var(--text)] lg:text-lg">
-            <span className="lg:hidden">Reading</span>
-            <span className="hidden lg:inline">Currently Reading</span>
-          </h3>
-        </div>
+<header className="mb-4 flex shrink-0 items-center justify-between lg:mb-5">
+  <div className="flex items-center gap-2">
+    <Bookmark
+      size={14}
+      className="hidden shrink-0 text-[var(--gold-light)] lg:block"
+    />
 
-        {/*only show the count once there's one worth showing */}
-        {hasBooks && (
-          <span
-            className="
-              rounded-full
-              bg-[var(--stone-100)]
+    <h3 className="font-heading text-sm font-semibold text-white lg:text-lg">
+      Currently Reading
+    </h3>
+  </div>
 
-              px-2
-              py-0.5
+  {hasBooks && (
+    <span
+      className="
+        hidden
+        shrink-0
+        rounded-full
+        bg-white/10
 
-              text-[10px]
-              font-medium
-              uppercase
-              tracking-[0.18em]
+        px-2.5
+        py-1
 
-              text-[var(--text-secondary)]
+        text-[11px]
+        font-medium
+        uppercase
+        tracking-[0.18em]
 
-              lg:px-2.5
-              lg:py-1
-              lg:text-[11px]
-            "
-          >
-            {books.length}
-          </span>
-        )}
-      </header>
+        text-white/70
+
+        lg:inline-flex
+      "
+    >
+      {books.length}
+    </span>
+  )}
+</header>
 
       {hasBooks ? (
         <>
-          {/* MOBILE HERO */}
-<div
-  className="
-    flex
-    items-center
-    gap-4
+{/* ================= MOBILE ================= */}
+<div className="flex w-full flex-col gap-3.5 lg:hidden">
+  <div className="flex items-center gap-3.5 sm:gap-4">
+    {/* Cover */}
+    <div className="w-[92px] shrink-0 sm:w-[104px]">
+      <CurrentReadEmbla
+        books={books}
+        currentIndex={currentIndex}
+        onSelect={setCurrentIndex}
+      />
+    </div>
 
-    lg:hidden
-  "
->
-
-  {/* Cover */}
-  <div className="shrink-0">
-    <CurrentReadEmbla
-      books={books}
-      currentIndex={currentIndex}
-      onSelect={setCurrentIndex}
-    />
+    {/* Details */}
+    <div className="min-w-0 flex-1">
+      <CurrentReadDetails book={currentBook} />
+    </div>
   </div>
 
+  {/* Continue Reading */}
+  <button
+    type="button"
+    onClick={() => navigate(`/book/${currentBook.id}`)}
+    className="
+      w-full
+      rounded-full
+      bg-white/10
 
-  {/* Details */}
-  <CurrentReadDetails book={currentBook} />
+      py-2.5
 
+      text-center
+      text-sm
+      font-medium
+      text-white
+
+      transition-colors
+      active:bg-white/15
+    "
+  >
+    Continue Reading
+  </button>
 </div>
 
 
@@ -141,77 +182,59 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
         </>
       ) : (
         /* Empty state */
-        <div
-          className="
-            flex
-            flex-1
-            flex-col
-            items-center
-            justify-center
-            gap-3
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 py-4 text-center">
+  <div
+    className="
+      flex
+      h-11
+      w-11
+      items-center
+      justify-center
 
-            py-4
+      rounded-full
+      bg-white/10
+      text-white
 
-            text-center
-          "
-        >
-          <div
-            className="
-              flex
-              h-11
-              w-11
-              items-center
-              justify-center
+      lg:h-14
+      lg:w-14
+    "
+  >
+    <BookMarked size={18} className="lg:hidden" />
+    <BookMarked size={22} className="hidden lg:block" />
+  </div>
 
-              rounded-full
-              bg-[var(--stone-100)]
+  <div className="space-y-1">
+    <p className="font-heading text-sm font-semibold text-white lg:text-base">
+      Nothing in progress
+    </p>
+    <p className="mx-auto max-w-[200px] text-xs text-white/60 lg:text-sm">
+      Add a book and mark it as current to see it here.
+    </p>
+  </div>
 
-              text-[var(--brown-500)]
+  <button
+    onClick={() => navigate("/search")}
+    className="
+      mt-1
+      rounded-full
+      bg-white/10
 
-              lg:h-14
-              lg:w-14
-            "
-          >
-            <BookMarked size={18} className="lg:hidden" />
-            <BookMarked size={22} className="hidden lg:block" />
-          </div>
+      px-4
+      py-1.5
 
-          <div className="space-y-1">
-            <p className="font-heading text-sm font-semibold text-[var(--text)] lg:text-base">
-              Nothing in progress
-            </p>
-            <p className="mx-auto max-w-[200px] text-xs text-[var(--text-secondary)] lg:text-sm">
-              Add a book and mark it as current to see it here.
-            </p>
-          </div>
+      text-xs
+      font-medium
+      text-white
 
-          <button
-            onClick={() => navigate("/search")}
-            className="
-              mt-1
+      transition-all
+      hover:bg-white/15
 
-              rounded-full
-              border
-              border-[var(--border)]
-              bg-white
-
-              px-4
-              py-1.5
-
-              text-xs
-              font-medium
-              text-[var(--text)]
-
-              transition-all
-              hover:border-[var(--brown-500)]
-              hover:bg-[var(--stone-100)]
-
-              lg:text-sm
-            "
-          >
-            Find a book
-          </button>
-        </div>
+      lg:text-sm
+    "
+  >
+    Find a book
+  </button>
+</div>
       )}
     </Card>
   );
