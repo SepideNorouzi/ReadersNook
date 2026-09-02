@@ -11,8 +11,6 @@ export default function DesktopLayout({
   return (
     <main
       className="
-        relative
-
         h-screen
         w-screen
         overflow-hidden
@@ -23,19 +21,18 @@ export default function DesktopLayout({
         to-[var(--bg)]
       "
     >
-      {/* Floating desktop navbar */}
-      <DesktopNavbar />
-
-      {/* Pages */}
       <section
         className="
           h-full
           w-full
-
           overflow-y-auto
         "
       >
-        {children}
+        <div className="relative min-h-full">
+          <DesktopNavbar />
+
+          {children}
+        </div>
       </section>
     </main>
   );

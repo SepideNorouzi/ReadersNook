@@ -17,25 +17,25 @@ export default function DesktopNavbar() {
   );
 
   return (
-    <nav
-      className="
-        absolute
-        inset-x-0
-        top-0
-        z-40
+<nav
+  className="
+    absolute
+    inset-x-0
+    top-0
+    z-40
 
-        hidden
-        lg:flex
+    hidden
+    lg:flex
 
-        h-20
+    h-20
 
-        items-center
-        justify-between
+    items-center
+    justify-between
 
-        px-12
-        xl:px-16
-      "
-    >
+    px-12
+    xl:px-16
+  "
+>
       {/* ================= Logo / Dashboard ================= */}
 
       <NavLink

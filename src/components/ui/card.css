@@ -1,0 +1,8 @@
+/* Drop shadow for ui/Card only. Children must not set box-shadow on the card root. */
+.stamp-card {
+  box-shadow: var(--shadow-premium);
+}
+
+.stamp-card:hover {
+  box-shadow: var(--shadow-premium-hover);
+}
