@@ -1,4 +1,4 @@
-import { BookOpen, SquarePen, Sparkles } from "lucide-react";
+import { BookOpen, SquarePen } from "lucide-react";
 import Card from "../../../components/ui/Card";
 import { useTBRBooks } from "../../../hooks/useTbr";
 import TbrBookGrid from "./TbrBookGrid";
@@ -292,16 +292,6 @@ export default function TBRCard({ className }: Props) {
               gap-1.5
             "
           >
-            <Sparkles
-              size={11}
-              className="
-                hidden
-                text-[var(--gold)]
-                opacity-60
-
-                lg:block
-              "
-            />
 
             <span
               className="

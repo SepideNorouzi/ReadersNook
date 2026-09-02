@@ -11,56 +11,50 @@ function CollectionGrid({
   onCollectionClick,
 }: CollectionGridProps) {
   return (
-    <>
-      {/* Mobile: horizontal snap rail of collection stacks */}
-      <div
-        className="
-          -mx-0.5
-          flex
-          gap-3
-          overflow-x-auto
-          px-0.5
-          pb-2
-          scrollbar-hidden
-          snap-x
-          snap-mandatory
+    <div
+      className="
+        flex
+        h-full
+        w-max
+        min-w-full
+        items-center
 
-          md:hidden
-        "
-      >
-        {collections.map((collection) => (
-          <div
-            key={collection.id}
-            className="w-[108px] shrink-0 snap-start"
-          >
-            <CollectionsItem
-              collection={collection}
-              onClick={onCollectionClick}
-              compact
-            />
-          </div>
-        ))}
-      </div>
+        gap-4
+        px-5
+        py-4
 
-      {/* md+: wrap grid (tablet full-width uses 3 cols, desktop bento uses 2) */}
-      <div
-        className="
-          hidden
-          gap-3
-          md:grid
-          md:grid-cols-3
-          xl:grid-cols-2
-        "
-      >
-        {collections.map((collection) => (
+        sm:gap-5
+        sm:px-6
+        sm:py-5
+
+        lg:gap-7
+        lg:px-8
+        lg:py-6
+
+        snap-x
+        snap-mandatory
+      "
+    >
+      {collections.map((collection) => (
+        <div
+          key={collection.id}
+          className="
+            w-[108px]
+            shrink-0
+            snap-start
+
+            sm:w-[124px]
+
+            lg:w-[142px]
+          "
+        >
           <CollectionsItem
-            key={collection.id}
             collection={collection}
             onClick={onCollectionClick}
           />
-        ))}
-      </div>
-    </>
+        </div>
+      ))}
+    </div>
   );
 }
 

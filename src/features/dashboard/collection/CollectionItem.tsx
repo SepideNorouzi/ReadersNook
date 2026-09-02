@@ -4,62 +4,148 @@ import type { CollectionWithBooks } from "../../../types/collection";
 export interface CollectionCardProps {
   collection: CollectionWithBooks;
   onClick?: (collection: CollectionWithBooks) => void;
-  /** Tighter layout for the mobile horizontal rail */
   compact?: boolean;
 }
 
 export default function CollectionItem({
   collection,
   onClick,
-  compact = false,
 }: CollectionCardProps) {
   const { name, books } = collection;
-  const count = books.length;
 
   return (
     <button
       type="button"
       onClick={() => onClick?.(collection)}
-      className={`
+      className="
+        group
+
         flex
         w-full
         flex-col
         items-center
-        text-left
+        text-center
 
-        transition-transform
-        duration-200
+        snap-start
 
-        hover:-translate-y-0.5
+        transition-all
+        duration-300
+        ease-out
+
+        hover:-translate-y-1
         active:scale-[0.98]
-
-        ${compact ? "gap-2 py-1" : "gap-2.5 py-2 sm:gap-3"}
-      `}
+      "
     >
-      <CollectionStack books={books} size={compact ? "sm" : "md"} />
+      {/* ====================================================== */}
+      {/* Collection stack                                      */}
+      {/* ====================================================== */}
 
-      <div className="w-full min-w-0 text-center">
+      <div
+        className="
+          relative
+
+          flex
+          items-center
+          justify-center
+
+          rounded-[20px]
+
+          px-3
+          py-4
+
+          transition-all
+          duration-400
+
+          group-hover:bg-[rgba(207,162,71,0.035)]
+        "
+      >
+        {/* Soft collection glow */}
+
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            inset-1
+
+            rounded-full
+
+            bg-[radial-gradient(
+              circle,
+              rgba(207,162,71,0.16),
+              transparent_68%
+            )]
+
+            opacity-0
+
+            blur-xl
+
+            transition-all
+            duration-500
+
+            group-hover:opacity-100
+          "
+        />
+
+        <div className="relative z-10">
+          <CollectionStack
+            books={books}
+            size="md"
+          />
+        </div>
+      </div>
+
+      {/* ====================================================== */}
+      {/* Collection information                                */}
+      {/* ====================================================== */}
+
+      <div className="mt-2.5 w-full min-w-0">
         <h3
-          className={`
+          className="
             line-clamp-2
+
             font-heading
+            text-xs
             font-semibold
+            leading-snug
+
             text-[var(--text)]
-            ${compact ? "text-xs leading-snug" : "text-sm"}
-          `}
+
+            transition-colors
+            duration-300
+
+            group-hover:text-[var(--brown-700)]
+
+            sm:text-[13px]
+            lg:text-sm
+          "
         >
           {name}
         </h3>
 
-        <p
-          className={`
-            mt-0.5
-            text-[var(--text-secondary)]
-            ${compact ? "text-[10px]" : "text-[11px]"}
-          `}
+        <div
+          className="
+            mt-1
+
+            flex
+            items-center
+            justify-center
+            gap-1.5
+          "
         >
-          {count} {count === 1 ? "book" : "books"}
-        </p>
+          <span
+            className="
+              h-1
+              w-1
+
+              rounded-full
+
+              bg-[var(--gold)]
+
+              opacity-60
+            "
+          />
+        </div>
       </div>
     </button>
   );
