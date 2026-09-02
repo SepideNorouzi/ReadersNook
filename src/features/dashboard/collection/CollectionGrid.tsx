@@ -6,7 +6,7 @@ export interface CollectionGridProps {
   onCollectionClick?: (collection: CollectionWithBooks) => void;
 }
 
-function CollectionGrid({
+export default function CollectionGrid({
   collections,
   onCollectionClick,
 }: CollectionGridProps) {
@@ -14,25 +14,22 @@ function CollectionGrid({
     <div
       className="
         flex
-        h-full
         w-max
         min-w-full
         items-center
 
-        gap-4
+        gap-5
+
         px-5
-        py-4
+        py-5
 
-        sm:gap-5
+        sm:gap-6
         sm:px-6
-        sm:py-5
+        sm:py-6
 
-        lg:gap-7
+        lg:gap-8
         lg:px-8
-        lg:py-6
-
-        snap-x
-        snap-mandatory
+        lg:py-7
       "
     >
       {collections.map((collection) => (
@@ -41,7 +38,6 @@ function CollectionGrid({
           className="
             w-[108px]
             shrink-0
-            snap-start
 
             sm:w-[124px]
 
@@ -57,5 +53,3 @@ function CollectionGrid({
     </div>
   );
 }
-
-export default CollectionGrid;

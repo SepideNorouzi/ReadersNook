@@ -12,6 +12,7 @@ export default function CollectionItem({
   onClick,
 }: CollectionCardProps) {
   const { name, books } = collection;
+  const count = books.length;
 
   return (
     <button
@@ -19,13 +20,11 @@ export default function CollectionItem({
       onClick={() => onClick?.(collection)}
       className="
         group
-
         flex
         w-full
         flex-col
         items-center
         text-center
-
         snap-start
 
         transition-all
@@ -36,22 +35,18 @@ export default function CollectionItem({
         active:scale-[0.98]
       "
     >
-      {/* ====================================================== */}
-      {/* Collection stack                                      */}
-      {/* ====================================================== */}
-
+      {/* Collection stack */}
       <div
         className="
           relative
-
           flex
           items-center
           justify-center
 
-          rounded-[20px]
+          rounded-[24px]
 
-          px-3
-          py-4
+          px-4
+          py-5
 
           transition-all
           duration-400
@@ -60,29 +55,28 @@ export default function CollectionItem({
         "
       >
         {/* Soft collection glow */}
-
         <div
           aria-hidden="true"
           className="
             pointer-events-none
             absolute
-            inset-1
+            inset-0
 
             rounded-full
 
             bg-[radial-gradient(
               circle,
-              rgba(207,162,71,0.16),
+              rgba(207,162,71,0.18),
               transparent_68%
             )]
 
             opacity-0
-
-            blur-xl
+            blur-2xl
 
             transition-all
             duration-500
 
+            group-hover:scale-110
             group-hover:opacity-100
           "
         />
@@ -95,17 +89,14 @@ export default function CollectionItem({
         </div>
       </div>
 
-      {/* ====================================================== */}
-      {/* Collection information                                */}
-      {/* ====================================================== */}
-
-      <div className="mt-2.5 w-full min-w-0">
+      {/* Collection information */}
+      <div className="mt-3 w-full min-w-0">
         <h3
           className="
             line-clamp-2
 
             font-heading
-            text-xs
+            text-lg
             font-semibold
             leading-snug
 
@@ -116,8 +107,7 @@ export default function CollectionItem({
 
             group-hover:text-[var(--brown-700)]
 
-            sm:text-[13px]
-            lg:text-sm
+            lg:text-[16px]
           "
         >
           {name}
@@ -125,8 +115,7 @@ export default function CollectionItem({
 
         <div
           className="
-            mt-1
-
+            mt-1.5
             flex
             items-center
             justify-center
@@ -137,14 +126,23 @@ export default function CollectionItem({
             className="
               h-1
               w-1
-
               rounded-full
-
               bg-[var(--gold)]
-
               opacity-60
             "
           />
+
+          <p
+            className="
+              text-[10px]
+              font-medium
+              text-[var(--text-secondary)]
+
+              lg:text-[11px]
+            "
+          >
+            {count} {count === 1 ? "book" : "books"}
+          </p>
         </div>
       </div>
     </button>
