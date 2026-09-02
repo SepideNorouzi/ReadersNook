@@ -146,27 +146,43 @@ export default function AppHeader() {
 
       {/* ================= Hero Stats ================= */}
 
-      <div
-        className="
-          absolute
-          z-30
+<div
+  className="
+    absolute
+    z-30
 
-          left-1/2
-          -translate-x-1/2
+    inset-x-0
+    bottom-4
 
-          bottom-8
+    flex
+    justify-center
 
-          sm:bottom-12
+    bg-white/10
+    backdrop-blur-sm
 
-          lg:right-20
-          lg:left-auto
-          lg:translate-x-0
-          lg:bottom-16
+    py-3
 
-          xl:right-18
-          xl:bottom-28
-        "
-      >
+    [mask-image:linear-gradient(to_bottom,transparent_40%,black_40%)]
+    [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_18%)]
+    [-webkit-mask-image:linear-gradient(to_top,transparent_0%,black_18%)]
+
+    sm:bottom-12
+    sm:py-4
+
+    lg:inset-x-auto
+    lg:right-20
+    lg:bottom-16
+
+    lg:bg-transparent
+    lg:backdrop-blur-none
+    lg:py-0
+    lg:[mask-image:none]
+    lg:[-webkit-mask-image:none]
+
+    xl:right-18
+    xl:bottom-28
+  "
+>
         <HeroStats
           stats={[
             { icon: BookOpen, value: stats.totalBooks, label: "Books" },
