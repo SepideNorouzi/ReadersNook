@@ -11,7 +11,7 @@ export default function CurrentReadDetails({ book }: Props) {
     <>
       {/* ================= MOBILE ================= */}
 
-      <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 lg:hidden">
+      <div className="flex min-w-0 flex-col justify-center gap-3 lg:hidden">
         {/* Title + author */}
         <div className="min-w-0">
           <h4
