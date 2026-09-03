@@ -1,14 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createQuote, updateQuote, deleteQuote } from "../../services/quotes";
 import type { QuoteChanges, QuoteDraft } from "../../types/quote";
-import { BOOKS_KEY, bookDetailKey } from "../book/bookRepo";
+import { queryKeys } from "../../queries/queryKeys";
+import { useAuthStore } from "../../auth/store/authStore";
 
 function invalidateBookQueries(
   queryClient: ReturnType<typeof useQueryClient>,
+  username: string,
   bookId: string,
 ) {
-  queryClient.invalidateQueries({ queryKey: BOOKS_KEY });
-  queryClient.invalidateQueries({ queryKey: bookDetailKey(bookId) });
+  queryClient.invalidateQueries({
+    queryKey: queryKeys.books(username),
+  });
+
+  queryClient.invalidateQueries({
+    queryKey: queryKeys.book(username, bookId),
+  });
 }
 
 export const adminQuoteRepo = {
@@ -16,15 +23,14 @@ export const adminQuoteRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: ({
-        bookId,
-        quote,
-      }: {
-        bookId: string;
-        quote: QuoteDraft;
-      }) => createQuote(bookId, quote),
+      mutationFn: ({ bookId, quote }: { bookId: string; quote: QuoteDraft }) =>
+        createQuote(bookId, quote),
       onSuccess: (_quote, { bookId }) => {
-        invalidateBookQueries(queryClient, bookId);
+        const username = useAuthStore.getState().username;
+
+        if (!username) return;
+
+        invalidateBookQueries(queryClient, username, bookId);
       },
     });
   },
@@ -43,7 +49,11 @@ export const adminQuoteRepo = {
         changes: QuoteChanges;
       }) => updateQuote(bookId, quoteId, changes),
       onSuccess: (_quote, { bookId }) => {
-        invalidateBookQueries(queryClient, bookId);
+        const username = useAuthStore.getState().username;
+
+        if (!username) return;
+
+        invalidateBookQueries(queryClient, username, bookId);
       },
     });
   },
@@ -52,15 +62,14 @@ export const adminQuoteRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: ({
-        bookId,
-        quoteId,
-      }: {
-        bookId: string;
-        quoteId: string;
-      }) => deleteQuote(bookId, quoteId),
-      onSuccess: (_result, { bookId }) => {
-        invalidateBookQueries(queryClient, bookId);
+      mutationFn: ({ bookId, quoteId }: { bookId: string; quoteId: string }) =>
+        deleteQuote(bookId, quoteId),
+      onSuccess: (_quote, { bookId }) => {
+        const username = useAuthStore.getState().username;
+
+        if (!username) return;
+
+        invalidateBookQueries(queryClient, username, bookId);
       },
     });
   },

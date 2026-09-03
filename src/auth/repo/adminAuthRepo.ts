@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   AuthHttpError,
@@ -8,8 +12,13 @@ import {
   register,
   toProfile,
 } from "../services/auth";
+
 import { useAuthStore } from "../store/authStore";
 import { authKeys } from "../queries/authKeys";
+
+import {
+  invalidateAuthTransport,
+} from "../authTransport";
 
 import type {
   LoginCredentials,
@@ -20,16 +29,31 @@ import type {
 let refreshInFlight: Promise<TokenResponse> | null = null;
 
 async function refreshSession(): Promise<TokenResponse> {
-  if (refreshInFlight) return refreshInFlight;
+  if (refreshInFlight) {
+    return refreshInFlight;
+  }
 
   refreshInFlight = (async () => {
-    const refresh = useAuthStore.getState().refreshToken;
+    const refresh =
+      useAuthStore.getState().refreshToken;
+
     if (!refresh) {
-      throw new AuthHttpError("Refresh token expired.", 401);
+      throw new AuthHttpError(
+        "Refresh token expired.",
+        401,
+      );
     }
 
-    const tokens = await refreshToken(refresh);
-    useAuthStore.getState().setTokens(tokens.access, tokens.refresh);
+    const tokens =
+      await refreshToken(refresh);
+
+    useAuthStore
+      .getState()
+      .setTokens(
+        tokens.access,
+        tokens.refresh,
+      );
+
     return tokens;
   })().finally(() => {
     refreshInFlight = null;
@@ -40,58 +64,110 @@ async function refreshSession(): Promise<TokenResponse> {
 
 export const adminAuthRepo = {
   useMe(enabled = true) {
-    const accessToken = useAuthStore((state) => state.accessToken);
+    const accessToken = useAuthStore(
+      (state) => state.accessToken,
+    );
 
     return useQuery({
       queryKey: authKeys.me("admin"),
+
       queryFn: async () => {
-        const token = useAuthStore.getState().accessToken;
+        const token =
+          useAuthStore.getState().accessToken;
+
         if (!token) {
-          throw new AuthHttpError("Not authenticated.", 401);
+          throw new AuthHttpError(
+            "Not authenticated.",
+            401,
+          );
         }
 
         try {
-          return toProfile(await getMe(token));
+          const rawUser =
+            await getMe(token);
+
+          const user =
+            toProfile(rawUser);
+
+          useAuthStore
+            .getState()
+            .setUsername(user.username);
+
+          return user;
         } catch (error) {
-          if (!(error instanceof AuthHttpError) || error.status !== 401) {
+          if (
+            !(
+              error instanceof AuthHttpError
+            ) ||
+            error.status !== 401
+          ) {
             throw error;
           }
 
-          const tokens = await refreshSession();
-          return toProfile(await getMe(tokens.access));
+          const tokens =
+            await refreshSession();
+
+          const rawUser =
+            await getMe(tokens.access);
+
+          const user =
+            toProfile(rawUser);
+
+          useAuthStore
+            .getState()
+            .setUsername(user.username);
+
+          return user;
         }
       },
-      enabled: enabled && Boolean(accessToken),
+
+      enabled:
+        enabled &&
+        Boolean(accessToken),
+
       retry: false,
     });
   },
 
   useLogin() {
-    //   OLD ACCOUNT CACHE
-    //         ↓
-    //   new login succeeds
-    //         ↓
-    //   cache destroyed
-    //         ↓
-    //   NEW ACCOUNT CACHE
+    const setSession = useAuthStore(
+      (state) => state.setSession,
+    );
 
-    const setTokens = useAuthStore((state) => state.setTokens);
-    const queryClient = useQueryClient();
+    const queryClient =
+      useQueryClient();
 
     return useMutation({
-      mutationFn: async (credentials: LoginCredentials) => {
-        const tokens = await login(credentials);
+      mutationFn: async (
+        credentials: LoginCredentials,
+      ) => {
+        const tokens =
+          await login(credentials);
 
-        const user = toProfile(await getMe(tokens.access));
+        // Find out which user owns the token.
+        const rawUser =
+          await getMe(tokens.access);
 
-        // New authenticated session.
-        await queryClient.cancelQueries();
-        queryClient.removeQueries();
+        const user =
+          toProfile(rawUser);
 
-        setTokens(tokens.access, tokens.refresh);
+        // A login is a new client session.
+        invalidateAuthTransport();
 
-        // Seed the new user's auth cache.
-        queryClient.setQueryData(authKeys.me("admin"), user);
+        // Remove cached data from the previous
+        // account before storing the new session.
+        queryClient.clear();
+
+        setSession(
+          tokens.access,
+          tokens.refresh,
+          user.username,
+        );
+
+        queryClient.setQueryData(
+          authKeys.me("admin"),
+          user,
+        );
 
         return user;
       },
@@ -100,8 +176,12 @@ export const adminAuthRepo = {
 
   useRegister() {
     return useMutation({
-      mutationFn: async (data: RegisterData) => {
-        return toProfile(await register(data));
+      mutationFn: async (
+        data: RegisterData,
+      ) => {
+        return toProfile(
+          await register(data),
+        );
       },
     });
   },
