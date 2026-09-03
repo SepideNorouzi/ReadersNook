@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import Card from "../../../components/ui/Card";
 import { useTBRBooks } from "../../../hooks/useTbr";
 import TbrBookGrid from "./TbrBookGrid";
+import Loading from "../../../components/Loading";
 
 interface Props {
   className?: string;
@@ -48,7 +49,7 @@ export default function TBRCard({ className }: Props) {
         />
 
         <p className="relative z-10 text-sm text-[var(--text-secondary)]">
-          Loading...
+          <Loading />
         </p>
       </Card>
     );

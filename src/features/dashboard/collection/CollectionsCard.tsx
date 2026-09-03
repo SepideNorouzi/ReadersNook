@@ -5,6 +5,7 @@ import Card from "../../../components/ui/Card";
 import CollectionGrid from "./CollectionGrid";
 import CollectionModal from "../../../modals/CollectionModal";
 import { useCollections } from "../../../hooks/useCollections";
+import Loading from "../../../components/Loading";
 
 interface Props {
   className?: string;
@@ -37,7 +38,9 @@ export default function CollectionsCard({
           ${className ?? ""}
         `}
       >
-        <p className="text-sm text-[var(--text-secondary)]">Loading...</p>
+        <p className="text-sm text-[var(--text-secondary)]">
+          <Loading />
+        </p>
       </Card>
     );
   }

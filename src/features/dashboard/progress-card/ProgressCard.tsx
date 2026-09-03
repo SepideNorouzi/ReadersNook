@@ -2,6 +2,7 @@ import { Target, Sparkles, Trophy } from "lucide-react";
 import Card from "../../../components/ui/Card";
 import { useReadingGoal } from "../../../hooks/useReadingGoal";
 import CircularProgress from "../../../components/ui/CircularProgress";
+import Loading from "../../../components/Loading";
 
 interface ProgressCardProps {
   className?: string;
@@ -23,7 +24,7 @@ export default function ProgressCard({ className }: ProgressCardProps) {
         `}
       >
         <p className="relative z-10 text-sm text-[var(--text-secondary)]">
-          Loading...
+          <Loading />
         </p>
       </Card>
     );

@@ -7,6 +7,7 @@ import Card from "../../../components/ui/Card";
 import CurrentReadProgress from "./CurrentReadProgress";
 import CurrentReadDetails from "./CurrentReadDetail";
 import CurrentReadEmbla from "./CurrentReadEmbla";
+import Loading from "../../../components/Loading";
 
 interface CurrentReadProps {
   className?: string;
@@ -35,7 +36,9 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
   if (isLoading) {
     return (
       <Card className={cardClass}>
-        <p className="text-sm text-[var(--gold-light)]">Loading...</p>
+        <p className="text-sm text-[var(--gold-light)]">
+          <Loading />
+        </p>
       </Card>
     );
   }

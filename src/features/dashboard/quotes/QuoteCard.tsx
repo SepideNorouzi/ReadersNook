@@ -2,6 +2,7 @@ import { Quote, Sparkles } from "lucide-react";
 import Card from "../../../components/ui/Card";
 import { useBooks } from "../../../hooks/useBooks";
 import QuoteItem from "./QuoteItem";
+import Loading from "../../../components/Loading";
 
 interface Props {
   className?: string;
@@ -20,7 +21,7 @@ export default function QuoteCard({ className }: Props) {
         `}
       >
         <p className="text-sm text-[var(--text-secondary)]">
-          Loading...
+          <Loading />
         </p>
       </Card>
     );
@@ -215,10 +216,7 @@ export default function QuoteCard({ className }: Props) {
                 shadow-[0_4px_12px_rgba(164,125,93,0.10)]
               "
             >
-              <Quote
-                size={14}
-                className="text-[var(--brown-700)]"
-              />
+              <Quote size={14} className="text-[var(--brown-700)]" />
             </div>
 
             <div>
@@ -234,9 +232,7 @@ export default function QuoteCard({ className }: Props) {
                 "
               >
                 <span className="lg:hidden">Quote</span>
-                <span className="hidden lg:inline">
-                  Daily Quote
-                </span>
+                <span className="hidden lg:inline">Daily Quote</span>
               </h2>
 
               <p

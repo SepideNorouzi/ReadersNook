@@ -6,6 +6,7 @@ import { useBook } from "../hooks/useBook";
 
 import BookHero from "../features/Detail/hero/BookHero";
 import DetailContent from "../features/Detail/DetailContent";
+import Loading from "../components/Loading";
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -15,7 +16,12 @@ export default function BookDetail() {
 
   if (!id) return <Navigate to="/404" replace />;
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <p>
+        <Loading />
+      </p>
+    );
 
   if (!book) return <p>Book not found.</p>;
 
