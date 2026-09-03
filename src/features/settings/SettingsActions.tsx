@@ -16,20 +16,14 @@ export default function SettingsActions() {
 
   const isDemo = mode === "demo";
 
-  const handleAuthAction = () => {
+  const handleAuthAction = async () => {
     if (isDemo) {
-      if (isAuthenticated) {
-        setMode("admin");
-        navigate("/dashboard");
-      } else {
-        navigate("/auth");
-      }
-
+      navigate("/auth");
       return;
     }
 
+    await logout();
     setMode("demo");
-    logout();
     navigate("/");
   };
 

@@ -7,14 +7,28 @@ import {
   removeBookFromCollection,
   renameCollection,
 } from "../../services/collection";
-import { COLLECTION_KEY } from "./collectionRepo";
+import { queryKeys } from "../../queries/queryKeys";
+import { useAuthStore } from "../../auth/store/authStore";
+
+function collectionsKeyForCurrentUser() {
+  const username = useAuthStore.getState().username;
+  return username
+    ? queryKeys.collections(username)
+    : (["collections", "anonymous"] as const);
+}
 
 export const adminCollectionRepo = {
   useCollections(isAdmin: boolean) {
+    const username = useAuthStore((state) => state.username);
+
+    const queryEnabled = isAdmin && Boolean(username);
+
     return useQuery({
-      queryKey: COLLECTION_KEY,
+      queryKey: username
+        ? queryKeys.collections(username)
+        : ["collections", "anonymous"],
       queryFn: getCollectionsWithBooks,
-      enabled: isAdmin,
+      enabled: queryEnabled,
     });
   },
 
@@ -26,7 +40,7 @@ export const adminCollectionRepo = {
 
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: COLLECTION_KEY,
+          queryKey: collectionsKeyForCurrentUser(),
         });
       },
     });
@@ -46,7 +60,7 @@ export const adminCollectionRepo = {
 
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: COLLECTION_KEY,
+          queryKey: collectionsKeyForCurrentUser(),
         });
       },
     });
@@ -66,7 +80,7 @@ export const adminCollectionRepo = {
 
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: COLLECTION_KEY,
+          queryKey: collectionsKeyForCurrentUser(),
         });
       },
     });
@@ -86,7 +100,7 @@ export const adminCollectionRepo = {
 
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: COLLECTION_KEY,
+          queryKey: collectionsKeyForCurrentUser(),
         });
       },
     });

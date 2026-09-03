@@ -45,13 +45,14 @@ export default function Auth() {
     try {
       // /auth is always a real-account flow. Using the admin mutations
       // avoids the demo no-op if the user landed here while still in demo mode.
-      setMode("admin");
-
+      // Switch to admin only after credentials succeed — flipping mode first
+      // would redirect an leftover session straight to the old library.
       if (isLogin) {
         await adminLogin.mutateAsync({
           username: data.username,
           password: data.password,
         });
+        setMode("admin");
         reset();
         navigate("/dashboard");
       } else {

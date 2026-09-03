@@ -1,7 +1,10 @@
 import { useAuthStore } from "../auth/store/authStore";
 import { refreshToken as refreshTokenRequest } from "../auth/services/auth";
 import { logoutSession } from "../auth/session";
-import { getAuthTransportVersion } from "../auth/authTransport";
+import {
+  getAuthTransportVersion,
+  onAuthTransportInvalidate,
+} from "../auth/authTransport";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
@@ -18,14 +21,9 @@ type RequestOptions = Omit<RequestInit, "body"> & { body?: unknown };
 
 let refreshInFlight: Promise<string> | null = null;
 
-// Changes whenever the authenticated session is invalidated.
-// This prevents an old refresh request from modifying a new session.
-let authTransportVersion = 0;
-
-export function invalidateAuthTransport() {
-  authTransportVersion += 1;
+onAuthTransportInvalidate(() => {
   refreshInFlight = null;
-}
+});
 
 /**
  * Single-flight refresh: no matter how many requests 401 at once, only
@@ -86,14 +84,14 @@ export async function apiFetch<T>(
   options: RequestOptions = {},
   _isRetry = false,
 ): Promise<T> {
-  const requestVersion = authTransportVersion;
+  const requestVersion = getAuthTransportVersion();
 
   const accessToken = useAuthStore.getState().accessToken;
 
   const res = await doFetch(path, options, accessToken);
 
   // Session changed while this request was running.
-  if (requestVersion !== authTransportVersion) {
+  if (requestVersion !== getAuthTransportVersion()) {
     throw new ApiError("Authentication session changed.", 401);
   }
 

@@ -15,10 +15,7 @@ import {
 
 import { useAuthStore } from "../store/authStore";
 import { authKeys } from "../queries/authKeys";
-
-import {
-  invalidateAuthTransport,
-} from "../authTransport";
+import { clearClientSession } from "../session";
 
 import type {
   LoginCredentials,
@@ -67,9 +64,12 @@ export const adminAuthRepo = {
     const accessToken = useAuthStore(
       (state) => state.accessToken,
     );
+    const username = useAuthStore(
+      (state) => state.username,
+    );
 
     return useQuery({
-      queryKey: authKeys.me("admin"),
+      queryKey: authKeys.me("admin", username ?? "anonymous"),
 
       queryFn: async () => {
         const token =
@@ -151,12 +151,10 @@ export const adminAuthRepo = {
         const user =
           toProfile(rawUser);
 
-        // A login is a new client session.
-        invalidateAuthTransport();
-
-        // Remove cached data from the previous
-        // account before storing the new session.
-        queryClient.clear();
+        // Drop the previous account's tokens, caches, and
+        // in-memory demo data before installing this session.
+        await queryClient.cancelQueries();
+        clearClientSession();
 
         setSession(
           tokens.access,
@@ -165,7 +163,7 @@ export const adminAuthRepo = {
         );
 
         queryClient.setQueryData(
-          authKeys.me("admin"),
+          authKeys.me("admin", user.username),
           user,
         );
 

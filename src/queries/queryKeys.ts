@@ -4,6 +4,8 @@ export const queryKeys = {
   book: (username: string, bookId: string) =>
     ["books", username, bookId] as const,
 
+  collections: (username: string) => ["collections", username] as const,
+
   quotes: (username: string) => ["quotes", username] as const,
 
   currentReading: (username: string) => ["current-reading", username] as const,
