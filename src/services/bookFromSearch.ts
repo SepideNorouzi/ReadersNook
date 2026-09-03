@@ -8,8 +8,8 @@ import { getBookDetails } from "./openLibrary";
  *
  * Search results alone are enough for the search cards (title, author,
  * cover, pages, rating). The book detail page also needs a real summary
- * and genres, which Open Library only exposes on the works endpoint —
- * so we hydrate those here right before the book is saved.
+ * and genres, which Open Library only exposes on the works endpoint
+ * so hydrate those here right before the book is saved.
  */
 export async function bookFromSearchResult(
   result: BookSearchResult,
