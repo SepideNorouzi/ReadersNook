@@ -1,5 +1,5 @@
 import { useAuthStore } from "../auth/store/authStore";
-import { refreshToken as refreshTokenRequest } from "../auth/services/auth"; // adjust path to your real services/auth.ts
+import { refreshToken as refreshTokenRequest } from "../auth/services/auth";
 import { logoutSession } from "../auth/session";
 import { getAuthTransportVersion } from "../auth/authTransport";
 
