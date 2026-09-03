@@ -11,7 +11,11 @@ import {
 import { useAuthStore } from "../store/authStore";
 import { authKeys } from "../queries/authKeys";
 
-import type { LoginCredentials, RegisterData, TokenResponse } from "../types/auth";
+import type {
+  LoginCredentials,
+  RegisterData,
+  TokenResponse,
+} from "../types/auth";
 
 let refreshInFlight: Promise<TokenResponse> | null = null;
 
@@ -63,18 +67,30 @@ export const adminAuthRepo = {
   },
 
   useLogin() {
+    //   OLD ACCOUNT CACHE
+    //         ↓
+    //   new login succeeds
+    //         ↓
+    //   cache destroyed
+    //         ↓
+    //   NEW ACCOUNT CACHE
+
     const setTokens = useAuthStore((state) => state.setTokens);
     const queryClient = useQueryClient();
 
     return useMutation({
       mutationFn: async (credentials: LoginCredentials) => {
         const tokens = await login(credentials);
-        setTokens(tokens.access, tokens.refresh);
 
         const user = toProfile(await getMe(tokens.access));
 
-        // Seed the query cache directly instead of writing to Zustand —
-        // useMe() will read this immediately, no extra fetch needed.
+        // New authenticated session.
+        await queryClient.cancelQueries();
+        queryClient.removeQueries();
+
+        setTokens(tokens.access, tokens.refresh);
+
+        // Seed the new user's auth cache.
         queryClient.setQueryData(authKeys.me("admin"), user);
 
         return user;
