@@ -1,9 +1,9 @@
 import { useAuthStore } from "../auth/store/authStore";
 import { refreshToken as refreshTokenRequest } from "../auth/services/auth"; // adjust path to your real services/auth.ts
 import { logoutSession } from "../auth/session";
+import { getAuthTransportVersion } from "../auth/authTransport";
 
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 export class ApiError extends Error {
   status: number;
@@ -33,9 +33,11 @@ export function invalidateAuthTransport() {
  * same promise instead of racing it.
  */
 async function getFreshAccessToken(): Promise<string> {
-  if (refreshInFlight) return refreshInFlight;
+  if (refreshInFlight) {
+    return refreshInFlight;
+  }
 
-  const versionAtStart = authTransportVersion;
+  const versionAtStart = getAuthTransportVersion();
 
   refreshInFlight = (async () => {
     const refresh = useAuthStore.getState().refreshToken;
@@ -46,18 +48,13 @@ async function getFreshAccessToken(): Promise<string> {
 
     const tokens = await refreshTokenRequest(refresh);
 
-    // The user may have logged out or switched accounts
-    // while this refresh request was running.
-    if (versionAtStart !== authTransportVersion) {
-      throw new ApiError(
-        "Authentication session changed.",
-        401,
-      );
+    // User changed sessions while refresh
+    // was running.
+    if (versionAtStart !== getAuthTransportVersion()) {
+      throw new ApiError("Authentication session changed.", 401);
     }
 
-    useAuthStore
-      .getState()
-      .setTokens(tokens.access, tokens.refresh);
+    useAuthStore.getState().setTokens(tokens.access, tokens.refresh);
 
     return tokens.access;
   })().finally(() => {
@@ -97,10 +94,7 @@ export async function apiFetch<T>(
 
   // Session changed while this request was running.
   if (requestVersion !== authTransportVersion) {
-    throw new ApiError(
-      "Authentication session changed.",
-      401,
-    );
+    throw new ApiError("Authentication session changed.", 401);
   }
 
   if (res.status === 401 && !_isRetry) {
@@ -108,10 +102,7 @@ export async function apiFetch<T>(
       await getFreshAccessToken();
     } catch {
       await logoutSession();
-      throw new ApiError(
-        "Session expired. Please log in again.",
-        401,
-      );
+      throw new ApiError("Session expired. Please log in again.", 401);
     }
 
     return apiFetch<T>(path, options, true);
@@ -121,16 +112,11 @@ export async function apiFetch<T>(
     const body = await res.json().catch(() => null);
 
     const detail =
-      body &&
-      typeof body === "object" &&
-      "detail" in body
+      body && typeof body === "object" && "detail" in body
         ? String((body as { detail: unknown }).detail)
         : null;
 
-    throw new ApiError(
-      detail || `Request failed: ${res.status}`,
-      res.status,
-    );
+    throw new ApiError(detail || `Request failed: ${res.status}`, res.status);
   }
 
   if (res.status === 204) {
