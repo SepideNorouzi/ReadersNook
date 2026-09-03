@@ -17,7 +17,7 @@ class AuthenticationAPITests(APITestCase):
     def test_registration_hashes_password(self):
         response = self.client.post(
             reverse("user_module:register"),
-            self.registration_data,
+            {**self.registration_data, "password2": self.registration_data["password"]},
             format="json",
         )
 
@@ -55,7 +55,11 @@ class AuthenticationAPITests(APITestCase):
         self.assertIn("refresh", refresh_response.data)
 
     def test_registration_rejects_weak_password(self):
-        weak_data = {**self.registration_data, "password": "password"}
+        weak_data = {
+            **self.registration_data,
+            "password": "password",
+            "password2": "password",
+        }
 
         response = self.client.post(
             reverse("user_module:register"),

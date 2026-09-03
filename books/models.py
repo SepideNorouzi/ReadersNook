@@ -1,5 +1,4 @@
-import uuid
-from user_module.models import User 
+from user_module.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 

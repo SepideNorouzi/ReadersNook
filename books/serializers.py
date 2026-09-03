@@ -7,7 +7,7 @@ class QuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quote
         fields = "__all__"
-        read_only_fields = ("id", "created_at", "updated_at", "created_by")
+        read_only_fields = ("id", "created_at", "updated_at", "created_by", "book")
 
 class ShortQuoteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -117,11 +117,14 @@ class CollectionSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class ShortCollectionSerializer(serializers.ModelSerializer):
+class ShortCollectionSerializer(CollectionSerializer):
     class Meta:
         model = Collection
-        fields = ["id","name", "description"]
+        fields = ["id", "name", "description"]
         read_only_fields = ("id",)
+        extra_kwargs = {
+            "description": {"required": False, "allow_blank": True},
+        }
 
 
 
