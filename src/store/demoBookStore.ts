@@ -12,7 +12,7 @@ interface BookStore {
 }
 
 // structuredClone matters here: without it, every "demo" user would be
-// reading and mutating the SAME array object your search/service layer
+// reading and mutating the SAME array object the search/service layer
 // also imports from `data/book.ts`. Cloning breaks that shared reference
 // so resetting demo state can never corrupt your actual mock data.
 export const useBookStore = create<BookStore>((set) => ({
