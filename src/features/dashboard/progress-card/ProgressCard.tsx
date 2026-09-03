@@ -23,9 +23,7 @@ export default function ProgressCard({ className }: ProgressCardProps) {
           ${className ?? ""}
         `}
       >
-        <p className="relative z-10 text-sm text-[var(--text-secondary)]">
           <Loading />
-        </p>
       </Card>
     );
   }

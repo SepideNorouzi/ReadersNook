@@ -16,12 +16,7 @@ export default function BookDetail() {
 
   if (!id) return <Navigate to="/404" replace />;
 
-  if (isLoading)
-    return (
-      <p>
-        <Loading />
-      </p>
-    );
+  if (isLoading) return <Loading />;
 
   if (!book) return <p>Book not found.</p>;
 

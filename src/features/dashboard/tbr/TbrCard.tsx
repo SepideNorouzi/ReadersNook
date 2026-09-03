@@ -48,9 +48,7 @@ export default function TBRCard({ className }: Props) {
           "
         />
 
-        <p className="relative z-10 text-sm text-[var(--text-secondary)]">
-          <Loading />
-        </p>
+        <Loading />
       </Card>
     );
   }

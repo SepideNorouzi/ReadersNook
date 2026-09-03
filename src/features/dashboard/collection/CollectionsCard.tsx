@@ -38,9 +38,7 @@ export default function CollectionsCard({
           ${className ?? ""}
         `}
       >
-        <p className="text-sm text-[var(--text-secondary)]">
           <Loading />
-        </p>
       </Card>
     );
   }

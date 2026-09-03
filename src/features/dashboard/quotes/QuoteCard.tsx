@@ -20,9 +20,7 @@ export default function QuoteCard({ className }: Props) {
           ${className ?? ""}
         `}
       >
-        <p className="text-sm text-[var(--text-secondary)]">
           <Loading />
-        </p>
       </Card>
     );
   }
