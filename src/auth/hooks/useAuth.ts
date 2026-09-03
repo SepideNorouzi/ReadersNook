@@ -1,16 +1,14 @@
 import { useCallback, useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-
+import { adminAuthRepo } from "../repo/adminAuthRepo";
 import { authRepository } from "../repo/authRepo";
 import { useAuthStore } from "../store/authStore";
-import { adminAuthRepo } from "../repo/adminAuthRepo";
+import { logoutSession } from "../session";
 import { AuthHttpError } from "../services/auth";
 
 export function useAuth() {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const storeLogout = useAuthStore((state) => state.logout);
-
-  const queryClient = useQueryClient();
+  const isAuthenticated = useAuthStore(
+    (state) => state.isAuthenticated,
+  );
 
   const {
     data: user,
@@ -25,22 +23,17 @@ export function useAuth() {
   const adminLogin = adminAuthRepo.useLogin();
   const adminRegister = adminAuthRepo.useRegister();
 
-  const logout = useCallback(async () => {
-    // Stop requests that could still belong to the old account.
-    await queryClient.cancelQueries();
-
-    // Remove authentication state.
-    storeLogout();
-
-    // Remove ALL cached server data.
-    // Books, quotes, reading progress, goals, etc.
-    queryClient.removeQueries();
-  }, [storeLogout, queryClient]);
+  const logout = useCallback(() => {
+    return logoutSession();
+  }, []);
 
   useEffect(() => {
     if (!isError) return;
 
-    if (error instanceof AuthHttpError && error.status === 401) {
+    if (
+      error instanceof AuthHttpError &&
+      error.status === 401
+    ) {
       logout();
     }
   }, [isError, error, logout]);
