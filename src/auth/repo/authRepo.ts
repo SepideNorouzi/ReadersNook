@@ -33,4 +33,11 @@ export const authRepository = {
 
     return mode === "demo" ? demoMutation : adminMutation;
   },
+
+  useUpdateAvatar: () => {
+    const mode = useModeStore((state) => state.mode);
+    const demoMutation = demoAuthRepo.useUpdateAvatar();
+    const adminMutation = adminAuthRepo.useUpdateAvatar();
+    return mode === "demo" ? demoMutation : adminMutation;
+  },
 };
