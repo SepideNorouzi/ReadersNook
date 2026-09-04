@@ -3,6 +3,7 @@ import { Sparkles, UserRound, Pencil } from "lucide-react";
 import type { Profile } from "../../auth/types/auth";
 
 import AvatarPicker from "./AvatarPicker";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 interface Props {
   user: Profile;
@@ -18,16 +19,16 @@ export default function ProfileHeader({
   const account =
     user.id === "guest" ? "Browsing in demo mode" : "Reader's Nook Member";
 
-  const handleAvatarSelect = (avatarUrl: string) => {
-    /*
-     * This is where the selected avatar should be
-     * persisted to your user/profile data.
-     *
-     * For now we update the local UI.
-     */
-    console.log("Selected avatar:", avatarUrl);
+  const { updateAvatar } = useAuth();
 
-    onAvatarPickerChange(false);
+  const handleAvatarSelect = async (avatarId: string) => {
+    try {
+      await updateAvatar.mutateAsync(avatarId);
+
+      onAvatarPickerChange(false);
+    } catch (error) {
+      console.error("Failed to update avatar:", error);
+    }
   };
 
   return (

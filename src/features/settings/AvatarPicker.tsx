@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
-import avatar01 from "../../assets/avatars/00.png";
-import avatar02 from "../../assets/avatars/01.png";
-import avatar03 from "../../assets/avatars/02.png";
-import avatar04 from "../../assets/avatars/03.png";
-import avatar05 from "../../assets/avatars/04.png";
-import avatar06 from "../../assets/avatars/05.png";
-
 import "../../styles/AvatarPicker.css";
 
 export type AvatarOption = {
@@ -19,39 +12,39 @@ export type AvatarOption = {
 export const avatarOptions: AvatarOption[] = [
   {
     id: "avatar-01",
-    src: avatar01,
+    src: "/avatars/00.png",
     name: "The Dreamer",
   },
   {
     id: "avatar-02",
-    src: avatar02,
+    src: "/avatars/01.png",
     name: "The Curious Reader",
   },
   {
     id: "avatar-03",
-    src: avatar03,
+    src: "/avatars/02.png",
     name: "The Adventurer",
   },
   {
     id: "avatar-04",
-    src: avatar04,
+    src: "/avatars/03.png",
     name: "The Scholar",
   },
   {
     id: "avatar-05",
-    src: avatar05,
+    src: "/avatars/04.png",
     name: "The Storyteller",
   },
   {
     id: "avatar-06",
-    src: avatar06,
+    src: "/avatars/05.png",
     name: "The Bookworm",
   },
 ];
 
 interface Props {
   currentAvatar?: string | null;
-  onSelect: (avatarUrl: string) => void;
+  onSelect: (avatarId: string) => void;
   onClose?: () => void;
 }
 
