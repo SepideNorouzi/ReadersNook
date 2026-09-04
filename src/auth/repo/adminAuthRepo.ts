@@ -15,22 +15,32 @@ import {
 
 import { useAuthStore } from "../store/authStore";
 import { authKeys } from "../queries/authKeys";
-import { clearClientSession } from "../session";
 
 import type {
   LoginCredentials,
   RegisterData,
   TokenResponse,
 } from "../types/auth";
+import { getAuthTransportVersion } from "../authTransport";
+import { logoutSession } from "../session";
 
-let refreshInFlight: Promise<TokenResponse> | null = null;
+let refreshInFlight: {
+  version: number;
+  promise: Promise<TokenResponse>;
+} | null = null;
 
 async function refreshSession(): Promise<TokenResponse> {
-  if (refreshInFlight) {
-    return refreshInFlight;
+  const currentVersion =
+    getAuthTransportVersion();
+
+  if (
+    refreshInFlight &&
+    refreshInFlight.version === currentVersion
+  ) {
+    return refreshInFlight.promise;
   }
 
-  refreshInFlight = (async () => {
+  const promise = (async () => {
     const refresh =
       useAuthStore.getState().refreshToken;
 
@@ -44,6 +54,18 @@ async function refreshSession(): Promise<TokenResponse> {
     const tokens =
       await refreshToken(refresh);
 
+    // User logged out or switched accounts
+    // while the refresh was running.
+    if (
+      currentVersion !==
+      getAuthTransportVersion()
+    ) {
+      throw new AuthHttpError(
+        "Authentication session changed.",
+        401,
+      );
+    }
+
     useAuthStore
       .getState()
       .setTokens(
@@ -52,11 +74,22 @@ async function refreshSession(): Promise<TokenResponse> {
       );
 
     return tokens;
-  })().finally(() => {
-    refreshInFlight = null;
-  });
+  })();
 
-  return refreshInFlight;
+  refreshInFlight = {
+    version: currentVersion,
+    promise,
+  };
+
+  try {
+    return await promise;
+  } finally {
+    if (
+      refreshInFlight?.promise === promise
+    ) {
+      refreshInFlight = null;
+    }
+  }
 }
 
 export const adminAuthRepo = {
@@ -154,7 +187,7 @@ export const adminAuthRepo = {
         // Drop the previous account's tokens, caches, and
         // in-memory demo data before installing this session.
         await queryClient.cancelQueries();
-        clearClientSession();
+        logoutSession();
 
         setSession(
           tokens.access,

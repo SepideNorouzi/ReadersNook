@@ -35,44 +35,22 @@ export default function CollectionItem({
         active:scale-[0.98]
       "
     >
-      {/* Collection stack */}
-      <div
-        className="
-          relative
-          flex
-          items-center
-          justify-center
-
-          rounded-[24px]
-
-          px-4
-          py-5
-
-          transition-all
-          duration-400
-
-          group-hover:bg-[rgba(207,162,71,0.035)]
-        "
-      >
-        {/* Soft collection glow */}
+      {/* Books */}
+      <div className="relative flex items-center justify-center">
         <div
           aria-hidden="true"
           className="
             pointer-events-none
             absolute
-            inset-0
-
+            inset-[-12px]
             rounded-full
-
             bg-[radial-gradient(
               circle,
-              rgba(207,162,71,0.18),
+              rgba(207,162,71,0.14),
               transparent_68%
             )]
-
             opacity-0
-            blur-2xl
-
+            blur-xl
             transition-all
             duration-500
 
@@ -81,24 +59,22 @@ export default function CollectionItem({
           "
         />
 
-        <div className="relative z-10">
-          <CollectionStack
-            books={books}
-            size="md"
-          />
-        </div>
+        <CollectionStack
+          books={books}
+          size="md"
+        />
       </div>
 
       {/* Collection information */}
-      <div className="mt-3 w-full min-w-0">
+      <div className="mt-2.5 w-full min-w-0 sm:mt-3">
         <h3
           className="
             line-clamp-2
 
             font-heading
-            text-lg
+            text-[12px]
             font-semibold
-            leading-snug
+            leading-[1.25]
 
             text-[var(--text)]
 
@@ -107,6 +83,7 @@ export default function CollectionItem({
 
             group-hover:text-[var(--brown-700)]
 
+            sm:text-sm
             lg:text-[16px]
           "
         >
@@ -115,29 +92,36 @@ export default function CollectionItem({
 
         <div
           className="
-            mt-1.5
+            mt-1
             flex
             items-center
             justify-center
-            gap-1.5
+            gap-1
+
+            sm:mt-1.5
+            sm:gap-1.5
           "
         >
           <span
             className="
-              h-1
-              w-1
+              h-[3px]
+              w-[3px]
               rounded-full
               bg-[var(--gold)]
               opacity-60
+
+              sm:h-1
+              sm:w-1
             "
           />
 
           <p
             className="
-              text-[10px]
+              text-[8px]
               font-medium
               text-[var(--text-secondary)]
 
+              sm:text-[10px]
               lg:text-[11px]
             "
           >

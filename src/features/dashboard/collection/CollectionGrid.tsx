@@ -16,31 +16,29 @@ export default function CollectionGrid({
         flex
         w-max
         min-w-full
-        items-center
+        items-start
 
-        gap-5
-
-        px-5
-        py-5
+        gap-4
+        px-2
+        py-2.5
 
         sm:gap-6
-        sm:px-6
-        sm:py-6
+        sm:px-4
+        sm:py-5
 
         lg:gap-8
-        lg:px-8
-        lg:py-7
+        lg:px-6
+        lg:py-6
       "
     >
       {collections.map((collection) => (
         <div
           key={collection.id}
           className="
-            w-[108px]
+            w-[82px]
             shrink-0
 
-            sm:w-[124px]
-
+            sm:w-[110px]
             lg:w-[142px]
           "
         >

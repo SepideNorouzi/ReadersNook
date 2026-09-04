@@ -3,13 +3,14 @@ import { refreshToken as refreshTokenRequest } from "../auth/services/auth";
 import { logoutSession } from "../auth/session";
 import {
   getAuthTransportVersion,
-  onAuthTransportInvalidate,
 } from "../auth/authTransport";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 export class ApiError extends Error {
   status: number;
+
   constructor(message: string, status: number) {
     super(message);
     this.name = "ApiError";
@@ -17,49 +18,75 @@ export class ApiError extends Error {
   }
 }
 
-type RequestOptions = Omit<RequestInit, "body"> & { body?: unknown };
+type RequestOptions = Omit<RequestInit, "body"> & {
+  body?: unknown;
+};
 
-let refreshInFlight: Promise<string> | null = null;
+let refreshInFlight: {
+  version: number;
+  promise: Promise<string>;
+} | null = null;
 
-onAuthTransportInvalidate(() => {
-  refreshInFlight = null;
-});
-
-/**
- * Single-flight refresh: no matter how many requests 401 at once, only
- * one POST to /auth/refresh/ ever goes out. Everyone else awaits the
- * same promise instead of racing it.
- */
 async function getFreshAccessToken(): Promise<string> {
-  if (refreshInFlight) {
-    return refreshInFlight;
+  const currentVersion = getAuthTransportVersion();
+
+  // Reuse only a refresh belonging to THIS auth session.
+  if (
+    refreshInFlight &&
+    refreshInFlight.version === currentVersion
+  ) {
+    return refreshInFlight.promise;
   }
 
-  const versionAtStart = getAuthTransportVersion();
-
-  refreshInFlight = (async () => {
-    const refresh = useAuthStore.getState().refreshToken;
+  const promise = (async () => {
+    const refresh =
+      useAuthStore.getState().refreshToken;
 
     if (!refresh) {
-      throw new ApiError("No refresh token available.", 401);
+      throw new ApiError(
+        "No refresh token available.",
+        401,
+      );
     }
 
-    const tokens = await refreshTokenRequest(refresh);
+    const tokens =
+      await refreshTokenRequest(refresh);
 
-    // User changed sessions while refresh
-    // was running.
-    if (versionAtStart !== getAuthTransportVersion()) {
-      throw new ApiError("Authentication session changed.", 401);
+    // Logout/login happened while refresh was running.
+    if (
+      currentVersion !==
+      getAuthTransportVersion()
+    ) {
+      throw new ApiError(
+        "Authentication session changed.",
+        401,
+      );
     }
 
-    useAuthStore.getState().setTokens(tokens.access, tokens.refresh);
+    useAuthStore
+      .getState()
+      .setTokens(
+        tokens.access,
+        tokens.refresh,
+      );
 
     return tokens.access;
-  })().finally(() => {
-    refreshInFlight = null;
-  });
+  })();
 
-  return refreshInFlight;
+  refreshInFlight = {
+    version: currentVersion,
+    promise,
+  };
+
+  try {
+    return await promise;
+  } finally {
+    if (
+      refreshInFlight?.promise === promise
+    ) {
+      refreshInFlight = null;
+    }
+  }
 }
 
 async function doFetch(
@@ -68,53 +95,95 @@ async function doFetch(
   token: string | null,
 ) {
   const { body, headers, ...rest } = options;
+
   return fetch(`${BASE_URL}${path}`, {
     ...rest,
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {}),
       ...headers,
     },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body:
+      body !== undefined
+        ? JSON.stringify(body)
+        : undefined,
   });
 }
 
 export async function apiFetch<T>(
   path: string,
   options: RequestOptions = {},
-  _isRetry = false,
+  isRetry = false,
 ): Promise<T> {
-  const requestVersion = getAuthTransportVersion();
+  const requestVersion =
+    getAuthTransportVersion();
 
-  const accessToken = useAuthStore.getState().accessToken;
+  const accessToken =
+    useAuthStore.getState().accessToken;
 
-  const res = await doFetch(path, options, accessToken);
+  const res = await doFetch(
+    path,
+    options,
+    accessToken,
+  );
 
-  // Session changed while this request was running.
-  if (requestVersion !== getAuthTransportVersion()) {
-    throw new ApiError("Authentication session changed.", 401);
+  // The request started under a different session.
+  if (
+    requestVersion !==
+    getAuthTransportVersion()
+  ) {
+    throw new ApiError(
+      "Authentication session changed.",
+      401,
+    );
   }
 
-  if (res.status === 401 && !_isRetry) {
+  if (res.status === 401 && !isRetry) {
     try {
       await getFreshAccessToken();
     } catch {
       await logoutSession();
-      throw new ApiError("Session expired. Please log in again.", 401);
+
+      throw new ApiError(
+        "Session expired. Please log in again.",
+        401,
+      );
     }
 
-    return apiFetch<T>(path, options, true);
+    return apiFetch<T>(
+      path,
+      options,
+      true,
+    );
   }
 
   if (!res.ok) {
-    const body = await res.json().catch(() => null);
+    const body = await res
+      .json()
+      .catch(() => null);
 
     const detail =
-      body && typeof body === "object" && "detail" in body
-        ? String((body as { detail: unknown }).detail)
+      body &&
+      typeof body === "object" &&
+      "detail" in body
+        ? String(
+            (
+              body as {
+                detail: unknown;
+              }
+            ).detail,
+          )
         : null;
 
-    throw new ApiError(detail || `Request failed: ${res.status}`, res.status);
+    throw new ApiError(
+      detail ||
+        `Request failed: ${res.status}`,
+      res.status,
+    );
   }
 
   if (res.status === 204) {
