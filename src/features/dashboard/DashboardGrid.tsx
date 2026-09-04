@@ -55,15 +55,15 @@ export default function DashboardGrid() {
     <div className="flex flex-col gap-3.5 sm:gap-4">
       <CurrentReadingCard />
 
-      <ProgressCard className="min-h-[200px]" />
+      <ProgressCard  />
 
-      <TBRCard className="h-[280px] min-h-[280px] sm:h-[300px] sm:min-h-[300px]" />
+      <TBRCard/>
 
-      <CollectionsCard className="h-[280px] min-h-[280px] sm:h-[320px] sm:min-h-[320px]" />
+      <CollectionsCard  />
 
-      <AchievementCard className="h-[260px] min-h-[260px] sm:h-[280px] sm:min-h-[280px]" />
+      <AchievementCard />
 
-      <QuoteCard className="h-[160px] min-h-[160px]" />
+      <QuoteCard />
     </div>
   );
 }
