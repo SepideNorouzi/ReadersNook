@@ -2,7 +2,7 @@ import { LogIn, LogOut, Moon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-import Card from "../../components/ui/Card";
+import Card from "../../ui/Card";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useModeStore } from "../../store/modeStore";
 
@@ -79,11 +79,7 @@ export default function SettingsActions() {
             items-center rounded-full
             p-1
             transition-colors
-            ${
-              darkMode
-                ? "bg-[var(--brown-600)]"
-                : "bg-[var(--stone-300)]"
-            }
+            ${darkMode ? "bg-[var(--brown-600)]" : "bg-[var(--stone-300)]"}
           `}
         >
           <span

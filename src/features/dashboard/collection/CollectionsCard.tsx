@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Library, Sparkles } from "lucide-react";
 
-import Card from "../../../components/ui/Card";
+import Card from "../../../ui/Card";
 import CollectionGrid from "./CollectionGrid";
 import CollectionModal from "../../../modals/CollectionModal";
 import { useCollections } from "../../../hooks/useCollections";
-import Loading from "../../../components/Loading";
+import Loading from "../../../shared/Loading";
 
 interface Props {
   className?: string;

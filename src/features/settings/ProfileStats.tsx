@@ -1,7 +1,7 @@
 import { BookOpen, BookMarked, Library as LibraryIcon } from "lucide-react";
 
 import type { Book } from "../../types/book";
-import Card from "../../components/ui/Card";
+import Card from "../../ui/Card";
 
 interface Props {
   books: Book[];

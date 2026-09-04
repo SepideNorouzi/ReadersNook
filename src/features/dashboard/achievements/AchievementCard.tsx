@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Trophy } from "lucide-react";
 
-import Card from "../../../components/ui/Card";
+import Card from "../../../ui/Card";
 import { useAchievements } from "../../../hooks/useAchievements";
 
 import AchievementItem from "./AchievementItem";

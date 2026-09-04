@@ -1,4 +1,3 @@
-
 import { BookOpen, Flame, Quote, Folder } from "lucide-react";
 
 import hero from "../../assets/hero.png";
@@ -6,7 +5,7 @@ import hero from "../../assets/hero.png";
 import useScrollFade from "../../hooks/useScrollFade";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 
-import HeroStats from "../../components/ui/HeroStats";
+import HeroStats from "../../ui/HeroStats";
 
 export default function AppHeader() {
   const fadeRef = useScrollFade();
@@ -118,10 +117,7 @@ export default function AppHeader() {
             xl:text-[4.6rem]
           "
         >
-          Escape into{" "}
-          <span className="text-[#ae794c]">
-            Stories
-          </span>
+          Escape into <span className="text-[#ae794c]">Stories</span>
         </h1>
 
         {/* Description */}

@@ -1,13 +1,11 @@
 import type { ReactNode } from "react";
-import DesktopNavbar from "../components/navigation/DesktopNavbar";
+import DesktopNavbar from "../features/navigation/DesktopNavbar";
 
 interface DesktopLayoutProps {
   children: ReactNode;
 }
 
-export default function DesktopLayout({
-  children,
-}: DesktopLayoutProps) {
+export default function DesktopLayout({ children }: DesktopLayoutProps) {
   return (
     <main
       className="

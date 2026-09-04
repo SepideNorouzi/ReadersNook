@@ -3,7 +3,7 @@ import { X, Library, Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
 
 import type { CollectionWithBooks } from "../types/collection";
-import Card from "../components/ui/Card";
+import Card from "../ui/Card";
 import { useCollections } from "../hooks/useCollections";
 
 interface Props {

@@ -1,6 +1,6 @@
 import { BookOpen } from "lucide-react";
 
-import Card from "../../components/ui/Card";
+import Card from "../../ui/Card";
 
 export default function QuotesEmpty() {
   return (

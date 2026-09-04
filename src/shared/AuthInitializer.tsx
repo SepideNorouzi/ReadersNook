@@ -9,7 +9,6 @@ export function AuthInitializer() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const mode = useModeStore((state) => state.mode);
 
-
   useEffect(() => {
     hydrate();
   }, [hydrate]);
@@ -19,7 +18,6 @@ export function AuthInitializer() {
     if (mode !== "admin") return;
     if (!hydrated) return; // don't race the real localStorage check
     if (isAuthenticated) return; // already have a session — don't re-login
-
   }, [mode, hydrated, isAuthenticated]);
 
   return null;

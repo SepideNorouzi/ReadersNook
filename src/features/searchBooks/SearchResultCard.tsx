@@ -2,7 +2,7 @@ import { useState } from "react";
 import { BookOpen, Check, Plus, Star } from "lucide-react";
 
 import type { BookSearchResult } from "../../types/searchResults";
-import Card from "../../components/ui/Card";
+import Card from "../../ui/Card";
 import { useCreateBook, useIsBookSaved } from "../../hooks/useBooks";
 import { bookFromSearchResult } from "../../services/bookFromSearch";
 
@@ -221,11 +221,7 @@ export default function SearchResultCard({ result }: Props) {
         >
           {alreadySaved ? <Check size={13} /> : <Plus size={13} />}
 
-          {alreadySaved
-            ? "Added"
-            : isAdding
-              ? "Adding..."
-              : "Add to Library"}
+          {alreadySaved ? "Added" : isAdding ? "Adding..." : "Add to Library"}
         </button>
 
         {errorMessage && (

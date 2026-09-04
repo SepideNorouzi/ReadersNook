@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 
-import ResponsiveView from "../components/ResponsiveView";
+import ResponsiveView from "../shared/ResponsiveView";
 import MobileLayout from "./MobileDashboard";
 import DesktopLayout from "./DesktopDashboard";
 

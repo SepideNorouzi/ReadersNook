@@ -1,9 +1,8 @@
-
 import { Link } from "react-router";
 import { Star } from "lucide-react";
 
 import type { Book, BookStatus } from "../../types/book";
-import Card from "../../components/ui/Card";
+import Card from "../../ui/Card";
 import { STATUS_OPTIONS } from "../Detail/hero/statusOptions";
 
 const STATUS_LABELS: Record<BookStatus, string> = {
@@ -22,24 +21,19 @@ const STATUS_STYLES: Record<
 > = {
   current: {
     glow: "hover:shadow-[0_18px_50px_rgba(207,104,45,0.22)]",
-    badge:
-      "bg-[var(--brown-900)]/70 text-white border-white/15",
-    progress:
-      "from-[var(--orange)] via-[var(--gold)] to-[var(--orange)]",
+    badge: "bg-[var(--brown-900)]/70 text-white border-white/15",
+    progress: "from-[var(--orange)] via-[var(--gold)] to-[var(--orange)]",
   },
   tbr: {
     glow: "hover:shadow-[0_18px_50px_rgba(111,85,66,0.18)]",
-    badge:
-      "bg-[var(--surface)]/80 text-[var(--text)] border-white/40",
+    badge: "bg-[var(--surface)]/80 text-[var(--text)] border-white/40",
     progress:
       "from-[var(--brown-500)] via-[var(--brown-400)] to-[var(--brown-700)]",
   },
   read: {
     glow: "hover:shadow-[0_18px_50px_rgba(191,151,70,0.22)]",
-    badge:
-      "bg-[var(--surface)]/85 text-[var(--text)] border-[var(--gold)]/30",
-    progress:
-      "from-[var(--gold)] via-[var(--orange)] to-[var(--brown-500)]",
+    badge: "bg-[var(--surface)]/85 text-[var(--text)] border-[var(--gold)]/30",
+    progress: "from-[var(--gold)] via-[var(--orange)] to-[var(--brown-500)]",
   },
 };
 

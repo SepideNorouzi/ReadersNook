@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   getBooks,
@@ -14,9 +10,7 @@ import {
 
 import type { Book } from "../../types/book";
 
-import {
-  queryKeys
-} from "../../queries/queryKeys";
+import { queryKeys } from "../../queries/queryKeys";
 
 import { useAuthStore } from "../../auth/store/authStore";
 
@@ -25,35 +19,29 @@ function mergeBookIntoList(
   username: string,
   book: Book,
 ) {
-  queryClient.setQueryData<Book[]>(
-    queryKeys.books(username),
-    (old) => {
-      if (!old) return old;
+  queryClient.setQueryData<Book[]>(queryKeys.books(username), (old) => {
+    if (!old) return old;
 
-      return old.map((item) =>
-        item.id === book.id
-          ? {
-              ...item,
-              quotes: book.quotes,
-              aestheticImages: book.aestheticImages,
-              currentPage: book.currentPage,
-              status: book.status,
-              rating: book.rating,
-            }
-          : item,
-      );
-    },
-  );
+    return old.map((item) =>
+      item.id === book.id
+        ? {
+            ...item,
+            quotes: book.quotes,
+            aestheticImages: book.aestheticImages,
+            currentPage: book.currentPage,
+            status: book.status,
+            rating: book.rating,
+          }
+        : item,
+    );
+  });
 }
 
 export const adminBookRepo = {
   useBooks(enabled = true) {
-    const username = useAuthStore(
-      (state) => state.username,
-    );
+    const username = useAuthStore((state) => state.username);
 
-    const queryEnabled =
-      enabled && Boolean(username);
+    const queryEnabled = enabled && Boolean(username);
 
     const {
       data = [],
@@ -61,9 +49,7 @@ export const adminBookRepo = {
       isError,
       error,
     } = useQuery({
-      queryKey: username
-        ? queryKeys.books(username)
-        : ["books", "anonymous"],
+      queryKey: username ? queryKeys.books(username) : ["books", "anonymous"],
 
       queryFn: getBooks,
 
@@ -81,27 +67,14 @@ export const adminBookRepo = {
     };
   },
 
-  useBook(
-    id: string | undefined,
-    enabled = true,
-  ) {
+  useBook(id: string | undefined, enabled = true) {
     const queryClient = useQueryClient();
 
-    const username = useAuthStore(
-      (state) => state.username,
-    );
+    const username = useAuthStore((state) => state.username);
 
-    const canFetch =
-      enabled &&
-      Boolean(username) &&
-      Boolean(id);
+    const canFetch = enabled && Boolean(username) && Boolean(id);
 
-    const {
-      data,
-      isLoading,
-      isError,
-      error,
-    } = useQuery({
+    const { data, isLoading, isError, error } = useQuery({
       queryKey:
         username && id
           ? queryKeys.book(username, id)
@@ -109,18 +82,12 @@ export const adminBookRepo = {
 
       queryFn: async () => {
         if (!id || !username) {
-          throw new Error(
-            "Cannot fetch book without an authenticated user.",
-          );
+          throw new Error("Cannot fetch book without an authenticated user.");
         }
 
         const book = await getBook(id);
 
-        mergeBookIntoList(
-          queryClient,
-          username,
-          book,
-        );
+        mergeBookIntoList(queryClient, username, book);
 
         return book;
       },
@@ -148,39 +115,30 @@ export const adminBookRepo = {
       onSuccess: (created) => {
         // Read the CURRENT username.
         // Do not capture it once when the hook is created.
-        const username =
-          useAuthStore.getState().username;
+        const username = useAuthStore.getState().username;
 
         if (!username) return;
 
         const key = queryKeys.books(username);
 
-        queryClient.setQueryData<Book[]>(
-          key,
-          (old) => {
-            if (!old) {
-              return [created];
-            }
+        queryClient.setQueryData<Book[]>(key, (old) => {
+          if (!old) {
+            return [created];
+          }
 
-            if (
-              old.some(
-                (item) =>
-                  item.id === created.id,
-              )
-            ) {
-              return old.map((item) =>
-                item.id === created.id
-                  ? {
-                      ...item,
-                      ...created,
-                    }
-                  : item,
-              );
-            }
+          if (old.some((item) => item.id === created.id)) {
+            return old.map((item) =>
+              item.id === created.id
+                ? {
+                    ...item,
+                    ...created,
+                  }
+                : item,
+            );
+          }
 
-            return [created, ...old];
-          },
-        );
+          return [created, ...old];
+        });
 
         queryClient.invalidateQueries({
           queryKey: key,
@@ -193,18 +151,11 @@ export const adminBookRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: ({
-        id,
-        changes,
-      }: {
-        id: string;
-        changes: Partial<Book>;
-      }) =>
+      mutationFn: ({ id, changes }: { id: string; changes: Partial<Book> }) =>
         updateBook(id, changes),
 
       onSuccess: (_book, { id }) => {
-        const username =
-          useAuthStore.getState().username;
+        const username = useAuthStore.getState().username;
 
         if (!username) return;
 
@@ -213,10 +164,7 @@ export const adminBookRepo = {
         });
 
         queryClient.invalidateQueries({
-          queryKey: queryKeys.book(
-            username,
-            id,
-          ),
+          queryKey: queryKeys.book(username, id),
         });
       },
     });
@@ -229,8 +177,7 @@ export const adminBookRepo = {
       mutationFn: deleteBook,
 
       onSuccess: () => {
-        const username =
-          useAuthStore.getState().username;
+        const username = useAuthStore.getState().username;
 
         if (!username) return;
 

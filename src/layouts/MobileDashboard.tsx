@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
 
-import MobileNavbar from "../components/navigation/MobileNavbar";
-import MobileSidebar from "../components/navigation/MobileSidebar";
+import MobileNavbar from "../features/navigation/MobileNavbar";
+import MobileSidebar from "../features/navigation/MobileSidebar";
 
 interface MobileLayoutProps {
   children: React.ReactNode;
 }
 
-export default function MobileLayout({
-  children,
-}: MobileLayoutProps) {
+export default function MobileLayout({ children }: MobileLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { pathname } = useLocation();
 

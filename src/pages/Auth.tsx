@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, signupSchema } from "../auth/schemas/authSchema";
 import { useAuth } from "../auth/hooks/useAuth";
-import Card from "../components/ui/Card";
+import Card from "../ui/Card";
 import { useModeStore } from "../store/modeStore";
 
 // Combined shape covers both modes; RHF needs one type to register against,

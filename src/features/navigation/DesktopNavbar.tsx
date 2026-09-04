@@ -17,8 +17,8 @@ export default function DesktopNavbar() {
   );
 
   return (
-<nav
-  className="
+    <nav
+      className="
     absolute
     inset-x-0
     top-0
@@ -35,7 +35,7 @@ export default function DesktopNavbar() {
     px-12
     xl:px-16
   "
->
+    >
       {/* ================= Logo / Dashboard ================= */}
 
       <NavLink

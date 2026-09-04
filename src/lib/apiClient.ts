@@ -1,12 +1,9 @@
 import { useAuthStore } from "../auth/store/authStore";
 import { refreshToken as refreshTokenRequest } from "../auth/services/auth";
 import { logoutSession } from "../auth/session";
-import {
-  getAuthTransportVersion,
-} from "../auth/authTransport";
+import { getAuthTransportVersion } from "../auth/authTransport";
 
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 export class ApiError extends Error {
   status: number;
@@ -31,44 +28,25 @@ async function getFreshAccessToken(): Promise<string> {
   const currentVersion = getAuthTransportVersion();
 
   // Reuse only a refresh belonging to THIS auth session.
-  if (
-    refreshInFlight &&
-    refreshInFlight.version === currentVersion
-  ) {
+  if (refreshInFlight && refreshInFlight.version === currentVersion) {
     return refreshInFlight.promise;
   }
 
   const promise = (async () => {
-    const refresh =
-      useAuthStore.getState().refreshToken;
+    const refresh = useAuthStore.getState().refreshToken;
 
     if (!refresh) {
-      throw new ApiError(
-        "No refresh token available.",
-        401,
-      );
+      throw new ApiError("No refresh token available.", 401);
     }
 
-    const tokens =
-      await refreshTokenRequest(refresh);
+    const tokens = await refreshTokenRequest(refresh);
 
     // Logout/login happened while refresh was running.
-    if (
-      currentVersion !==
-      getAuthTransportVersion()
-    ) {
-      throw new ApiError(
-        "Authentication session changed.",
-        401,
-      );
+    if (currentVersion !== getAuthTransportVersion()) {
+      throw new ApiError("Authentication session changed.", 401);
     }
 
-    useAuthStore
-      .getState()
-      .setTokens(
-        tokens.access,
-        tokens.refresh,
-      );
+    useAuthStore.getState().setTokens(tokens.access, tokens.refresh);
 
     return tokens.access;
   })();
@@ -81,9 +59,7 @@ async function getFreshAccessToken(): Promise<string> {
   try {
     return await promise;
   } finally {
-    if (
-      refreshInFlight?.promise === promise
-    ) {
+    if (refreshInFlight?.promise === promise) {
       refreshInFlight = null;
     }
   }
@@ -107,10 +83,7 @@ async function doFetch(
         : {}),
       ...headers,
     },
-    body:
-      body !== undefined
-        ? JSON.stringify(body)
-        : undefined,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
   });
 }
 
@@ -119,27 +92,15 @@ export async function apiFetch<T>(
   options: RequestOptions = {},
   isRetry = false,
 ): Promise<T> {
-  const requestVersion =
-    getAuthTransportVersion();
+  const requestVersion = getAuthTransportVersion();
 
-  const accessToken =
-    useAuthStore.getState().accessToken;
+  const accessToken = useAuthStore.getState().accessToken;
 
-  const res = await doFetch(
-    path,
-    options,
-    accessToken,
-  );
+  const res = await doFetch(path, options, accessToken);
 
   // The request started under a different session.
-  if (
-    requestVersion !==
-    getAuthTransportVersion()
-  ) {
-    throw new ApiError(
-      "Authentication session changed.",
-      401,
-    );
+  if (requestVersion !== getAuthTransportVersion()) {
+    throw new ApiError("Authentication session changed.", 401);
   }
 
   if (res.status === 401 && !isRetry) {
@@ -148,28 +109,17 @@ export async function apiFetch<T>(
     } catch {
       await logoutSession();
 
-      throw new ApiError(
-        "Session expired. Please log in again.",
-        401,
-      );
+      throw new ApiError("Session expired. Please log in again.", 401);
     }
 
-    return apiFetch<T>(
-      path,
-      options,
-      true,
-    );
+    return apiFetch<T>(path, options, true);
   }
 
   if (!res.ok) {
-    const body = await res
-      .json()
-      .catch(() => null);
+    const body = await res.json().catch(() => null);
 
     const detail =
-      body &&
-      typeof body === "object" &&
-      "detail" in body
+      body && typeof body === "object" && "detail" in body
         ? String(
             (
               body as {
@@ -179,11 +129,7 @@ export async function apiFetch<T>(
           )
         : null;
 
-    throw new ApiError(
-      detail ||
-        `Request failed: ${res.status}`,
-      res.status,
-    );
+    throw new ApiError(detail || `Request failed: ${res.status}`, res.status);
   }
 
   if (res.status === 204) {

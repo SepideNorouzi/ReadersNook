@@ -1,8 +1,8 @@
 import { Quote, Sparkles } from "lucide-react";
-import Card from "../../../components/ui/Card";
+import Card from "../../../ui/Card";
 import { useBooks } from "../../../hooks/useBooks";
 import QuoteItem from "./QuoteItem";
-import Loading from "../../../components/Loading";
+import Loading from "../../../shared/Loading";
 
 interface Props {
   className?: string;
@@ -20,7 +20,7 @@ export default function QuoteCard({ className }: Props) {
           ${className ?? ""}
         `}
       >
-          <Loading />
+        <Loading />
       </Card>
     );
   }

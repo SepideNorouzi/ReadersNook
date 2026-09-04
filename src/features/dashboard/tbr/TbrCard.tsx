@@ -1,9 +1,9 @@
 import { BookOpen, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router";
-import Card from "../../../components/ui/Card";
+import Card from "../../../ui/Card";
 import { useTBRBooks } from "../../../hooks/useTbr";
 import TbrBookGrid from "./TbrBookGrid";
-import Loading from "../../../components/Loading";
+import Loading from "../../../shared/Loading";
 
 interface Props {
   className?: string;

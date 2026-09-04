@@ -6,7 +6,7 @@ import { useBook } from "../hooks/useBook";
 
 import BookHero from "../features/Detail/hero/BookHero";
 import DetailContent from "../features/Detail/DetailContent";
-import Loading from "../components/Loading";
+import Loading from "../shared/Loading";
 
 export default function BookDetail() {
   const { id } = useParams();

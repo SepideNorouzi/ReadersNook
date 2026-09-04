@@ -3,8 +3,7 @@ import { Navigate } from "react-router";
 import { useModeStore } from "../../store/modeStore";
 import { useAuthStore } from "../store/authStore";
 import { useAuth } from "../hooks/useAuth";
-import Loading from "../../components/Loading";
-
+import Loading from "../../shared/Loading";
 
 interface Props {
   children: React.ReactNode;

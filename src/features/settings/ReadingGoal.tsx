@@ -1,6 +1,6 @@
 import { BookOpen, Minus, Plus } from "lucide-react";
 
-import Card from "../../components/ui/Card";
+import Card from "../../ui/Card";
 import { useReadingGoalStore } from "../../store/readingGoalStore";
 
 export default function ReadingGoalSettings() {

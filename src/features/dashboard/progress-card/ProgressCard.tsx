@@ -1,8 +1,8 @@
 import { Target, Sparkles, Trophy } from "lucide-react";
-import Card from "../../../components/ui/Card";
+import Card from "../../../ui/Card";
 import { useReadingGoal } from "../../../hooks/useReadingGoal";
-import CircularProgress from "../../../components/ui/CircularProgress";
-import Loading from "../../../components/Loading";
+import CircularProgress from "../../../ui/CircularProgress";
+import Loading from "../../../shared/Loading";
 
 interface ProgressCardProps {
   className?: string;
@@ -23,7 +23,7 @@ export default function ProgressCard({ className }: ProgressCardProps) {
           ${className ?? ""}
         `}
       >
-          <Loading />
+        <Loading />
       </Card>
     );
   }

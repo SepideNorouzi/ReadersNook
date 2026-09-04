@@ -65,11 +65,7 @@ export default function MobileNavbar({
             active:scale-95
           "
         >
-          <Menu
-            size={22}
-            strokeWidth={2}
-            className="text-white"
-          />
+          <Menu size={22} strokeWidth={2} className="text-white" />
         </button>
 
         {/* Center: Logo */}
@@ -165,11 +161,7 @@ export default function MobileNavbar({
               "
             />
           ) : (
-            <UserRound
-              size={18}
-              strokeWidth={2}
-              className="text-white"
-            />
+            <UserRound size={18} strokeWidth={2} className="text-white" />
           )}
         </NavLink>
       </nav>
