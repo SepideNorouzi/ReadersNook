@@ -6,9 +6,7 @@ import { logoutSession } from "../session";
 import { AuthHttpError } from "../services/auth";
 
 export function useAuth() {
-  const isAuthenticated = useAuthStore(
-    (state) => state.isAuthenticated,
-  );
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   const {
     data: user,
@@ -23,6 +21,8 @@ export function useAuth() {
   const adminLogin = adminAuthRepo.useLogin();
   const adminRegister = adminAuthRepo.useRegister();
 
+  const updateAvatar = authRepository.useUpdateAvatar();
+
   const logout = useCallback(() => {
     return logoutSession();
   }, []);
@@ -30,10 +30,7 @@ export function useAuth() {
   useEffect(() => {
     if (!isError) return;
 
-    if (
-      error instanceof AuthHttpError &&
-      error.status === 401
-    ) {
+    if (error instanceof AuthHttpError && error.status === 401) {
       logout();
     }
   }, [isError, error, logout]);
@@ -46,6 +43,7 @@ export function useAuth() {
     adminLogin,
     register,
     adminRegister,
+    updateAvatar,
     logout,
   };
 }
