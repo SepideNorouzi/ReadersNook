@@ -65,7 +65,7 @@ export function toProfile(user: AuthUser): Profile {
     id: user.username,
     name: name || user.username,
     username: user.username,
-    avatarUrl: null,
+    avatarUrl: user.avatar,
   };
 }
 
@@ -114,6 +114,26 @@ export async function getMe(accessToken: string): Promise<AuthUser> {
 
   if (!response.ok) {
     await throwApiError(response, "Failed to fetch authenticated user.");
+  }
+
+  return response.json();
+}
+
+export async function updateAvatar(
+  accessToken: string,
+  avatarUrl: string,
+): Promise<AuthUser> {
+  const response = await fetch(`${API_URL}/auth/me/`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ avatar: avatarUrl }),
+  });
+
+  if (!response.ok) {
+    await throwApiError(response, "Failed to update avatar.");
   }
 
   return response.json();
