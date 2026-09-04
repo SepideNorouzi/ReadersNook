@@ -72,7 +72,7 @@ export default function CollectionItem({
             line-clamp-2
 
             font-heading
-            text-[12px]
+            text-[11px]
             font-semibold
             leading-[1.25]
 
