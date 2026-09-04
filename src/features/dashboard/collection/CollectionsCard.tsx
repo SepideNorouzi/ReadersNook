@@ -228,18 +228,21 @@ export default function CollectionsCard({
             <div className="relative min-h-0 flex-1">
               <div
                 className="
-                  h-full
-                  overflow-x-auto
-                  overflow-y-hidden
+    h-full
+    overflow-x-auto
+    overflow-y-hidden
 
-                  scrollbar-thin
-                  scrollbar-track-transparent
-                  scrollbar-thumb-[var(--gold)]/25
-                  hover:scrollbar-thumb-[var(--gold)]/50
+    lg:overflow-x-hidden
+    lg:overflow-y-auto
 
-                  -mx-1
-                  sm:mx-0
-                "
+    scrollbar-thin
+    scrollbar-track-transparent
+    scrollbar-thumb-[var(--gold)]/25
+    hover:scrollbar-thumb-[var(--gold)]/50
+
+    -mx-1
+    sm:mx-0
+  "
               >
                 <CollectionGrid
                   collections={collections}
@@ -249,29 +252,48 @@ export default function CollectionsCard({
                 />
               </div>
 
-              {/* Very subtle edge fades */}
+              {/* Mobile side fades */}
               <div
                 className="
-                  pointer-events-none
-                  absolute inset-y-0 left-0 z-20
-                  w-3
-                  bg-gradient-to-r
-                  from-[var(--surface)]
-                  to-transparent
-                  sm:w-5
-                "
+    pointer-events-none
+    absolute inset-y-0 left-0 z-20
+    w-3
+    bg-gradient-to-r
+    from-[var(--surface)]
+    to-transparent
+    sm:w-5
+    lg:hidden
+  "
               />
 
               <div
                 className="
-                  pointer-events-none
-                  absolute inset-y-0 right-0 z-20
-                  w-4
-                  bg-gradient-to-l
-                  from-[var(--surface)]
-                  to-transparent
-                  sm:w-6
-                "
+    pointer-events-none
+    absolute inset-y-0 right-0 z-20
+    w-4
+    bg-gradient-to-l
+    from-[var(--surface)]
+    to-transparent
+    sm:w-6
+    lg:hidden
+  "
+              />
+
+              {/* Desktop bottom fade */}
+              <div
+                className="
+    pointer-events-none
+    absolute
+    inset-x-0
+    bottom-0
+    z-20
+    hidden
+    h-8
+    bg-gradient-to-t
+    from-[var(--surface)]
+    to-transparent
+    lg:block
+  "
               />
             </div>
           )}

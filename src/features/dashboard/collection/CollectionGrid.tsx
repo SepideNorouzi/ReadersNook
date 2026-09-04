@@ -1,5 +1,5 @@
 import type { CollectionWithBooks } from "../../../types/collection";
-import CollectionsItem from "./CollectionItem";
+import CollectionItem from "./CollectionItem";
 
 export interface CollectionGridProps {
   collections: CollectionWithBooks[];
@@ -17,7 +17,6 @@ export default function CollectionGrid({
         w-max
         min-w-full
         items-start
-
         gap-4
         px-2
         py-2.5
@@ -26,9 +25,13 @@ export default function CollectionGrid({
         sm:px-4
         sm:py-5
 
-        lg:gap-8
-        lg:px-6
-        lg:py-6
+        lg:grid
+        lg:w-full
+        lg:min-w-0
+        lg:grid-cols-2
+        lg:gap-5
+        lg:px-4
+        lg:py-4
       "
     >
       {collections.map((collection) => (
@@ -39,10 +42,12 @@ export default function CollectionGrid({
             shrink-0
 
             sm:w-[110px]
-            lg:w-[142px]
+
+            lg:w-full
+            lg:min-w-0
           "
         >
-          <CollectionsItem
+          <CollectionItem
             collection={collection}
             onClick={onCollectionClick}
           />
