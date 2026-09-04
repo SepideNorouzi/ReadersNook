@@ -7,7 +7,7 @@ import { useAuth } from "../../auth/hooks/useAuth";
 import "../../styles/desktopNav.css";
 
 export default function DesktopNavbar() {
-  const { user } = useAuth();
+  const { user, userLoading } = useAuth();
   const location = useLocation();
 
   const desktopNavItems = navItems.filter((item) =>
@@ -112,50 +112,77 @@ export default function DesktopNavbar() {
 
       {/* ================= Profile ================= */}
 
+      {/* Right: Profile */}
       <NavLink
         to="/settings"
         aria-label="Open settings"
         className="
-          flex
-          h-10
-          w-10
+    relative
+    flex
+    h-11
+    w-11
+    shrink-0
+    items-center
+    justify-center
+    rounded-full
 
-          overflow-hidden
+    border
+    border-[var(--gold)]
 
-          rounded-full
+    bg-white/15
 
-          bg-white/40
+    shadow-[0_0_10px_rgba(207,162,71,0.20)]
 
-          border
-          border-white/30
+    transition-all
+    duration-200
 
-          backdrop-blur-md
+    hover:scale-105
+    hover:shadow-[0_0_14px_rgba(207,162,71,0.32)]
 
-          transition-transform
-
-          hover:scale-105
-          active:scale-95
-        "
+    active:scale-95
+  "
       >
-        {user?.avatarUrl ? (
-          <img
-            src={user.avatarUrl}
-            alt="Profile"
-            className="
-              h-full
-              w-full
-              object-cover
-            "
-          />
-        ) : (
-          <UserRound
-            size={20}
-            className="
-              m-auto
-              text-[var(--text)]
-            "
-          />
-        )}
+        {/* Inner spacing between the ring and badge */}
+        <div
+          className="
+      flex
+      h-7
+      w-7
+      items-center
+      justify-center
+      overflow-hidden
+      rounded-full
+
+      bg-white/20
+
+      ring-1
+      ring-white/20
+    "
+        >
+          {userLoading ? (
+            <div
+              className="
+          h-full
+          w-full
+          animate-pulse
+          rounded-full
+          bg-white/20
+        "
+            />
+          ) : user?.avatarUrl ? (
+            <img
+              src={user.avatarUrl}
+              alt=""
+              className="
+          h-full
+          w-full
+          object-cover
+        "
+            />
+          ) : (
+            <UserRound size={18} strokeWidth={2} className="text-white" />
+          )}
+        </div>
       </NavLink>
     </nav>
   );
