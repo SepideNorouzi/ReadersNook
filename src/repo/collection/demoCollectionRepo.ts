@@ -3,10 +3,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useCollectionStore } from "../../store/demoCollectionStore";
 import { useBookStore } from "../../store/demoBookStore";
 
-import type { Collection, CollectionWithBooks } from "../../types/collection";
+import type {
+  Collection,
+  CollectionWithBooks,
+} from "../../types/collection";
 
 export const demoCollectionRepo = {
-  getCollections() {
+  getCollections(): Collection[] {
     return useCollectionStore.getState().collections;
   },
 
@@ -14,31 +17,36 @@ export const demoCollectionRepo = {
     const collections = useCollectionStore.getState().collections;
     const books = useBookStore.getState().books;
 
-    const bookById = new Map(books.map((book) => [String(book.id), book]));
+    const bookById = new Map(
+      books.map((book) => [String(book.id), book]),
+    );
 
     return collections.map(({ bookIds, ...collection }) => ({
       ...collection,
-
       books: bookIds
         .map((id) => bookById.get(String(id)))
-        .filter((book): book is (typeof books)[number] => Boolean(book)),
+        .filter(
+          (book): book is (typeof books)[number] => Boolean(book),
+        ),
     }));
   },
 
   useCollections() {
     const collections = useCollectionStore((state) => state.collections);
-
     const books = useBookStore((state) => state.books);
 
-    const bookById = new Map(books.map((book) => [String(book.id), book]));
+    const bookById = new Map(
+      books.map((book) => [String(book.id), book]),
+    );
 
     const data: CollectionWithBooks[] = collections.map(
       ({ bookIds, ...collection }) => ({
         ...collection,
-
         books: bookIds
           .map((id) => bookById.get(String(id)))
-          .filter((book): book is (typeof books)[number] => Boolean(book)),
+          .filter(
+            (book): book is (typeof books)[number] => Boolean(book),
+          ),
       }),
     );
 
@@ -78,7 +86,9 @@ export const demoCollectionRepo = {
       }) => {
         const collection = useCollectionStore
           .getState()
-          .collections.find((collection) => collection.id === collectionId);
+          .collections.find(
+            (collection) => collection.id === collectionId,
+          );
 
         if (!collection) {
           throw new Error("Collection not found");
@@ -106,7 +116,9 @@ export const demoCollectionRepo = {
       }) => {
         const collection = useCollectionStore
           .getState()
-          .collections.find((collection) => collection.id === collectionId);
+          .collections.find(
+            (collection) => collection.id === collectionId,
+          );
 
         if (!collection) {
           throw new Error("Collection not found");
@@ -132,13 +144,17 @@ export const demoCollectionRepo = {
       }) => {
         const collection = useCollectionStore
           .getState()
-          .collections.find((collection) => collection.id === collectionId);
+          .collections.find(
+            (collection) => collection.id === collectionId,
+          );
 
         if (!collection) {
           throw new Error("Collection not found");
         }
 
-        useCollectionStore.getState().updateCollection(collectionId, { name });
+        useCollectionStore.getState().updateCollection(collectionId, {
+          name,
+        });
 
         return {
           ...collection,

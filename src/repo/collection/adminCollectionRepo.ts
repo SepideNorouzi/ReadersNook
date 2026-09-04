@@ -7,9 +7,11 @@ import {
   renameCollection,
   deleteCollection,
   getCollections,
+  getCollectionDetail,
 } from "../../services/collection";
 import { queryKeys } from "../../queries/queryKeys";
 import { useAuthStore } from "../../auth/store/authStore";
+import type { CollectionWithBooks } from "../../types/collection";
 
 function collectionsKeyForCurrentUser() {
   const username = useAuthStore.getState().username;
@@ -23,11 +25,19 @@ export const adminCollectionRepo = {
     const username = useAuthStore((state) => state.username);
     const queryEnabled = isAdmin && Boolean(username);
 
-    return useQuery({
+    return useQuery<CollectionWithBooks[]>({
       queryKey: username
         ? queryKeys.collections(username)
         : ["collections", "anonymous"],
-      queryFn: getCollections,
+
+      queryFn: async () => {
+        const collections = await getCollections();
+
+        return Promise.all(
+          collections.map((collection) => getCollectionDetail(collection.id)),
+        );
+      },
+
       enabled: queryEnabled,
     });
   },
