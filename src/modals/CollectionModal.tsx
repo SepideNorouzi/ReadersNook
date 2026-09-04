@@ -11,10 +11,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function CollectionModal({
-  collection,
-  onClose,
-}: Props) {
+export default function CollectionModal({ collection, onClose }: Props) {
   const navigate = useNavigate();
 
   const {
@@ -23,7 +20,7 @@ export default function CollectionModal({
 
     // Add these to useCollections if they don't exist yet.
     deleteCollection,
-    isDeletingCollection,
+    isDeleting,
 
     isRemovingBook,
     isRenaming,
@@ -62,7 +59,7 @@ export default function CollectionModal({
 
   async function handleDeleteCollection() {
     const confirmed = window.confirm(
-      `Delete "${collection.name}"? This will remove the collection.`
+      `Delete "${collection.name}"? This will remove the collection.`,
     );
 
     if (!confirmed) return;
@@ -321,10 +318,7 @@ export default function CollectionModal({
               "
             >
               {collection.books.map((book) => (
-                <div
-                  key={book.id}
-                  className="group relative min-w-0"
-                >
+                <div key={book.id} className="group relative min-w-0">
                   <button
                     type="button"
                     onClick={() => {
@@ -435,7 +429,7 @@ export default function CollectionModal({
           <button
             type="button"
             onClick={handleDeleteCollection}
-            disabled={isDeletingCollection}
+            disabled={isDeleting}
             className="
               flex
               w-full
@@ -467,9 +461,7 @@ export default function CollectionModal({
           >
             <Trash2 size={14} />
 
-            {isDeletingCollection
-              ? "Deleting collection..."
-              : "Delete collection"}
+            {isDeleting ? "Deleting collection..." : "Delete collection"}
           </button>
         </div>
       </Card>

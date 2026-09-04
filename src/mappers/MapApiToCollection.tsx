@@ -1,39 +1,42 @@
-import type { CollectionWithBooks } from "../types/collection";
 import type {
-  ApiCollectionSummary,
   ApiCollectionCreatePayload,
+  ApiCollectionDetail,
+  ApiCollectionListItem,
   ApiCollectionUpdatePayload,
 } from "../types/api/apiCollection";
+import type { Collection, CollectionWithBooks } from "../types/collection";
 import { mapApiBookSummaryToBook } from "./MapApiToBook";
 
-//  this one function covers every endpoint in apiCollection.ts.
-export function mapApiCollectionToCollectionWithBooks(
-  apiCollection: ApiCollectionSummary,
+export function mapApiCollectionListItemToCollection(
+  api: ApiCollectionListItem,
+): Collection {
+  return {
+    id: String(api.id),
+    name: api.name,
+    description: api.description,
+    bookIds: api.books.map(String),
+  };
+}
+
+export function mapApiCollectionDetailToCollectionWithBooks(
+  api: ApiCollectionDetail,
 ): CollectionWithBooks {
   return {
-    id: String(apiCollection.id),
-    name: apiCollection.name,
-    // `description` is genuinely optional on the domain type,
-    //  so normalizing the backend's likely ""
-    // default into `undefined` here is correct.
-    description: apiCollection.description || undefined,
-    books: apiCollection.books.map(mapApiBookSummaryToBook),
+    id: String(api.id),
+    name: api.name,
+    description: api.description,
+    books: api.books.map(mapApiBookSummaryToBook),
   };
 }
 
 export function mapCollectionToCreatePayload(
   name: string,
-  description?: string,
 ): ApiCollectionCreatePayload {
-  return { name, description: description ?? "" };
+  return { name, description: "" };
 }
 
 export function mapCollectionToUpdatePayload(
-  changes: Partial<Pick<CollectionWithBooks, "name" | "description">>,
+  changes: Partial<{ name: string; description: string }>,
 ): ApiCollectionUpdatePayload {
-  const payload: ApiCollectionUpdatePayload = {};
-  if (changes.name !== undefined) payload.name = changes.name;
-  if (changes.description !== undefined)
-    payload.description = changes.description;
-  return payload;
+  return changes;
 }

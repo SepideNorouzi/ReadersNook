@@ -54,4 +54,11 @@ export const collectionRepository = {
 
     return mode === "demo" ? demoMutation : adminMutation;
   },
+
+  useDeleteCollection() {
+    const mode = useModeStore((state) => state.mode);
+    const demoMutation = demoCollectionRepo.useDeleteCollection();
+    const adminMutation = adminCollectionRepo.useDeleteCollection();
+    return mode === "demo" ? demoMutation : adminMutation;
+  },
 };

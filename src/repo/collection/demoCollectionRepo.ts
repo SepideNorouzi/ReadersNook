@@ -147,4 +147,12 @@ export const demoCollectionRepo = {
       },
     });
   },
+
+  useDeleteCollection() {
+    return useMutation({
+      mutationFn: async (collectionId: string) => {
+        useCollectionStore.getState().deleteCollection(collectionId);
+      },
+    });
+  },
 };

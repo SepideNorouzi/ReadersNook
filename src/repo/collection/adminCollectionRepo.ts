@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
-  getCollectionsWithBooks,
   createCollection,
   addBookToCollection,
   removeBookFromCollection,
   renameCollection,
+  deleteCollection,
+  getCollections,
 } from "../../services/collection";
 import { queryKeys } from "../../queries/queryKeys";
 import { useAuthStore } from "../../auth/store/authStore";
@@ -20,14 +21,13 @@ function collectionsKeyForCurrentUser() {
 export const adminCollectionRepo = {
   useCollections(isAdmin: boolean) {
     const username = useAuthStore((state) => state.username);
-
     const queryEnabled = isAdmin && Boolean(username);
 
     return useQuery({
       queryKey: username
         ? queryKeys.collections(username)
         : ["collections", "anonymous"],
-      queryFn: getCollectionsWithBooks,
+      queryFn: getCollections,
       enabled: queryEnabled,
     });
   },
@@ -98,6 +98,18 @@ export const adminCollectionRepo = {
         name: string;
       }) => renameCollection(collectionId, name),
 
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: collectionsKeyForCurrentUser(),
+        });
+      },
+    });
+  },
+
+  useDeleteCollection() {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: (collectionId: string) => deleteCollection(collectionId),
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: collectionsKeyForCurrentUser(),

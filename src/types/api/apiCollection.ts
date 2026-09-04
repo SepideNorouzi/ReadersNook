@@ -34,3 +34,5 @@ export type ApiCollectionDetail = ApiCollectionCore & {
   created_at: string;
   updated_at: string;
 };
+
+export type ApiCollectionUpdateResponse = ApiCollectionCore; // { id, name, description } — no books

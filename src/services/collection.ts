@@ -1,38 +1,47 @@
 import { apiFetch } from "../lib/apiClient";
 import {
-  mapApiCollectionToCollectionWithBooks,
+  mapApiCollectionDetailToCollectionWithBooks,
+  mapApiCollectionListItemToCollection,
   mapCollectionToCreatePayload,
   mapCollectionToUpdatePayload,
 } from "../mappers/MapApiToCollection";
-import type { CollectionWithBooks } from "../types/collection";
 import type {
-  ApiCollectionSummary,
-  ApiCollectionAddBookPayload,
-  ApiCollectionRemoveBookPayload,
+  ApiCollectionAddBookResponse,
+  ApiCollectionDetail,
+  ApiCollectionListItem,
+  ApiCollectionUpdateResponse,
 } from "../types/api/apiCollection";
+import type { Collection, CollectionWithBooks } from "../types/collection";
 
 // ─────────────────────────────────────────────
 // GET COLLECTIONS (books always nested)
+
 // ─────────────────────────────────────────────
-export async function getCollectionsWithBooks(): Promise<
-  CollectionWithBooks[]
-> {
+export async function getCollections(): Promise<Collection[]> {
   const apiCollections =
-    await apiFetch<ApiCollectionSummary[]>("/collections/");
-  return apiCollections.map(mapApiCollectionToCollectionWithBooks);
+    await apiFetch<ApiCollectionListItem[]>("/collections/");
+  return apiCollections.map(mapApiCollectionListItemToCollection);
+}
+
+// GET /collections/{id}/ — detail, hydrated books
+export async function getCollectionDetail(
+  collectionId: string,
+): Promise<CollectionWithBooks> {
+  const apiCollection = await apiFetch<ApiCollectionDetail>(
+    `/collections/${collectionId}/`,
+  );
+  return mapApiCollectionDetailToCollectionWithBooks(apiCollection);
 }
 
 // ─────────────────────────────────────────────
 // CREATE COLLECTION
 // ─────────────────────────────────────────────
-export async function createCollection(
-  name: string,
-): Promise<CollectionWithBooks> {
-  const apiCollection = await apiFetch<ApiCollectionSummary>(
+export async function createCollection(name: string): Promise<Collection> {
+  const apiCollection = await apiFetch<ApiCollectionListItem>(
     "/collections/create/",
     { method: "POST", body: mapCollectionToCreatePayload(name) },
   );
-  return mapApiCollectionToCollectionWithBooks(apiCollection);
+  return mapApiCollectionListItemToCollection(apiCollection);
 }
 
 // ─────────────────────────────────────────────
@@ -41,42 +50,39 @@ export async function createCollection(
 export async function renameCollection(
   collectionId: string,
   name: string,
-): Promise<CollectionWithBooks> {
-  const apiCollection = await apiFetch<ApiCollectionSummary>(
+): Promise<void> {
+  await apiFetch<ApiCollectionUpdateResponse>(
     `/collections/${collectionId}/update/`,
     { method: "PATCH", body: mapCollectionToUpdatePayload({ name }) },
   );
-  return mapApiCollectionToCollectionWithBooks(apiCollection);
 }
 
 // ─────────────────────────────────────────────
 // ADD BOOK TO COLLECTION
 // ─────────────────────────────────────────────
+
+// POST /collections/{id}/books/{book_pk}/ — id in URL, no body
 export async function addBookToCollection(
   collectionId: string,
   bookId: string,
-): Promise<CollectionWithBooks> {
-  const payload: ApiCollectionAddBookPayload = { book_id: Number(bookId) };
-  const apiCollection = await apiFetch<ApiCollectionSummary>(
-    `/collections/${collectionId}/add-book/`,
-    { method: "POST", body: payload },
+): Promise<ApiCollectionAddBookResponse> {
+  return apiFetch<ApiCollectionAddBookResponse>(
+    `/collections/${collectionId}/books/${bookId}/`,
+    { method: "POST" },
   );
-  return mapApiCollectionToCollectionWithBooks(apiCollection);
 }
 
 // ─────────────────────────────────────────────
 // REMOVE BOOK FROM COLLECTION
 // ─────────────────────────────────────────────
+// DELETE /collections/{id}/books/{book_pk}/ — 204, no body
 export async function removeBookFromCollection(
   collectionId: string,
   bookId: string,
-): Promise<CollectionWithBooks> {
-  const payload: ApiCollectionRemoveBookPayload = { book_id: Number(bookId) };
-  const apiCollection = await apiFetch<ApiCollectionSummary>(
-    `/collections/${collectionId}/remove-book/`,
-    { method: "POST", body: payload },
-  );
-  return mapApiCollectionToCollectionWithBooks(apiCollection);
+): Promise<void> {
+  await apiFetch<void>(`/collections/${collectionId}/books/${bookId}/`, {
+    method: "DELETE",
+  });
 }
 
 // ─────────────────────────────────────────────
