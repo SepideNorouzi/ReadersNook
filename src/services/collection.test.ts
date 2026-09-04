@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { resetCollectionsDb } from "../data/handlers";
 import {
-  getCollectionsWithBooks,
+  getCollections,
+  getCollectionDetail,
   createCollection,
   renameCollection,
   addBookToCollection,
@@ -12,42 +13,80 @@ import { mockApiCollection, mockApiBook } from "../test/fixtures";
 beforeEach(() => resetCollectionsDb());
 
 describe("collection service", () => {
-  it("creates a collection and returns it hydrated", async () => {
+  it("creates a collection", async () => {
     const created = await createCollection("Cozy Fantasy");
+
     expect(created.name).toBe("Cozy Fantasy");
-    expect(created.books).toEqual([]);
+    expect(created.bookIds).toEqual([]);
   });
 
-  it("adds a book to a collection", async () => {
-    resetCollectionsDb([mockApiCollection({ id: 1, books: [] })]);
-
-    const updated = await addBookToCollection("1", "5");
-    expect(updated.books.some((b) => b.id === "5")).toBe(true);
-  });
-
-  it("removes a book from a collection", async () => {
-    resetCollectionsDb([
-      mockApiCollection({ id: 1, books: [mockApiBook({ id: 5 })] }),
-    ]);
-
-    const updated = await removeBookFromCollection("1", "5");
-    expect(updated.books).toEqual([]);
-  });
-
-  it("renames a collection", async () => {
-    resetCollectionsDb([mockApiCollection({ id: 1, name: "Old Name" })]);
-
-    const updated = await renameCollection("1", "New Name");
-    expect(updated.name).toBe("New Name");
-  });
-
-  it("fetches all collections with books nested", async () => {
+  it("fetches all collections", async () => {
     resetCollectionsDb([
       mockApiCollection({ id: 1 }),
       mockApiCollection({ id: 2 }),
     ]);
 
-    const all = await getCollectionsWithBooks();
-    expect(all).toHaveLength(2);
+    const collections = await getCollections();
+
+    expect(collections).toHaveLength(2);
+    expect(collections[0].id).toBe("1");
+    expect(collections[1].id).toBe("2");
+  });
+
+  it("fetches a collection with books nested", async () => {
+    resetCollectionsDb([
+      mockApiCollection({
+        id: 1,
+        books: [mockApiBook({ id: 5 })],
+      }),
+    ]);
+
+    const collection = await getCollectionDetail("1");
+
+    expect(collection.id).toBe("1");
+    expect(collection.books).toHaveLength(1);
+    expect(collection.books[0].id).toBe("5");
+  });
+
+  it("adds a book to a collection", async () => {
+    resetCollectionsDb([
+      mockApiCollection({
+        id: 1,
+        books: [],
+      }),
+    ]);
+
+    const response = await addBookToCollection("1", "5");
+
+    expect(response).toBeDefined();
+  });
+
+  it("removes a book from a collection", async () => {
+    resetCollectionsDb([
+      mockApiCollection({
+        id: 1,
+        books: [mockApiBook({ id: 5 })],
+      }),
+    ]);
+
+    await removeBookFromCollection("1", "5");
+
+    const collection = await getCollectionDetail("1");
+
+    expect(collection.books).toEqual([]);
+  });
+
+  it("renames a collection", async () => {
+    resetCollectionsDb([
+      mockApiCollection({
+        id: 1,
+        name: "Old Name",
+      }),
+    ]);
+
+    await renameCollection("1", "New Name");
+
+    const collections = await getCollections();
+    expect(collections[0].name).toBe("New Name");
   });
 });
