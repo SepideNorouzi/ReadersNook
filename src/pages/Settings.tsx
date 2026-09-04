@@ -33,6 +33,20 @@ export default function Settings() {
 
   return (
     <main className="p-4 pt-20 sm:pt-20 lg:pt-20">
+      <div
+        aria-hidden="true"
+        className="
+    pointer-events-none
+    absolute inset-x-0 top-0
+    z-0
+    h-24
+    bg-gradient-to-b
+    from-[rgba(35,23,17,0.10)]
+    via-[rgba(35,23,17,0.04)]
+    to-transparent
+    md:hidden
+  "
+      />
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         <ProfileHeader user={user} />
 

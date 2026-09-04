@@ -29,6 +29,20 @@ export default function Quotes() {
 
   return (
     <main className="w-full p-4 pt-20 sm:p-6 lg:p-12 lg:pt-20">
+      <div
+        aria-hidden="true"
+        className="
+    pointer-events-none
+    absolute inset-x-0 top-0
+    z-0
+    h-24
+    bg-gradient-to-b
+    from-[rgba(35,23,17,0.10)]
+    via-[rgba(35,23,17,0.04)]
+    to-transparent
+    md:hidden
+  "
+      />
       <div className="mx-auto max-w-5xl">
         {isLoading ? (
           <QuotesGrid />

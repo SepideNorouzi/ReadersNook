@@ -9,6 +9,20 @@ export default function Search() {
 
   return (
     <main className="flex flex-col gap-7 p-4 pt-20 sm:p-6 lg:p-12 lg:pt-20">
+      <div
+        aria-hidden="true"
+        className="
+    pointer-events-none
+    absolute inset-x-0 top-0
+    z-0
+    h-24
+    bg-gradient-to-b
+    from-[rgba(35,23,17,0.10)]
+    via-[rgba(35,23,17,0.04)]
+    to-transparent
+    md:hidden
+  "
+      />
       <section className="mx-auto w-full max-w-4xl">
         <div className="mb-5">
           <div className="mb-2 flex items-center gap-2">
@@ -22,8 +36,8 @@ export default function Search() {
           </div>
 
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Search by title, author, or whatever book has taken over your
-            brain lately.
+            Search by title, author, or whatever book has taken over your brain
+            lately.
           </p>
         </div>
 

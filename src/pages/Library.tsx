@@ -35,9 +35,23 @@ export default function Library() {
 
   return (
     <main className="flex flex-col gap-8 p-4 sm:p-6 lg:p-20 pt-18 md:pt-20">
+      <div
+        aria-hidden="true"
+        className="
+    pointer-events-none
+    absolute inset-x-0 top-0
+    z-0
+    h-24
+    bg-gradient-to-b
+    from-[rgba(35,23,17,0.10)]
+    via-[rgba(35,23,17,0.04)]
+    to-transparent
+    md:hidden
+  "
+      />
 
-  <div
-  className="
+      <div
+        className="
     rounded-[20px]
     border
     border-[var(--brown-200)]
@@ -45,9 +59,9 @@ export default function Library() {
     p-2
     shadow-[var(--shadow-sm)]
   "
->
-  <LibraryFilters active={filter} onChange={setFilter} counts={counts} />
-</div>
+      >
+        <LibraryFilters active={filter} onChange={setFilter} counts={counts} />
+      </div>
 
       {filteredBooks.length === 0 ? (
         <p className="text-[var(--text-muted)]">No books match this filter.</p>
