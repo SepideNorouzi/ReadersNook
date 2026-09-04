@@ -13,8 +13,9 @@ export default function Intro() {
   };
 
   const handleSignUp = () => {
-    setMode("admin");
-    navigate("/auth");
+    // setMode("admin");
+    // navigate("/auth");
+    navigate("/progress")
   };
 
   return (

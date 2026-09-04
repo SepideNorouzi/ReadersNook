@@ -13,6 +13,7 @@ import ProtectedRoutes from "../auth/components/ProtectedRoutes";
 import RedirectIfAuthenticated from "../auth/components/RedirectAuthenticated";
 import Intro from "../pages/Intro";
 import Quotes from "../pages/Quotes";
+import Progress from "../pages/Progress";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Intro />,
   },
+  {path:"/progress", element: <Progress />},
 ]);
 
 export default function Router() {
