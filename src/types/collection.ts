@@ -6,9 +6,6 @@ export type Collection = {
   description?: string;
   bookIds: string[];
 };
-
-// The UI never wants raw bookIds — it wants actual Book objects.
-// This is the "hydrated" shape your components will consume.
 export type CollectionWithBooks = Omit<Collection, "bookIds"> & {
   books: Book[];
 };
