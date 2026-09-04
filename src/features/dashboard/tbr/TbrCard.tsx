@@ -364,15 +364,6 @@ export default function TBRCard({ className }: Props) {
               rounded-[18px]
               sm:rounded-[20px]
 
-              border
-              border-[rgba(207,162,71,0.08)]
-
-              bg-[rgba(255,255,255,0.22)]
-
-              shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(35,23,17,0.025)]
-
-              backdrop-blur-[2px]
-
               transition-all
               duration-500
 
