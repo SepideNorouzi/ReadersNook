@@ -102,8 +102,8 @@ export default function MobileNavbar({
           className="
     relative
     flex
-    h-10
-    w-10
+    h-9
+    w-9
     shrink-0
     items-center
     justify-center
@@ -129,8 +129,8 @@ export default function MobileNavbar({
           <div
             className="
       flex
-      h-7
-      w-7
+      h-6
+      w-6
       items-center
       justify-center
       overflow-hidden
