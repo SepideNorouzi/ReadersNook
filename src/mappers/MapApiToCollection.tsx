@@ -13,7 +13,7 @@ export function mapApiCollectionListItemToCollection(
   return {
     id: String(api.id),
     name: api.name,
-    description: api.description,
+    description: api.description || undefined,
     bookIds: api.books.map(String),
   };
 }
@@ -24,7 +24,7 @@ export function mapApiCollectionDetailToCollectionWithBooks(
   return {
     id: String(api.id),
     name: api.name,
-    description: api.description,
+    description: api.description || undefined,
     books: api.books.map(mapApiBookSummaryToBook),
   };
 }
