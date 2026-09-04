@@ -11,7 +11,7 @@ export default function SettingsActions() {
 
   const mode = useModeStore((state) => state.mode);
   const setMode = useModeStore((state) => state.setMode);
-  const { logout, isAuthenticated } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const isDemo = mode === "demo";
