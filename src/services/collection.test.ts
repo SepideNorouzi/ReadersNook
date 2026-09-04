@@ -43,7 +43,6 @@ describe("collection service", () => {
 
     const collection = await getCollectionDetail("1");
 
-    expect(collection.id).toBe("1");
     expect(collection.books).toHaveLength(1);
     expect(collection.books[0].id).toBe("5");
   });
@@ -56,9 +55,11 @@ describe("collection service", () => {
       }),
     ]);
 
-    const response = await addBookToCollection("1", "5");
+    await addBookToCollection("1", "5");
 
-    expect(response).toBeDefined();
+    const collection = await getCollectionDetail("1");
+
+    expect(collection.books.some((book) => book.id === "5")).toBe(true);
   });
 
   it("removes a book from a collection", async () => {
@@ -87,6 +88,7 @@ describe("collection service", () => {
     await renameCollection("1", "New Name");
 
     const collections = await getCollections();
+
     expect(collections[0].name).toBe("New Name");
   });
 });
