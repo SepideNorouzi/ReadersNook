@@ -242,6 +242,7 @@ export default function CollectionsCard({
 
     -mx-1
     sm:mx-0
+    bg-transparent
   "
               >
                 <CollectionGrid
@@ -257,11 +258,11 @@ export default function CollectionsCard({
                 className="
     pointer-events-none
     absolute inset-y-0 left-0 z-20
-    w-3
+    w-2
     bg-gradient-to-r
-    from-[var(--surface)]
+    from-[rgba(248,244,239,0.45)]
     to-transparent
-    sm:w-5
+    sm:w-3
     lg:hidden
   "
               />
@@ -270,11 +271,11 @@ export default function CollectionsCard({
                 className="
     pointer-events-none
     absolute inset-y-0 right-0 z-20
-    w-4
+    w-2
     bg-gradient-to-l
-    from-[var(--surface)]
+    from-[rgba(248,244,239,0.45)]
     to-transparent
-    sm:w-6
+    sm:w-3
     lg:hidden
   "
               />
@@ -283,14 +284,10 @@ export default function CollectionsCard({
               <div
                 className="
     pointer-events-none
-    absolute
-    inset-x-0
-    bottom-0
-    z-20
-    hidden
-    h-8
+    absolute inset-x-0 bottom-0 z-20
+    hidden h-8
     bg-gradient-to-t
-    from-[var(--surface)]
+    from-[rgba(248,244,239,0.65)]
     to-transparent
     lg:block
   "
