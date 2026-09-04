@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
-import "../../styles/AvatarPicker.css";
+import "../../styles/avatarPicker.css";
 
 export type AvatarOption = {
   id: string;
