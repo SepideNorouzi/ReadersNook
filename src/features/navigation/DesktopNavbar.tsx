@@ -146,8 +146,8 @@ export default function DesktopNavbar() {
         <div
           className="
       flex
-      h-7
-      w-7
+      h-10
+      w-10
       items-center
       justify-center
       overflow-hidden
