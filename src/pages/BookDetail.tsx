@@ -74,17 +74,16 @@ export default function BookDetail() {
     group
 
     lg:flex
-    h-14
-    w-14
-    items-center
-    justify-center
-
-    rounded-2xl
+    h-11
+              w-11
+              shrink-0
+              items-center
+              justify-center
+              rounded-2xl
 
     bg-gradient-to-br
-    from-[var(--brown-900)]
-    via-[var(--brown-700)]
-    to-[var(--brown-500)]
+              from-[var(--sidebar-accent-start)]
+              to-[var(--sidebar-accent-end)]
 
     text-white
 
@@ -100,14 +99,38 @@ export default function BookDetail() {
     active:scale-95
   "
       >
-        <BookOpen
-          size={22}
+        <div
           className="
-      transition-transform
-      duration-300
-      group-hover:scale-110
-    "
-        />
+              flex
+              h-10
+              w-10
+              shrink-0
+              items-center
+              justify-center
+              rounded-2xl
+
+              bg-gradient-to-br
+              from-[var(--sidebar-accent-start)]
+              to-[var(--sidebar-accent-end)]
+
+              text-white
+
+              shadow-[0_12px_30px_rgba(54,35,27,.28),inset_0_1px_1px_rgba(255,255,255,.18)]
+
+              transition-all
+              duration-200
+              ease-out
+
+              hover:-translate-y-0.5
+
+              hover:shadow-[0_14px_34px_rgba(54,35,27,.34),inset_0_1px_1px_rgba(255,255,255,.2)]
+
+              active:translate-y-0
+              active:scale-95
+            "
+        >
+          <BookOpen size={20} />
+        </div>
       </button>
 
       <BookHero book={book} />
