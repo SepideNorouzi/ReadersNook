@@ -1,0 +1,430 @@
+/* =========================================================
+   PAGE ENTRY
+========================================================= */
+
+.intro-page {
+  isolation: isolate;
+}
+
+.intro-background {
+  animation: introZoom 16s ease-out forwards;
+  transform: scale(1.04);
+}
+
+@keyframes introZoom {
+  from {
+    transform: scale(1.04);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+
+/* =========================================================
+   REVEAL ANIMATION
+========================================================= */
+
+.intro-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: introReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes introReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.intro-delay-1 {
+  animation-delay: 0.12s;
+}
+
+.intro-delay-2 {
+  animation-delay: 0.22s;
+}
+
+.intro-delay-3 {
+  animation-delay: 0.32s;
+}
+
+.intro-delay-4 {
+  animation-delay: 0.44s;
+}
+
+
+/* =========================================================
+   NAV
+========================================================= */
+
+.intro-nav-item {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: navReveal 0.8s ease-out forwards;
+}
+
+@keyframes navReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   GRADIENT HEADING
+========================================================= */
+
+.intro-gradient-text {
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #f6d8c2 35%,
+    #d99b78 65%,
+    #b86a50 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  background-size: 200% auto;
+  animation: gradientShimmer 7s ease-in-out infinite;
+}
+
+@keyframes gradientShimmer {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+
+  50% {
+    background-position: 100% center;
+  }
+}
+
+
+/* =========================================================
+   AMBIENT ORBS
+========================================================= */
+
+.intro-orb {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.45;
+}
+
+.intro-orb-1 {
+  width: 280px;
+  height: 280px;
+  right: 18%;
+  top: 13%;
+  background: rgba(191, 120, 82, 0.22);
+
+  animation: orbFloatOne 11s ease-in-out infinite;
+}
+
+.intro-orb-2 {
+  width: 220px;
+  height: 220px;
+  right: 6%;
+  bottom: 14%;
+  background: rgba(172, 90, 112, 0.17);
+
+  animation: orbFloatTwo 14s ease-in-out infinite;
+}
+
+.intro-orb-3 {
+  width: 170px;
+  height: 170px;
+  left: 34%;
+  bottom: 8%;
+  background: rgba(219, 163, 94, 0.12);
+
+  animation: orbFloatThree 9s ease-in-out infinite;
+}
+
+@keyframes orbFloatOne {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-30px, 20px, 0) scale(1.08);
+  }
+}
+
+@keyframes orbFloatTwo {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(25px, -25px, 0);
+  }
+}
+
+@keyframes orbFloatThree {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(18px, -30px, 0) scale(1.05);
+  }
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+.intro-particle {
+  position: absolute;
+  z-index: 3;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 226, 202, 0.65);
+  box-shadow:
+    0 0 8px rgba(255, 209, 172, 0.55),
+    0 0 18px rgba(205, 132, 92, 0.35);
+
+  animation: particleFloat 6s ease-in-out infinite;
+}
+
+.intro-particle-1 {
+  right: 29%;
+  top: 26%;
+}
+
+.intro-particle-2 {
+  right: 15%;
+  top: 40%;
+  width: 3px;
+  height: 3px;
+  animation-delay: 1.2s;
+}
+
+.intro-particle-3 {
+  left: 52%;
+  top: 19%;
+  width: 3px;
+  height: 3px;
+  animation-delay: 2.4s;
+}
+
+.intro-particle-4 {
+  right: 35%;
+  bottom: 24%;
+  animation-delay: 3.1s;
+}
+
+@keyframes particleFloat {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: translateY(-16px) scale(1.35);
+  }
+}
+
+
+/* =========================================================
+   FEATURE CARDS
+========================================================= */
+
+.intro-feature-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  min-height: 94px;
+
+  padding: 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.09),
+      rgba(255, 255, 255, 0.025)
+    );
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s ease,
+    box-shadow 0.45s ease,
+    background 0.45s ease;
+}
+
+.intro-feature-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.1),
+      transparent 70%
+    );
+
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+}
+
+.intro-feature-card:hover {
+  transform: translateY(-6px);
+
+  border-color: rgba(255, 255, 255, 0.18);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.04)
+    );
+
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(185, 107, 76, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.intro-feature-card:hover::before {
+  transform: translateX(100%);
+}
+
+
+/* =========================================================
+   FEATURE ICON
+========================================================= */
+
+.intro-feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 20px rgba(0, 0, 0, 0.18);
+
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.intro-feature-card:hover .intro-feature-icon {
+  transform: translateY(-2px) scale(1.06);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================================
+   SCROLL CUE
+========================================================= */
+
+.intro-scroll-cue {
+  animation: scrollCueFloat 2.6s ease-in-out infinite;
+}
+
+@keyframes scrollCueFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: translateY(7px);
+    opacity: 0.85;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-page *,
+  .intro-page *::before,
+  .intro-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE REFINEMENTS
+========================================================= */
+
+@media (max-width: 640px) {
+  .intro-orb-1 {
+    width: 190px;
+    height: 190px;
+    right: -40px;
+    top: 18%;
+  }
+
+  .intro-orb-2 {
+    width: 160px;
+    height: 160px;
+    right: -30px;
+    bottom: 20%;
+  }
+
+  .intro-orb-3 {
+    width: 120px;
+    height: 120px;
+    left: 8%;
+  }
+
+  .intro-particle {
+    display: none;
+  }
+
+  .intro-feature-card {
+    min-height: 82px;
+    padding: 14px;
+  }
+}
