@@ -1,7 +1,15 @@
-import { BookOpen, ArrowRight, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Bookmark,
+  Library,
+  Sparkles,
+} from "lucide-react";
 import { useNavigate } from "react-router";
 
 import { useModeStore } from "../store/modeStore";
+
+import "../styles/intro.css";
 
 export default function Intro() {
   const navigate = useNavigate();
@@ -13,77 +21,88 @@ export default function Intro() {
   };
 
   const handleSignUp = () => {
-    // setMode("admin");
-    // navigate("/auth");
-    navigate("/progress")
+    navigate("/progress");
   };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[var(--stone-50)] text-[var(--text)]">
-      {/* Background decoration */}
+    <main className="intro-page relative min-h-screen overflow-hidden bg-[var(--stone-50)] text-[var(--text)]">
+      {/* =========================================================
+          Ambient background
+      ========================================================== */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[var(--brown-200)] opacity-30 blur-3xl" />
+        <div className="intro-orb intro-orb-top" />
+        <div className="intro-orb intro-orb-bottom" />
+        <div className="intro-orb intro-orb-center" />
 
-        <div className="absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-[var(--brown-100)] opacity-40 blur-3xl" />
+        <div className="intro-grid absolute inset-0 opacity-[0.035]" />
 
-        <div className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-white opacity-50 blur-3xl" />
+        <div className="intro-noise absolute inset-0 opacity-[0.025]" />
       </div>
 
-      {/* Navigation */}
-      <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6 sm:px-10 lg:px-12">
+      {/* =========================================================
+          Navigation
+      ========================================================== */}
+      <header className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 sm:py-6 lg:px-12">
         <button
           onClick={() => navigate("/")}
-          className="group flex items-center gap-3"
+          className="group flex items-center gap-2.5 sm:gap-3"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--brown-600)] text-white shadow-lg shadow-[var(--brown-600)]/20 transition-transform duration-300 group-hover:-rotate-3">
-            <BookOpen size={20} strokeWidth={1.8} />
+          <div className="intro-logo flex h-9 w-9 items-center justify-center rounded-[14px] bg-[var(--brown-600)] text-white shadow-lg shadow-[var(--brown-600)]/20 transition duration-500 group-hover:rotate-[-5deg] group-hover:scale-105 sm:h-10 sm:w-10">
+            <BookOpen size={18} strokeWidth={1.8} />
           </div>
 
-          <span className="font-heading text-lg font-semibold tracking-tight">
+          <span className="font-heading text-base font-semibold tracking-[-0.02em] sm:text-lg">
             Reader's Nook
           </span>
         </button>
 
         <button
           onClick={handleSignUp}
-          className="hidden rounded-full px-5 py-2.5 text-sm font-medium text-[var(--brown-700)] transition hover:bg-[var(--brown-100)] sm:block"
+          className="rounded-full px-3 py-2 text-xs font-semibold text-[var(--brown-700)] transition duration-300 hover:bg-[var(--brown-100)] sm:px-5 sm:text-sm"
         >
           Sign in
         </button>
       </header>
 
-      {/* Hero */}
-      <section className="relative z-10 mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-7xl items-center px-6 pb-16 pt-10 sm:px-10 lg:px-12 lg:pb-24">
-        <div className="grid w-full items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
-          {/* Left side */}
-          <div className="max-w-2xl">
+      {/* =========================================================
+          Hero
+      ========================================================== */}
+      <section className="relative z-10 mx-auto flex min-h-[calc(100svh-72px)] w-full max-w-7xl items-center px-5 pb-10 pt-6 sm:px-8 sm:pb-16 sm:pt-10 lg:px-12 lg:pb-24">
+        <div className="grid w-full items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+          {/* =====================================================
+              Left content
+          ====================================================== */}
+          <div className="mx-auto flex w-full max-w-2xl flex-col items-center text-center lg:mx-0 lg:items-start lg:text-left">
             {/* Eyebrow */}
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white/60 px-4 py-2 text-xs font-medium text-[var(--brown-700)] shadow-sm backdrop-blur">
-              <Sparkles size={14} />
+            <div className="intro-eyebrow mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white/60 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--brown-700)] shadow-sm backdrop-blur-xl sm:mb-7 sm:px-4 sm:text-xs">
+              <Sparkles size={13} />
               <span>Your personal reading space</span>
             </div>
 
             {/* Heading */}
-            <h1 className="font-heading text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-[var(--text)] sm:text-6xl lg:text-7xl">
+            <h1 className="font-heading text-[3.2rem] font-semibold leading-[0.98] tracking-[-0.055em] sm:text-6xl lg:text-7xl">
               A quieter place
               <br />
-              <span className="text-[var(--brown-600)]">for your books.</span>
+              <span className="intro-shimmer text-[var(--brown-600)]">
+                for your books.
+              </span>
             </h1>
 
             {/* Description */}
-            <p className="mt-7 max-w-xl text-base leading-7 text-[var(--text-secondary)] sm:text-lg">
+            <p className="mt-5 max-w-xl text-sm leading-6 text-[var(--text-secondary)] sm:mt-7 sm:text-lg sm:leading-7">
               Reader's Nook helps you keep track of what you're reading,
               discover what comes next, and build a reading life that feels
               intentional.
             </p>
 
             {/* Buttons */}
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-7 flex w-full flex-col gap-3 sm:mt-9 sm:w-auto sm:flex-row">
               <button
                 onClick={handleDemo}
-                className="group flex items-center justify-center gap-2 rounded-2xl bg-[var(--brown-600)] px-6 py-3.5 text-sm font-semibold text-white shadow-xl shadow-[var(--brown-600)]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--brown-700)] hover:shadow-2xl"
+                className="intro-primary-button group flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[var(--brown-600)] px-6 text-sm font-semibold text-white shadow-xl shadow-[var(--brown-600)]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[var(--brown-700)] hover:shadow-2xl sm:h-auto sm:w-auto sm:py-3.5"
               >
-                Explore the demo
+                <span>Explore the demo</span>
+
                 <ArrowRight
                   size={17}
                   className="transition-transform duration-300 group-hover:translate-x-1"
@@ -92,41 +111,53 @@ export default function Intro() {
 
               <button
                 onClick={handleSignUp}
-                className="rounded-2xl border border-[var(--border)] bg-white/70 px-6 py-3.5 text-sm font-semibold text-[var(--text)] shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-lg"
+                className="intro-secondary-button flex h-12 w-full items-center justify-center rounded-2xl border border-[var(--border)] bg-white/65 px-6 text-sm font-semibold text-[var(--text)] shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-lg sm:h-auto sm:w-auto sm:py-3.5"
               >
                 Create your nook
               </button>
             </div>
 
-            {/* Small reassurance */}
-            <p className="mt-5 text-xs text-[var(--text-muted)]">
+            <p className="mt-4 text-[11px] text-[var(--text-muted)] sm:mt-5 sm:text-xs">
               Explore freely in demo mode, or create your own library.
             </p>
           </div>
 
-          {/* Right side: book composition */}
-          <div className="relative mx-auto flex w-full max-w-lg justify-center lg:justify-end">
-            {/* Glow */}
-            <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--brown-200)] opacity-40 blur-3xl" />
+          {/* =====================================================
+              Right visual composition
+          ====================================================== */}
+          <div className="relative mx-auto mt-2 flex w-full max-w-lg justify-center lg:mt-0 lg:justify-end">
+            {/* Large atmospheric glow */}
+            <div className="intro-book-glow absolute left-1/2 top-1/2 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--brown-200)] blur-[80px] sm:h-80 sm:w-80" />
 
-            {/* Main book */}
-            <div className="relative h-[430px] w-[290px] rotate-[-4deg] rounded-[28px] bg-[var(--brown-700)] p-5 shadow-2xl shadow-black/20 transition-transform duration-700 hover:rotate-[-2deg] sm:h-[470px] sm:w-[315px]">
-              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[20px] border border-white/10 bg-gradient-to-br from-[var(--brown-600)] to-[var(--brown-800)] p-7 text-white">
-                {/* Decorative circles */}
-                <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full border border-white/10" />
-                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full border border-white/10" />
-                <div className="absolute -bottom-20 -left-20 h-52 w-52 rounded-full border border-white/10" />
+            {/* Secondary glow */}
+            <div className="absolute left-[56%] top-[45%] h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/70 blur-3xl" />
+
+            {/* Book shadow */}
+            <div className="absolute bottom-[2%] left-1/2 h-14 w-[190px] -translate-x-1/2 rounded-full bg-black/15 blur-2xl sm:w-[220px]" />
+
+            {/* =================================================
+                Main Book
+            ================================================== */}
+            <div className="intro-book relative h-[350px] w-[235px] rotate-[-5deg] rounded-[25px] bg-[var(--brown-800)] p-[6px] shadow-[0_35px_80px_rgba(60,35,25,0.28)] sm:h-[470px] sm:w-[315px] sm:rounded-[30px] sm:p-[7px]">
+              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[20px] border border-white/10 bg-gradient-to-br from-[var(--brown-600)] via-[var(--brown-700)] to-[var(--brown-800)] p-6 text-white sm:rounded-[23px] sm:p-7">
+                {/* Decorative rings */}
+                <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full border border-white/[0.08]" />
+                <div className="absolute -right-9 -top-9 h-32 w-32 rounded-full border border-white/[0.08]" />
+                <div className="absolute -bottom-20 -left-20 h-52 w-52 rounded-full border border-white/[0.08]" />
+
+                {/* Soft shine */}
+                <div className="intro-book-shine absolute inset-0" />
 
                 <div className="relative">
-                  <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
-                    <BookOpen size={23} strokeWidth={1.5} />
+                  <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 shadow-inner shadow-white/10 backdrop-blur sm:mb-8 sm:h-12 sm:w-12 sm:rounded-2xl">
+                    <BookOpen size={20} strokeWidth={1.5} />
                   </div>
 
-                  <p className="text-xs uppercase tracking-[0.25em] text-white/60">
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-white/55 sm:text-xs">
                     Reader's Nook
                   </p>
 
-                  <h2 className="mt-5 font-heading text-4xl font-semibold leading-tight tracking-tight">
+                  <h2 className="mt-4 font-heading text-[2rem] font-semibold leading-[1.03] tracking-[-0.04em] sm:mt-5 sm:text-4xl">
                     Your stories.
                     <br />
                     Your shelf.
@@ -134,88 +165,129 @@ export default function Intro() {
                 </div>
 
                 <div className="relative">
-                  <div className="mb-5 h-px w-full bg-white/15" />
+                  <div className="mb-4 h-px w-full bg-white/15 sm:mb-5" />
 
-                  <p className="max-w-[220px] text-sm leading-6 text-white/65">
+                  <p className="max-w-[190px] text-[11px] leading-5 text-white/60 sm:max-w-[220px] sm:text-sm sm:leading-6">
                     Keep your reading journey in one beautiful little place.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Floating current-reading card */}
-            <div className="absolute -bottom-4 -left-2 w-52 rotate-[4deg] rounded-2xl border border-white/70 bg-white/85 p-4 shadow-xl backdrop-blur-xl sm:-left-8 sm:w-56">
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-9 shrink-0 items-center justify-center rounded-md bg-[var(--brown-100)]">
+            {/* =================================================
+                Current reading
+            ================================================== */}
+            <div className="intro-float-card absolute -bottom-2 -left-1 w-[155px] -rotate-[1deg] rounded-[17px] border border-white/70 bg-white/75 p-2.5 shadow-[0_20px_50px_rgba(60,35,25,0.15)] backdrop-blur-2xl sm:-bottom-4 sm:-left-8 sm:w-56 sm:rotate-[4deg] sm:rounded-2xl sm:p-4">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="flex h-9 w-7 shrink-0 items-center justify-center rounded-md bg-[var(--brown-100)] sm:h-11 sm:w-9 sm:rounded-md">
                   <BookOpen
-                    size={18}
-                    className="text-[var(--brown-600)]"
+                    size={15}
+                    className="text-[var(--brown-600)] sm:h-[18px] sm:w-[18px]"
                     strokeWidth={1.7}
                   />
                 </div>
 
-                <div className="min-w-0">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[8px] font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)] sm:text-[10px] sm:tracking-wider">
                     Currently reading
                   </p>
 
-                  <p className="mt-1 truncate font-heading text-sm font-semibold text-[var(--text)]">
+                  <p className="mt-1 truncate font-heading text-[11px] font-semibold text-[var(--text)] sm:text-sm">
                     Your next chapter
                   </p>
 
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--stone-200)]">
+                  <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-[var(--stone-200)] sm:mt-2 sm:h-1.5">
                     <div className="h-full w-[68%] rounded-full bg-[var(--brown-500)]" />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Floating books count card */}
-            <div className="absolute -right-1 top-8 rotate-[5deg] rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-xl backdrop-blur-xl sm:-right-8">
-              <p className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
+            {/* =================================================
+                Books count
+            ================================================== */}
+            <div className="intro-float-card absolute -right-1 top-2 rounded-[16px] border border-white/70 bg-white/75 px-3 py-2 shadow-[0_20px_50px_rgba(60,35,25,0.15)] backdrop-blur-2xl sm:-right-8 sm:top-8 sm:rounded-2xl sm:px-4 sm:py-3">
+              <p className="text-[8px] font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)] sm:text-[10px] sm:tracking-wider">
                 This year
               </p>
 
-              <div className="mt-1 flex items-end gap-1">
-                <span className="font-heading text-2xl font-semibold text-[var(--brown-700)]">
+              <div className="mt-0.5 flex items-end gap-1">
+                <span className="font-heading text-xl font-semibold text-[var(--brown-700)] sm:text-2xl">
                   24
                 </span>
 
-                <span className="pb-1 text-xs text-[var(--text-secondary)]">
+                <span className="pb-0.5 text-[9px] text-[var(--text-secondary)] sm:pb-1 sm:text-xs">
                   books
                 </span>
               </div>
+            </div>
+
+            {/* =================================================
+                Tiny decorative badge
+            ================================================== */}
+            <div className="intro-mini-badge absolute -top-4 left-[12%] hidden rounded-full border border-white/80 bg-white/70 px-3 py-2 text-[10px] font-semibold text-[var(--brown-700)] shadow-lg backdrop-blur-xl sm:flex sm:items-center sm:gap-1.5">
+              <Sparkles size={11} />
+              Made for readers
             </div>
           </div>
         </div>
       </section>
 
-      {/* Bottom feature strip */}
-      <section className="relative z-10 border-t border-[var(--border)] bg-white/30 backdrop-blur-sm">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-[var(--border)] px-6 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-10 lg:px-12">
-          <div className="px-0 py-6 sm:px-8">
-            <p className="font-heading text-sm font-semibold">
-              Track your reading
-            </p>
-            <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
+      {/* =========================================================
+          Feature strip
+      ========================================================== */}
+      <section className="relative z-10 px-5 pb-5 sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-7xl gap-2.5 overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:gap-3 sm:overflow-visible">
+          <div className="intro-feature-chip min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
+            <div className="flex items-center gap-2.5">
+              <BookOpen
+                size={15}
+                className="text-[var(--brown-600)]"
+                strokeWidth={1.7}
+              />
+
+              <p className="font-heading text-xs font-semibold sm:text-sm">
+                Track your reading
+              </p>
+            </div>
+
+            <p className="mt-1 hidden text-xs leading-5 text-[var(--text-secondary)] sm:block">
               Know what you're reading and where you left off.
             </p>
           </div>
 
-          <div className="px-0 py-6 sm:px-8">
-            <p className="font-heading text-sm font-semibold">
-              Build your library
-            </p>
-            <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
+          <div className="intro-feature-chip min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
+            <div className="flex items-center gap-2.5">
+              <Library
+                size={15}
+                className="text-[var(--brown-600)]"
+                strokeWidth={1.7}
+              />
+
+              <p className="font-heading text-xs font-semibold sm:text-sm">
+                Build your library
+              </p>
+            </div>
+
+            <p className="mt-1 hidden text-xs leading-5 text-[var(--text-secondary)] sm:block">
               Keep the books you've read and the ones waiting for you.
             </p>
           </div>
 
-          <div className="px-0 py-6 sm:px-8">
-            <p className="font-heading text-sm font-semibold">
-              Make reading yours
-            </p>
-            <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
+          <div className="intro-feature-chip min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
+            <div className="flex items-center gap-2.5">
+              <Bookmark
+                size={15}
+                className="text-[var(--brown-600)]"
+                strokeWidth={1.7}
+              />
+
+              <p className="font-heading text-xs font-semibold sm:text-sm">
+                Make reading yours
+              </p>
+            </div>
+
+            <p className="mt-1 hidden text-xs leading-5 text-[var(--text-secondary)] sm:block">
               Set goals, save favorites, and make your nook personal.
             </p>
           </div>

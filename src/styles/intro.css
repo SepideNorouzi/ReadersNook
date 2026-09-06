@@ -1,0 +1,413 @@
+/* ============================================================
+   INTRO PAGE
+============================================================ */
+
+.intro-page {
+  isolation: isolate;
+}
+
+/* ============================================================
+   Background atmosphere
+============================================================ */
+
+.intro-orb {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.intro-orb-top {
+  width: 28rem;
+  height: 28rem;
+  top: -11rem;
+  right: -9rem;
+  background: var(--brown-200);
+  opacity: 0.28;
+  filter: blur(80px);
+  animation: introFloat 9s ease-in-out infinite;
+}
+
+.intro-orb-bottom {
+  width: 25rem;
+  height: 25rem;
+  left: -10rem;
+  bottom: -12rem;
+  background: var(--brown-100);
+  opacity: 0.45;
+  filter: blur(80px);
+  animation: introFloatReverse 11s ease-in-out infinite;
+}
+
+.intro-orb-center {
+  width: 18rem;
+  height: 18rem;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.7);
+  opacity: 0.55;
+  filter: blur(90px);
+}
+
+.intro-grid {
+  background-image:
+    linear-gradient(rgba(90, 60, 45, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 60, 45, 0.5) 1px, transparent 1px);
+
+  background-size: 34px 34px;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 25%,
+    black 75%,
+    transparent
+  );
+}
+
+.intro-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   Logo
+============================================================ */
+
+.intro-logo {
+  position: relative;
+}
+
+.intro-logo::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  background: var(--brown-400);
+  opacity: 0.2;
+  filter: blur(9px);
+  z-index: -1;
+}
+
+/* ============================================================
+   Eyebrow
+============================================================ */
+
+.intro-eyebrow {
+  box-shadow:
+    0 8px 30px rgba(70, 45, 30, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+/* ============================================================
+   Heading shimmer
+============================================================ */
+
+.intro-shimmer {
+  background: linear-gradient(
+    110deg,
+    var(--brown-600) 20%,
+    var(--brown-400) 40%,
+    var(--brown-700) 60%,
+    var(--brown-600) 80%
+  );
+
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+
+  animation: introShimmer 5s linear infinite;
+}
+
+/* ============================================================
+   Buttons
+============================================================ */
+
+.intro-primary-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.intro-primary-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+}
+
+.intro-primary-button:hover::before {
+  left: 130%;
+}
+
+.intro-secondary-button {
+  box-shadow:
+    0 8px 25px rgba(70, 45, 30, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+/* ============================================================
+   Book
+============================================================ */
+
+.intro-book {
+  transform-origin: center center;
+  animation: introBookFloat 7s ease-in-out infinite;
+  will-change: transform;
+}
+
+.intro-book::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.13),
+    transparent 35%
+  );
+
+  pointer-events: none;
+}
+
+.intro-book-glow {
+  animation: introGlow 7s ease-in-out infinite;
+}
+
+.intro-book-shine {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.09) 42%,
+    transparent 54%
+  );
+
+  background-size: 220% 100%;
+
+  animation: introBookShine 8s ease-in-out infinite;
+}
+
+/* ============================================================
+   Floating cards
+============================================================ */
+
+.intro-float-card {
+  animation: introCardFloat 6s ease-in-out infinite;
+}
+
+.intro-float-card:nth-of-type(2) {
+  animation-delay: -2.5s;
+}
+
+.intro-mini-badge {
+  animation: introMiniFloat 5s ease-in-out infinite;
+}
+
+/* ============================================================
+   Feature chips
+============================================================ */
+
+.intro-feature-chip {
+  box-shadow:
+    0 12px 35px rgba(65, 40, 25, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.intro-feature-chip:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 18px 40px rgba(65, 40, 25, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================================
+   Animations
+============================================================ */
+
+@keyframes introBookFloat {
+  0%,
+  100% {
+    transform: rotate(-5deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(-3.5deg) translateY(-9px);
+  }
+}
+
+@keyframes introCardFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(4deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+@keyframes introMiniFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes introGlow {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.62;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes introShimmer {
+  0% {
+    background-position: 200% center;
+  }
+
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes introBookShine {
+  0%,
+  35% {
+    background-position: 200% center;
+  }
+
+  70%,
+  100% {
+    background-position: -20% center;
+  }
+}
+
+@keyframes introFloat {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-20px, 18px);
+  }
+}
+
+@keyframes introFloatReverse {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(18px, -20px);
+  }
+}
+
+/* ============================================================
+   Mobile refinements
+============================================================ */
+
+@media (max-width: 639px) {
+  .intro-page {
+    background:
+      radial-gradient(
+        circle at 75% 30%,
+        rgba(255, 255, 255, 0.7),
+        transparent 27%
+      ),
+      var(--stone-50);
+  }
+
+  .intro-grid {
+    opacity: 0.018;
+    background-size: 28px 28px;
+  }
+
+  .intro-orb-top {
+    width: 18rem;
+    height: 18rem;
+    top: -7rem;
+    right: -7rem;
+    opacity: 0.35;
+    filter: blur(55px);
+  }
+
+  .intro-orb-bottom {
+    width: 17rem;
+    height: 17rem;
+    left: -8rem;
+    bottom: 10rem;
+    opacity: 0.3;
+    filter: blur(55px);
+  }
+
+  .intro-orb-center {
+    width: 14rem;
+    height: 14rem;
+    top: 54%;
+    opacity: 0.6;
+    filter: blur(70px);
+  }
+
+  .intro-book {
+    animation-duration: 8s;
+  }
+
+  .intro-float-card {
+    animation-duration: 7s;
+  }
+}
+
+/* ============================================================
+   Accessibility
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-book,
+  .intro-book-glow,
+  .intro-float-card,
+  .intro-mini-badge,
+  .intro-shimmer,
+  .intro-book-shine,
+  .intro-orb-top,
+  .intro-orb-bottom {
+    animation: none;
+  }
+
+  .intro-primary-button::before {
+    display: none;
+  }
+}
