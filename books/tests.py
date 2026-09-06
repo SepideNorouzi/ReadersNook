@@ -3,12 +3,12 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .models import Book, Collection, Quote
+from .models import Book, Collection, Library, Quote, UserBook
 
 User = get_user_model()
 
 
-class BooksAPITests(APITestCase):
+class LibraryAPITests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="reader",
@@ -21,39 +21,113 @@ class BooksAPITests(APITestCase):
             password="Strong-Admin-Password-947!",
         )
         self.book = Book.objects.create(
+            external_id="ol-dune",
             title="Dune",
             author="Frank Herbert",
             total_pages=100,
-            current_page=0,
         )
+        UserBook.objects.create(library=self.user.library, book=self.book)
 
     def _auth(self, user):
         self.client.force_authenticate(user=user)
 
-    def test_list_books_allows_anonymous(self):
+    def test_create_user_creates_library(self):
+        self.assertTrue(Library.objects.filter(user=self.user).exists())
+        self.assertTrue(Library.objects.filter(user=self.admin).exists())
+
+    def test_library_list_requires_auth_and_returns_own_books(self):
+        other = User.objects.create_user(
+            username="other",
+            password="Strong-Test-Password-947!",
+        )
+        other_book = Book.objects.create(
+            external_id="ol-other",
+            title="Other",
+            author="A",
+            total_pages=10,
+        )
+        UserBook.objects.create(library=other.library, book=other_book)
+
+        unauthorized = self.client.get(reverse("books:book-list"))
+        self.assertEqual(unauthorized.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        self._auth(self.user)
         response = self.client.get(reverse("books:book-list"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["book"]["title"], "Dune")
 
-    def test_create_book_requires_admin(self):
+    def test_add_book_to_library(self):
         payload = {
+            "external_id": "ol-neuromancer",
             "title": "Neuromancer",
             "author": "William Gibson",
             "total_pages": 50,
             "current_page": 0,
         }
         self._auth(self.user)
-        forbidden = self.client.post(reverse("books:book-create"), payload, format="json")
-        self.assertEqual(forbidden.status_code, status.HTTP_403_FORBIDDEN)
-
-        self._auth(self.admin)
         created = self.client.post(reverse("books:book-create"), payload, format="json")
         self.assertEqual(created.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(created.data["book"]["title"], "Neuromancer")
+        self.assertTrue(
+            UserBook.objects.filter(
+                library=self.user.library,
+                book__external_id="ol-neuromancer",
+            ).exists()
+        )
 
-    def test_book_rejects_current_page_greater_than_total(self):
+        duplicate = self.client.post(reverse("books:book-create"), payload, format="json")
+        self.assertEqual(duplicate.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_add_existing_book_only_needs_external_id(self):
         self._auth(self.admin)
+        catalog_count = Book.objects.count()
+        response = self.client.post(
+            reverse("books:book-create"),
+            {"external_id": "ol-dune"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Book.objects.count(), catalog_count)
+        self.assertTrue(
+            UserBook.objects.filter(library=self.admin.library, book=self.book).exists()
+        )
+
+    def test_new_book_requires_title_and_author(self):
+        self._auth(self.user)
+        response = self.client.post(
+            reverse("books:book-create"),
+            {"external_id": "ol-new-book"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("title", response.data)
+        self.assertIn("author", response.data)
+
+    def test_two_users_can_own_the_same_catalog_book(self):
+        other = User.objects.create_user(
+            username="other",
+            password="Strong-Test-Password-947!",
+        )
+        self._auth(other)
+        response = self.client.post(
+            reverse("books:book-create"),
+            {
+                "external_id": "ol-dune",
+                "title": "Dune",
+                "author": "Frank Herbert",
+                "total_pages": 100,
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Book.objects.filter(external_id="ol-dune").count(), 1)
+        self.assertEqual(UserBook.objects.filter(book=self.book).count(), 2)
+
+    def test_library_book_rejects_current_page_greater_than_total(self):
+        self._auth(self.user)
         response = self.client.patch(
-            reverse("books:book-update", kwargs={"pk": self.book.pk}),
+            reverse("books:library-book-update", kwargs={"book_pk": self.book.pk}),
             {"current_page": 200},
             format="json",
         )
@@ -88,7 +162,12 @@ class BooksAPITests(APITestCase):
         self.assertEqual(list_response.data[0]["text"], "Fear is the mind-killer.")
 
     def test_quote_update_cannot_reassign_book(self):
-        other_book = Book.objects.create(title="Other", author="A", total_pages=10)
+        other_book = Book.objects.create(
+            external_id="ol-other",
+            title="Other",
+            author="A",
+            total_pages=10,
+        )
         quote = Quote.objects.create(
             book=self.book,
             text="Original",
@@ -116,6 +195,7 @@ class BooksAPITests(APITestCase):
             format="json",
         )
         self.assertEqual(first.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(first.data["library"], self.user.library.pk)
 
         duplicate = self.client.post(
             reverse("books:collection-create"),
@@ -140,7 +220,7 @@ class BooksAPITests(APITestCase):
 
     def test_collection_add_and_remove_book(self):
         self._auth(self.user)
-        collection = Collection.objects.create(name="Shelf", created_by=self.user)
+        collection = Collection.objects.create(name="Shelf", library=self.user.library)
         add_url = reverse(
             "books:collection-add-books",
             kwargs={"pk": collection.pk, "book_pk": self.book.pk},
@@ -156,3 +236,21 @@ class BooksAPITests(APITestCase):
         removed = self.client.delete(add_url)
         self.assertEqual(removed.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(collection.books.filter(pk=self.book.pk).exists())
+
+
+class RegistrationCreatesLibraryTests(APITestCase):
+    def test_registration_creates_library(self):
+        response = self.client.post(
+            reverse("user_module:register"),
+            {
+                "first_name": "Jane",
+                "last_name": "Reader",
+                "username": "jane_reader",
+                "password": "Strong-Test-Password-947!",
+                "password2": "Strong-Test-Password-947!",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        user = User.objects.get(username="jane_reader")
+        self.assertTrue(Library.objects.filter(user=user).exists())

@@ -12,19 +12,20 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
-from .models import AestheticPhoto, Book , Quote , Collection, Achievement
+from .models import AestheticPhoto, Book, Quote, Collection, Achievement, Library, UserBook
 from .serializers import (
-                           BookSerializer ,
+                           BookSerializer,
                            BookDetailSerializer,
-                           CollectionDetailSerializer ,
+                           CollectionDetailSerializer,
                            ShortCollectionSerializer,
-                           QuoteSerializer ,
+                           QuoteSerializer,
                            QuoteCreateSerializer,
                            AestheticPhotoCreateSerializer,
                            AchievementSerializer,
                            CollectionSerializer,
                            DetailMessageSerializer,
-
+                           AddLibraryBookSerializer,
+                           UserBookSerializer,
 )
 
 
@@ -35,26 +36,119 @@ from .serializers import (
 
 @extend_schema_view(
     post=extend_schema(
-        tags=["Books"],
-        summary="Create a book",
+        tags=["Library"],
+        summary="Add a book to my library",
+        description=(
+            "Look up the catalog book by external_id. "
+            "If it already exists, add it to the caller's library. "
+            "If it does not, create the catalog book first, then add it. "
+            "title and author are required only when the book is not in the database yet."
+        ),
     )
 )
 class BookCreateAPIView(generics.CreateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
+    serializer_class = AddLibraryBookSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        book, _ = Book.objects.get_or_create(
+            external_id=data["external_id"],
+            defaults={
+                "title": data["title"],
+                "author": data["author"],
+                "summary": data["summary"],
+                "cover_url": data["cover_url"],
+                "total_pages": data["total_pages"],
+            },
+        )
+
+        library = Library.for_user(request.user)
+
+        user_book, created = UserBook.objects.get_or_create(
+            library=library,
+            book=book,
+            defaults={
+                "status": data["status"],
+                "current_page": data["current_page"],
+                "rating": data["rating"],
+            },
+        )
+
+        if not created:
+            return Response(
+                {"detail": "This book is already in your library."},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        return Response(
+            {
+                "detail": "Book added to your library successfully.",
+                "user_book_id": user_book.id,
+                "book_id": book.id,
+                "external_id": book.external_id,
+                "title": book.title,
+                "status": user_book.status,
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
 @extend_schema_view(
     get=extend_schema(
-        tags=["Books"],
-        summary="List books",
+        tags=["Library"],
+        summary="List my library books",
     )
 )
 class BookListAPIView(generics.ListAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = UserBookSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return (
+            UserBook.objects.filter(library=Library.for_user(self.request.user))
+            .select_related("book")
+            .order_by("-added_at")
+        )
+
+
+@extend_schema_view(
+    put=extend_schema(
+        tags=["Library"],
+        summary="Replace library book progress",
+    ),
+    patch=extend_schema(
+        tags=["Library"],
+        summary="Update library book progress",
+    ),
+    delete=extend_schema(
+        tags=["Library"],
+        summary="Remove a book from my library",
+    ),
+    get=extend_schema(
+        tags=["Library"],
+        summary="Retrieve a library book",
+    ),
+)
+class LibraryBookUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserBookSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_url_kwarg = "book_pk"
+    lookup_field = "book_id"
+
+    def get_queryset(self):
+        return UserBook.objects.filter(
+            library=Library.for_user(self.request.user)
+        ).select_related("book")
+
+    def perform_destroy(self, instance):
+        book = instance.book
+        library = instance.library
+        instance.delete()
+        for collection in library.collections.all():
+            collection.books.remove(book)
 
 
 @extend_schema_view(
@@ -197,7 +291,7 @@ class CollectionListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return (Collection.objects
-                .filter(created_by=self.request.user)
+                .filter(library=Library.for_user(self.request.user))
                 .prefetch_related("books"))
 
 
@@ -213,7 +307,7 @@ class CollectionDetailAPIView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return (Collection.objects
-                .filter(created_by=self.request.user)
+                .filter(library=Library.for_user(self.request.user))
                 .prefetch_related("books"))
 
 
@@ -245,7 +339,7 @@ class CollectionUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Collection.objects.filter(
-            created_by=self.request.user
+            library=Library.for_user(self.request.user)
         ).prefetch_related("books")
 
 
@@ -345,11 +439,14 @@ class CollectionAddRemoveBooksAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def _get_owned_collection(self, request, pk):
-        return get_object_or_404(Collection, pk=pk, created_by=request.user)
+        return get_object_or_404(
+            Collection, pk=pk, library=Library.for_user(request.user)
+        )
 
     def post(self, request, pk, book_pk):
         collection = self._get_owned_collection(request, pk)
         book = get_object_or_404(Book, pk=book_pk)
+        library = collection.library
 
         if collection.books.filter(pk=book_pk).exists():
             return Response(
@@ -357,6 +454,7 @@ class CollectionAddRemoveBooksAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        UserBook.objects.get_or_create(library=library, book=book)
         collection.books.add(book)
         return Response(
             {"detail": "book added successfully"},

@@ -3,44 +3,28 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
-class BookStatus(models.TextChoices):
+class ReadingStatus(models.TextChoices):
     CURRENT = "current", "Currently Reading"
     TBR = "tbr", "To Be Read"
     READ = "read", "Read"
 
 
 class Book(models.Model):
+    external_id = models.CharField(
+        max_length=50,
+        unique=True,
+        db_index=True,
+    )
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     summary = models.TextField(blank=True)
     cover_url = models.URLField(max_length=500, blank=True)
-
-    current_page = models.PositiveIntegerField(default=0)
     total_pages = models.PositiveIntegerField(default=0)
-
-    status = models.CharField(
-        max_length=20,
-        choices=BookStatus.choices,
-        default=BookStatus.TBR,
-        db_index=True,
-    )
-    rating = models.FloatField(
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0), MaxValueValidator(5)],
-    )
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
-        constraints = [
-            models.CheckConstraint(
-                check=models.Q(current_page__lte=models.F("total_pages")),
-                name="book_current_page_lte_total_pages",
-            ),
-        ]
 
     def __str__(self):
         return self.title
@@ -55,7 +39,7 @@ class Quote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    created_by = models.ForeignKey(User , on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["created_at"]
@@ -81,11 +65,67 @@ class AestheticPhoto(models.Model):
         return self.caption or self.image_url
 
 
+class Library(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="library")
+    books = models.ManyToManyField(
+        Book,
+        through="UserBook",
+        related_name="libraries",
+        blank=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Library"
+
+    @classmethod
+    def for_user(cls, user):
+        library, _ = cls.objects.get_or_create(user=user)
+        return library
+
+
+class UserBook(models.Model):
+    library = models.ForeignKey(
+        Library, on_delete=models.CASCADE, related_name="user_books"
+    )
+    book = models.ForeignKey(
+        Book, on_delete=models.CASCADE, related_name="user_books"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=ReadingStatus.choices,
+        default=ReadingStatus.TBR,
+        db_index=True,
+    )
+    current_page = models.PositiveIntegerField(default=0)
+    rating = models.FloatField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
+    )
+    added_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["library", "book"],
+                name="uq_userbook_library_book",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.library.user.username} - {self.book.title}"
+
+
 class Collection(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    books = models.ManyToManyField(Book, related_name="collections" , blank=True)
-    created_by = models.ForeignKey(User , on_delete=models.CASCADE)
+    books = models.ManyToManyField(Book, related_name="collections", blank=True)
+    library = models.ForeignKey(
+        Library, on_delete=models.CASCADE, related_name="collections"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -93,8 +133,8 @@ class Collection(models.Model):
         ordering = ["name"]
         constraints = [
             models.UniqueConstraint(
-                fields=["created_by", "name"],
-                name="uq_collection_created_by_name",
+                fields=["library", "name"],
+                name="uq_collection_library_name",
             ),
         ]
 
@@ -104,14 +144,14 @@ class Collection(models.Model):
 
 class Achievement(models.Model):
     class Category(models.TextChoices):
-        READING   = "reading", "Reading"     
-        WRITING   = "writing", "Writing"      
-        POPULARITY = "popularity", "Popularity" 
+        READING = "reading", "Reading"
+        WRITING = "writing", "Writing"
+        POPULARITY = "popularity", "Popularity"
 
     code = models.SlugField(unique=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
-    category = models.CharField(max_length=40 , choices=Category.choices)
+    category = models.CharField(max_length=40, choices=Category.choices)
     threshold = models.PositiveIntegerField()
 
     class Meta:
@@ -127,6 +167,6 @@ class UserAchievement(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "achievement"],
-                name="uq_user_achievement"
+                name="uq_user_achievement",
             ),
         ]

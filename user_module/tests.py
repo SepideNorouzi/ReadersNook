@@ -3,6 +3,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from books.models import Library
+
 User = get_user_model()
 
 
@@ -27,6 +29,7 @@ class AuthenticationAPITests(APITestCase):
         user = User.objects.get(username=self.registration_data["username"])
         self.assertNotEqual(user.password, self.registration_data["password"])
         self.assertTrue(user.check_password(self.registration_data["password"]))
+        self.assertTrue(Library.objects.filter(user=user).exists())
 
     def test_login_and_refresh_return_tokens(self):
         User.objects.create_user(**self.registration_data)
