@@ -33,6 +33,8 @@ export default function Intro() {
         <div className="intro-orb intro-orb-top" />
         <div className="intro-orb intro-orb-bottom" />
         <div className="intro-orb intro-orb-center" />
+        <div className="intro-orb intro-orb-gold" />
+        <div className="intro-orb intro-orb-sage" />
 
         <div className="intro-grid absolute inset-0 opacity-[0.035]" />
 
@@ -104,7 +106,7 @@ export default function Intro() {
           <div className="mx-auto flex w-full max-w-2xl flex-col items-center text-center lg:mx-0 lg:items-start lg:text-left">
             {/* Eyebrow */}
             <div className="intro-eyebrow mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white/60 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--brown-700)] shadow-sm backdrop-blur-xl sm:mb-7 sm:px-4 sm:text-xs">
-              <Sparkles size={13} />
+              <Sparkles size={13} className="text-[var(--accent-gold)]" />
               <span>Your personal reading space</span>
             </div>
 
@@ -128,7 +130,7 @@ export default function Intro() {
             <div className="mt-7 flex w-full flex-col gap-3 sm:mt-9 sm:w-auto sm:flex-row">
               <button
                 onClick={handleDemo}
-                className="intro-primary-button group flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[var(--brown-600)] px-6 text-sm font-semibold text-white shadow-xl shadow-[var(--brown-600)]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[var(--brown-700)] hover:shadow-2xl sm:h-auto sm:w-auto sm:py-3.5"
+                className="intro-primary-button group flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 text-sm font-semibold text-white hover:-translate-y-1 sm:h-auto sm:w-auto sm:py-3.5"
               >
                 <span>Explore the demo</span>
 
@@ -156,7 +158,7 @@ export default function Intro() {
           ====================================================== */}
           <div className="relative mx-auto mt-2 flex w-full max-w-lg justify-center lg:mt-0 lg:justify-end">
             {/* Large atmospheric glow */}
-            <div className="intro-book-glow absolute left-1/2 top-1/2 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--brown-200)] blur-[80px] sm:h-80 sm:w-80" />
+            <div className="intro-book-glow absolute left-1/2 top-1/2 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[var(--accent-gold-soft)] via-[var(--brown-200)] to-[var(--accent-sage-soft)] blur-[80px] sm:h-80 sm:w-80" />
 
             {/* Secondary glow */}
             <div className="absolute left-[56%] top-[45%] h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/70 blur-3xl" />
@@ -226,7 +228,7 @@ export default function Intro() {
                   </p>
 
                   <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-[var(--stone-200)] sm:mt-2 sm:h-1.5">
-                    <div className="h-full w-[68%] rounded-full bg-[var(--brown-500)]" />
+                    <div className="h-full w-[68%] rounded-full bg-gradient-to-r from-[var(--brown-500)] to-[var(--accent-gold)]" />
                   </div>
                 </div>
               </div>
@@ -241,7 +243,7 @@ export default function Intro() {
               </p>
 
               <div className="mt-0.5 flex items-end gap-1">
-                <span className="font-heading text-xl font-semibold text-[var(--brown-700)] sm:text-2xl">
+                <span className="font-heading text-xl font-semibold text-[var(--accent-gold)] sm:text-2xl">
                   24
                 </span>
 
@@ -255,7 +257,7 @@ export default function Intro() {
                 Tiny decorative badge
             ================================================== */}
             <div className="intro-mini-badge absolute -top-4 left-[12%] hidden rounded-full border border-white/80 bg-white/70 px-3 py-2 text-[10px] font-semibold text-[var(--brown-700)] shadow-lg backdrop-blur-xl sm:flex sm:items-center sm:gap-1.5">
-              <Sparkles size={11} />
+              <Sparkles size={11} className="text-[var(--accent-gold)]" />
               Made for readers
             </div>
           </div>
@@ -267,11 +269,11 @@ export default function Intro() {
       ========================================================== */}
       <section className="relative z-10 px-5 pb-5 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-7xl gap-2.5 overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:gap-3 sm:overflow-visible">
-          <div className="intro-feature-chip min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
+          <div className="intro-feature-chip intro-feature-chip--gold min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
             <div className="flex items-center gap-2.5">
               <BookOpen
                 size={15}
-                className="text-[var(--brown-600)]"
+                className="text-[var(--accent-gold)]"
                 strokeWidth={1.7}
               />
 
@@ -285,11 +287,11 @@ export default function Intro() {
             </p>
           </div>
 
-          <div className="intro-feature-chip min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
+          <div className="intro-feature-chip intro-feature-chip--sage min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
             <div className="flex items-center gap-2.5">
               <Library
                 size={15}
-                className="text-[var(--brown-600)]"
+                className="text-[var(--accent-sage)]"
                 strokeWidth={1.7}
               />
 
@@ -303,11 +305,11 @@ export default function Intro() {
             </p>
           </div>
 
-          <div className="intro-feature-chip min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
+          <div className="intro-feature-chip intro-feature-chip--terracotta min-w-[210px] flex-1 rounded-2xl border border-white/60 bg-white/35 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
             <div className="flex items-center gap-2.5">
               <Bookmark
                 size={15}
-                className="text-[var(--brown-600)]"
+                className="text-[var(--accent-terracotta)]"
                 strokeWidth={1.7}
               />
 

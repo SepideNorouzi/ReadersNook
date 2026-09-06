@@ -4,6 +4,31 @@
 
 .intro-page {
   isolation: isolate;
+
+  --accent-gold: #d4a355;
+  --accent-gold-soft: #f0d9a8;
+  --accent-sage: #7a8b6f;
+  --accent-sage-soft: #c9d4bf;
+  --accent-terracotta: #c17a5c;
+  --accent-terracotta-soft: #e8c4b0;
+
+  background-image:
+    radial-gradient(
+      ellipse 900px 700px at 12% -8%,
+      color-mix(in srgb, var(--accent-sage) 22%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 800px 800px at 105% 8%,
+      color-mix(in srgb, var(--accent-gold) 26%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 1000px 800px at 50% 105%,
+      color-mix(in srgb, var(--accent-terracotta) 18%, transparent),
+      transparent 60%
+    );
+  background-repeat: no-repeat;
 }
 
 /* ============================================================
@@ -47,6 +72,28 @@
   background: rgba(255, 255, 255, 0.7);
   opacity: 0.55;
   filter: blur(90px);
+}
+
+.intro-orb-gold {
+  width: 22rem;
+  height: 22rem;
+  left: 8%;
+  top: 55%;
+  background: var(--accent-gold-soft);
+  opacity: 0.35;
+  filter: blur(70px);
+  animation: introFloat 13s ease-in-out infinite reverse;
+}
+
+.intro-orb-sage {
+  width: 20rem;
+  height: 20rem;
+  right: 18%;
+  bottom: -6rem;
+  background: var(--accent-sage-soft);
+  opacity: 0.3;
+  filter: blur(75px);
+  animation: introFloatReverse 10s ease-in-out infinite;
 }
 
 .intro-grid {
@@ -125,6 +172,35 @@
 .intro-primary-button {
   position: relative;
   overflow: hidden;
+
+  background-image: linear-gradient(
+    135deg,
+    var(--brown-600),
+    var(--accent-terracotta)
+  );
+  box-shadow:
+    0 20px 45px -12px
+      color-mix(in srgb, var(--accent-terracotta) 45%, transparent),
+    0 8px 20px -6px rgba(60, 35, 25, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background-image 0.3s ease;
+}
+
+.intro-primary-button:hover {
+  background-image: linear-gradient(
+    135deg,
+    var(--brown-700),
+    var(--accent-terracotta)
+  );
+  box-shadow:
+    0 26px 55px -10px
+      color-mix(in srgb, var(--accent-terracotta) 55%, transparent),
+    0 10px 26px -6px rgba(60, 35, 25, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .intro-primary-button::before {
@@ -224,6 +300,8 @@
 ============================================================ */
 
 .intro-feature-chip {
+  position: relative;
+  overflow: hidden;
   box-shadow:
     0 12px 35px rgba(65, 40, 25, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -234,12 +312,31 @@
     box-shadow 0.3s ease;
 }
 
+.intro-feature-chip::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--chip-accent, var(--brown-400));
+  opacity: 0.7;
+}
+
 .intro-feature-chip:hover {
   transform: translateY(-3px);
   background: rgba(255, 255, 255, 0.5);
   box-shadow:
     0 18px 40px rgba(65, 40, 25, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.intro-feature-chip--gold {
+  --chip-accent: var(--accent-gold);
+}
+.intro-feature-chip--sage {
+  --chip-accent: var(--accent-sage);
+}
+.intro-feature-chip--terracotta {
+  --chip-accent: var(--accent-terracotta);
 }
 
 /* ============================================================
