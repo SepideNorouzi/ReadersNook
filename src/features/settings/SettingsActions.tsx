@@ -18,7 +18,8 @@ export default function SettingsActions() {
 
   const handleAuthAction = async () => {
     if (isDemo) {
-      navigate("/auth");
+      // navigate("/auth");
+      navigate("/progress");
       return;
     }
 
