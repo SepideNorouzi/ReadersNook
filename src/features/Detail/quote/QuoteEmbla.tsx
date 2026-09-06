@@ -61,14 +61,15 @@ export default function QuoteEmbla({ book }: Props) {
             <div
               key={quote.id}
               className="
-                min-w-0
-                flex-[0_0_90%]
-                pr-6
-                pt-1
-                md:flex-[0_0_50%]
-                lg:flex-[0_0_38%]
-                xl:flex-[0_0_33.333%]
-              "
+    min-w-0
+    flex-[0_0_90%]
+    pr-6
+    pt-1
+    h-[200px]
+    md:flex-[0_0_50%]
+    lg:flex-[0_0_38%]
+    xl:flex-[0_0_33.333%]
+  "
             >
               <QuoteCard quote={quote} />
             </div>
