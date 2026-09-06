@@ -47,7 +47,36 @@ export default function Intro() {
           onClick={() => navigate("/")}
           className="group flex items-center gap-2.5 sm:gap-3"
         >
-          <div className="intro-logo flex h-9 w-9 items-center justify-center rounded-[14px] bg-[var(--brown-600)] text-white shadow-lg shadow-[var(--brown-600)]/20 transition duration-500 group-hover:rotate-[-5deg] group-hover:scale-105 sm:h-10 sm:w-10">
+          <div
+            className="
+              flex
+              h-10
+              w-10
+              shrink-0
+              items-center
+              justify-center
+              rounded-2xl
+
+              bg-gradient-to-br
+              from-[var(--sidebar-accent-start)]
+              to-[var(--sidebar-accent-end)]
+
+              text-white
+
+              shadow-[0_12px_30px_rgba(54,35,27,.28),inset_0_1px_1px_rgba(255,255,255,.18)]
+
+              transition-all
+              duration-200
+              ease-out
+
+              hover:-translate-y-0.5
+
+              hover:shadow-[0_14px_34px_rgba(54,35,27,.34),inset_0_1px_1px_rgba(255,255,255,.2)]
+
+              active:translate-y-0
+              active:scale-95
+            "
+          >
             <BookOpen size={18} strokeWidth={1.8} />
           </div>
 
