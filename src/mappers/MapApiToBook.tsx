@@ -28,12 +28,16 @@ export function mapApiBookSummaryToBook(apiBook: ApiBookSummary): Book {
 }
 
 export function mapApiBookDetailToBook(apiBook: ApiBookDetail): Book {
-  const photos = [...apiBook.aesthetic_photos].sort((a, b) => a.order - b.order);
+  const photos = [...apiBook.aesthetic_photos].sort(
+    (a, b) => a.order - b.order,
+  );
 
   return {
     ...mapApiBookSummaryToBook(apiBook),
     quotes: apiBook.quotes.map(mapApiQuoteNestedToQuote),
-    aestheticImages: photos.map((photo) => mapApiAestheticPhoto(photo).imageUrl),
+    aestheticImages: photos.map(
+      (photo) => mapApiAestheticPhoto(photo).imageUrl,
+    ),
   };
 }
 
@@ -60,6 +64,7 @@ export function mapBookToCreatePayload(
   const currentPage = Math.max(0, Math.round(book.currentPage || 0));
 
   return {
+    external_id: book.sourceId ?? "",
     title: clip(book.title, 255),
     author: clip(book.author, 255),
     summary: book.summary,

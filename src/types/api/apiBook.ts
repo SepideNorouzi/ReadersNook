@@ -5,6 +5,7 @@ export type ApiBookStatus = "current" | "tbr" | "read";
 
 type ApiBookCore = {
   id: number;
+  external_id: string;
   title: string;
   author: string;
   summary: string;
@@ -29,6 +30,7 @@ export type ApiBookDetail = ApiBookSummary & {
 
 export type ApiBookCreatePayload = Pick<
   ApiBookSummary,
+  | "external_id"
   | "title"
   | "author"
   | "summary"
