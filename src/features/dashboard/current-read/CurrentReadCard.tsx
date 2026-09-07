@@ -87,7 +87,7 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex min-w-0 flex-col">
+      <div className="relative z-10 flex h-full min-w-0 flex-col">
         {/* Header */}
         <header className="mb-4 flex w-full shrink-0 items-center justify-between lg:mb-5">
           <div className="flex min-w-0 items-center gap-2">
@@ -155,7 +155,7 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
             </div>
           </>
         ) : (
-          <div className="flex w-full flex-col items-center justify-center gap-3 py-4 text-center">
+          <div className="flex w-full flex-1 flex-col items-center justify-center gap-3 py-4 text-center">
             <div
               className="
                 flex h-11 w-11 items-center justify-center

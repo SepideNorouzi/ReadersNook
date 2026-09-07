@@ -18,6 +18,11 @@ export default function CollectionsCard({
 }: Props) {
   const { collections, isLoading, isError } = useCollections();
 
+  const populatedCollections = collections.filter(
+    (collection) => collection.books.length > 0,
+  );
+  const hasCollections = populatedCollections.length > 0;
+
   const [selectedCollectionId, setSelectedCollectionId] = useState<
     string | null
   >(null);
@@ -61,8 +66,6 @@ export default function CollectionsCard({
       </Card>
     );
   }
-
-  const hasCollections = collections.length > 0;
 
   return (
     <>
@@ -167,7 +170,7 @@ export default function CollectionsCard({
                     sm:px-2.5 sm:py-1 sm:text-[11px]
                   "
                 >
-                  {collections.length}
+                  {populatedCollections.length}
                 </span>
               </div>
             )}
@@ -246,7 +249,7 @@ export default function CollectionsCard({
   "
               >
                 <CollectionGrid
-                  collections={collections}
+                  collections={populatedCollections}
                   onCollectionClick={(collection) =>
                     setSelectedCollectionId(collection.id)
                   }
