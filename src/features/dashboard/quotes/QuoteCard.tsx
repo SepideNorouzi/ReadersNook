@@ -32,29 +32,46 @@ export default function QuoteCard({ className }: Props) {
     })),
   );
 
+  const today = new Date().getDate();
+  const quote = quotes[today % quotes.length];
+
   if (!quotes.length) {
     return (
       <Card
         className={`
-          flex h-full flex-col items-center justify-center
-          rounded-[22px] sm:rounded-[28px]
-          ${className ?? ""}
-        `}
+        flex h-full flex-col items-center justify-center gap-3
+        rounded-[22px] sm:rounded-[28px]
+        border border-[rgba(164,125,93,0.28)]
+        bg-gradient-to-br from-[var(--brown-200)] via-[var(--brown-100)] to-[var(--brown-300)]
+        p-3.5 text-center shadow-[0_18px_40px_rgba(35,23,17,0.10),0_0_24px_rgba(207,162,71,0.08)]
+        sm:p-4
+        lg:p-6
+        ${className ?? ""}
+      `}
       >
-        <Quote
-          size={26}
-          className="mb-2 text-[var(--brown-400)] lg:mb-3 lg:size-[30px]"
-        />
+        <div
+          className="
+          flex h-11 w-11 items-center justify-center rounded-full
+          border border-[rgba(164,125,93,0.20)]
+          bg-[rgba(248,237,203,0.62)]
+          shadow-[0_4px_12px_rgba(164,125,93,0.10)]
+          lg:h-14 lg:w-14
+        "
+        >
+          <Quote size={18} className="text-[var(--brown-700)] lg:size-[22px]" />
+        </div>
 
-        <p className="text-center text-xs text-[var(--brown-700)] lg:text-sm">
-          No saved quotes
-        </p>
+        <div className="space-y-1">
+          <p className="font-heading text-sm font-semibold text-[var(--brown-900)] lg:text-base">
+            No quotes yet
+          </p>
+          <p className="mx-auto max-w-[200px] text-xs leading-relaxed text-[var(--brown-700)] lg:text-sm">
+            Save a line that stays with you while you read.
+          </p>
+        </div>
       </Card>
     );
   }
-
-  const today = new Date().getDate();
-  const quote = quotes[today % quotes.length];
 
   return (
     <Card
