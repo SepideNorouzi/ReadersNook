@@ -60,11 +60,15 @@ function toCoverUrl(url: string): string {
 export function mapBookToCreatePayload(
   book: Omit<Book, "id" | "addedAt">,
 ): ApiBookCreatePayload {
+  if (!book.sourceId) {
+    throw new Error("Cannot add book: missing external_id.");
+  }
+
   const totalPages = Math.max(0, Math.round(book.totalPages || 0));
   const currentPage = Math.max(0, Math.round(book.currentPage || 0));
 
   return {
-    external_id: book.sourceId ?? "",
+    external_id: book.sourceId,
     title: clip(book.title, 255),
     author: clip(book.author, 255),
     summary: book.summary,
