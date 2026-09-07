@@ -21,7 +21,7 @@ export async function getBook(id: string): Promise<Book> {
 export async function createBook(
   book: Omit<Book, "id" | "addedAt">,
 ): Promise<Book> {
-  const apiBook = await apiFetch<ApiBookSummary>("/books/create/", {
+  const apiBook = await apiFetch<ApiBookSummary>("/books/add/", {
     method: "POST",
     body: mapBookToCreatePayload(book),
   });
