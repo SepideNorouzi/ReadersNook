@@ -19,19 +19,20 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const cardClass = `
-    relative isolate
-    flex h-fit w-full min-w-0 flex-col self-start overflow-hidden
-    rounded-[22px] sm:rounded-[28px]
-    border border-[rgba(207,162,71,0.28)]
-    bg-[linear-gradient(135deg,var(--brown-600)_0%,var(--brown-700)_48%,var(--brown-800)_100%)]
-    p-3.5 sm:p-4 lg:p-6
-    shadow-[var(--shadow-premium)]
-    transition-all duration-500 ease-out
-    hover:-translate-y-1.5
-    hover:border-[rgba(248,237,203,0.42)]
-    hover:shadow-[var(--shadow-premium-hover)]
-    ${className ?? ""}
-  `;
+  relative isolate
+  flex w-full min-w-0 flex-col self-start overflow-hidden
+  min-h-[220px] sm:min-h-[240px] lg:min-h-[505.5px]
+  rounded-[22px] sm:rounded-[28px]
+  border border-[rgba(207,162,71,0.28)]
+  bg-[linear-gradient(135deg,var(--brown-600)_0%,var(--brown-700)_48%,var(--brown-800)_100%)]
+  p-3.5 sm:p-4 lg:p-6
+  shadow-[var(--shadow-premium)]
+  transition-all duration-500 ease-out
+  hover:-translate-y-1.5
+  hover:border-[rgba(248,237,203,0.42)]
+  hover:shadow-[var(--shadow-premium-hover)]
+  ${className ?? ""}
+`;
 
   if (isLoading) {
     return (
