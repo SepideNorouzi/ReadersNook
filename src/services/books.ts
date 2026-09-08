@@ -7,6 +7,7 @@ import {
 } from "../mappers/MapApiToBook";
 import type { Book } from "../types/book";
 import type {
+  ApiBookCreateResponse,
   ApiLibraryEntry,
   ApiLibraryEntryDetail,
 } from "../types/api/apiBook";
@@ -25,19 +26,11 @@ export async function getBook(id: string): Promise<Book> {
 
 export async function createBook(
   book: Omit<Book, "id" | "addedAt">,
-): Promise<Book> {
-  // ⚠️ the Swagger example for this response mirrors the request body —
-  // that's likely a generic placeholder, not the real shape. Confirm via
-  // the network tab; the code below assumes it matches ApiLibraryEntry.
-  const entry = await apiFetch<ApiLibraryEntry>("/books/add/", {
+): Promise<void> {
+  await apiFetch<ApiBookCreateResponse>("/books/add/", {
     method: "POST",
     body: mapBookToCreatePayload(book),
   });
-  return {
-    ...mapApiLibraryEntryToBook(entry),
-    sourceId: book.sourceId,
-    genres: book.genres,
-  };
 }
 
 export async function updateBook(

@@ -3,7 +3,8 @@ import type { Quote } from "./quote";
 export type BookStatus = "current" | "tbr" | "read";
 
 export type Book = {
-  id: string;
+  id: string; // library entry id
+  catalogId?: string; // backend book/catalog id
   title: string;
   author: string;
   summary: string;

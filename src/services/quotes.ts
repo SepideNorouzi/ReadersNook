@@ -13,11 +13,11 @@ export async function getQuotes(bookId: string): Promise<Quote[]> {
 }
 
 export async function createQuote(
-  bookId: string,
+  catalogBookId: string,
   quote: QuoteDraft,
 ): Promise<Quote> {
   const apiQuote = await apiFetch<ApiQuote>(
-    `/books/${bookId}/quotes/create/`,
+    `/books/${catalogBookId}/quotes/create/`,
     {
       method: "POST",
       body: mapQuoteToCreatePayload(quote),

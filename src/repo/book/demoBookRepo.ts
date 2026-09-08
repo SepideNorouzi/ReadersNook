@@ -2,29 +2,47 @@ import { useMutation } from "@tanstack/react-query";
 import { useBookStore } from "../../store/demoBookStore";
 import type { Book } from "../../types/book";
 
+type UpdateBookInput = {
+  id: string;
+  changes: Partial<Pick<Book, "status" | "currentPage" | "rating">>;
+};
+
 export const demoBookRepo = {
   useBooks() {
     const books = useBookStore((state) => state.books);
-    return { data: books, isLoading: false, isError: false, error: null };
+
+    return {
+      data: books,
+      isLoading: false,
+      isError: false,
+      error: null,
+    };
   },
 
   useBook(id: string | undefined) {
     const books = useBookStore((state) => state.books);
-    const book = id ? books.find((item) => item.id === id) : undefined;
-    return { data: book, isLoading: false, isError: false, error: null };
+    const book = id ? books.find((book) => book.id === id) : undefined;
+
+    return {
+      data: book,
+      isLoading: false,
+      isError: false,
+      error: null,
+    };
   },
 
   useCreateBook() {
     return useMutation({
-      mutationFn: async (book: Omit<Book, "id" | "addedAt">) => {
-        const newBook = {
+      mutationFn: async (
+        book: Omit<Book, "id" | "addedAt">,
+      ): Promise<void> => {
+        const newBook: Book = {
           ...book,
           id: crypto.randomUUID(),
           addedAt: new Date().toISOString(),
-        } as Book;
+        };
 
         useBookStore.getState().addBook(newBook);
-        return newBook;
       },
     });
   },
@@ -34,10 +52,7 @@ export const demoBookRepo = {
       mutationFn: async ({
         id,
         changes,
-      }: {
-        id: string;
-        changes: Partial<Book>;
-      }) => {
+      }: UpdateBookInput): Promise<void> => {
         useBookStore.getState().updateBook(id, changes);
       },
     });
@@ -45,7 +60,7 @@ export const demoBookRepo = {
 
   useDeleteBook() {
     return useMutation({
-      mutationFn: async (id: string) => {
+      mutationFn: async (id: string): Promise<void> => {
         useBookStore.getState().deleteBook(id);
       },
     });

@@ -2,11 +2,6 @@ import { useModeStore } from "../../store/modeStore";
 import { demoBookRepo } from "./demoBookRepo";
 import { adminBookRepo } from "./adminBookRepo";
 
-export const booksKey = (username: string) => ["books", username] as const;
-
-export const bookDetailKey = (username: string, bookId: string) =>
-  ["books", username, bookId] as const;
-
 export const bookRepository = {
   useBooks() {
     const mode = useModeStore((s) => s.mode);

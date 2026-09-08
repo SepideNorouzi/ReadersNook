@@ -7,14 +7,14 @@ import type { AestheticPhoto } from "../types/aestheticPhoto";
 import type { ApiAestheticPhoto } from "../types/api/apiAestheticPhoto";
 
 export async function createAestheticPhoto(
-  bookId: string,
+  catalogBookId: string,
   photo: { imageUrl: string; caption?: string; order?: number },
 ): Promise<AestheticPhoto> {
   const apiPhoto = await apiFetch<ApiAestheticPhoto>(
-    `/books/${bookId}/aesthetic_photos/create/`,
+    `/books/${catalogBookId}/aesthetic_photos/create/`,
     {
       method: "POST",
-      body: mapAestheticPhotoToCreatePayload(bookId, photo),
+      body: mapAestheticPhotoToCreatePayload(catalogBookId, photo),
     },
   );
   return mapApiAestheticPhoto(apiPhoto);

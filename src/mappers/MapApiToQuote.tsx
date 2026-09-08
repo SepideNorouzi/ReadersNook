@@ -7,8 +7,14 @@ import type {
 } from "../types/api/apiQuote";
 
 function toQuote(
-  apiQuote: Pick<ApiQuote, "id" | "text" | "page" | "favorite" | "book">,
-  timestamps?: { createdAt?: string; updatedAt?: string },
+  apiQuote: Pick<
+    ApiQuote,
+    "id" | "text" | "page" | "favorite" | "book" | "created_by"
+  >,
+  timestamps?: {
+    createdAt?: string;
+    updatedAt?: string;
+  },
 ): Quote {
   return {
     id: String(apiQuote.id),
@@ -16,9 +22,9 @@ function toQuote(
     page: apiQuote.page ?? 0,
     favorite: apiQuote.favorite,
     createdAt: timestamps?.createdAt,
-    createdBy: "api",
     updatedAt: timestamps?.updatedAt,
     bookId: String(apiQuote.book),
+    createdBy: String(apiQuote.created_by),
   };
 }
 

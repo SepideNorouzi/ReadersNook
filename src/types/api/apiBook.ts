@@ -51,6 +51,18 @@ export type ApiBookCreatePayload = {
   rating: number;
 };
 
+export type ApiBookCreateResponse = {
+  external_id: string;
+  title: string;
+  author: string;
+  summary: string;
+  cover_url: string;
+  total_pages: number;
+  status: ApiBookStatus;
+  current_page: number;
+  rating: number | null;
+};
+
 // PUT/PATCH /library/books/{book_pk}/ — progress fields ONLY.
 // The backend has no way to accept title/author/cover/total_pages here.
 export type ApiLibraryUpdatePayload = Partial<{

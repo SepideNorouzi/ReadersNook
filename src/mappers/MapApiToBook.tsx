@@ -11,7 +11,8 @@ import { mapApiAestheticPhoto } from "./MapApiToAestheticPhoto";
 
 export function mapApiLibraryEntryToBook(entry: ApiLibraryEntry): Book {
   return {
-    id: String(entry.book.id), // ⚠️ assumes book_pk = catalog book id — verify
+    id: String(entry.id),
+    catalogId: String(entry.book.id),
     title: entry.book.title,
     author: entry.book.author,
     summary: entry.book.summary,
@@ -87,35 +88,36 @@ export function mapBookToCreatePayload(
 export function mapBookToUpdatePayload(
   changes: Partial<Pick<Book, "status" | "currentPage" | "rating">>,
 ): ApiLibraryUpdatePayload {
-  const payload: ApiLibraryUpdatePayload = {};
-  if (changes.status !== undefined) payload.status = changes.status;
-  if (changes.currentPage !== undefined)
-    payload.current_page = changes.currentPage;
-  if (changes.rating !== undefined) payload.rating = changes.rating;
-  return payload;
+  return {
+    ...(changes.status !== undefined && {
+      status: changes.status,
+    }),
+
+    ...(changes.currentPage !== undefined && {
+      current_page: changes.currentPage,
+    }),
+
+    ...(changes.rating !== undefined && {
+      rating: changes.rating,
+    }),
+  };
 }
 
-export function mapApiCatalogBookToBook(
-  book: ApiCatalogBook,
-): Book {
+export function mapApiCatalogBookToBook(book: ApiCatalogBook): Book {
   return {
     id: String(book.id),
+    catalogId: String(book.id),
     title: book.title,
     author: book.author,
     summary: book.summary,
     coverUrl: book.cover_url,
     totalPages: book.total_pages,
-
-    // Collection doesn't provide personal library state
     currentPage: 0,
     status: "tbr",
     rating: 0,
-
     quotes: [],
     aestheticImages: [],
     genres: [],
-
     sourceId: book.external_id,
-    addedAt: book.created_at,
   };
 }
