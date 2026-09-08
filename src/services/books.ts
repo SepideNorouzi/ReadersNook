@@ -1,32 +1,40 @@
 import { apiFetch } from "../lib/apiClient";
 import {
-  mapApiBookSummaryToBook,
-  mapApiBookDetailToBook,
+  mapApiLibraryEntryToBook,
+  mapApiLibraryEntryDetailToBook,
   mapBookToCreatePayload,
   mapBookToUpdatePayload,
 } from "../mappers/MapApiToBook";
 import type { Book } from "../types/book";
-import type { ApiBookSummary, ApiBookDetail } from "../types/api/apiBook";
+import type {
+  ApiLibraryEntry,
+  ApiLibraryEntryDetail,
+} from "../types/api/apiBook";
 
 export async function getBooks(): Promise<Book[]> {
-  const apiBooks = await apiFetch<ApiBookSummary[]>("/books/");
-  return apiBooks.map(mapApiBookSummaryToBook);
+  const entries = await apiFetch<ApiLibraryEntry[]>("/library/");
+  return entries.map(mapApiLibraryEntryToBook);
 }
 
 export async function getBook(id: string): Promise<Book> {
-  const apiBook = await apiFetch<ApiBookDetail>(`/books/${id}/`);
-  return mapApiBookDetailToBook(apiBook);
+  const entry = await apiFetch<ApiLibraryEntryDetail>(
+    `/library/books/${id}/`,
+  );
+  return mapApiLibraryEntryDetailToBook(entry);
 }
 
 export async function createBook(
   book: Omit<Book, "id" | "addedAt">,
 ): Promise<Book> {
-  const apiBook = await apiFetch<ApiBookSummary>("/books/add/", {
+  // ⚠️ the Swagger example for this response mirrors the request body —
+  // that's likely a generic placeholder, not the real shape. Confirm via
+  // the network tab; the code below assumes it matches ApiLibraryEntry.
+  const entry = await apiFetch<ApiLibraryEntry>("/books/add/", {
     method: "POST",
     body: mapBookToCreatePayload(book),
   });
   return {
-    ...mapApiBookSummaryToBook(apiBook),
+    ...mapApiLibraryEntryToBook(entry),
     sourceId: book.sourceId,
     genres: book.genres,
   };
@@ -34,15 +42,15 @@ export async function createBook(
 
 export async function updateBook(
   id: string,
-  changes: Partial<Book>,
+  changes: Partial<Pick<Book, "status" | "currentPage" | "rating">>,
 ): Promise<Book> {
-  const apiBook = await apiFetch<ApiBookSummary>(`/books/${id}/update/`, {
+  const entry = await apiFetch<ApiLibraryEntry>(`/library/books/${id}/`, {
     method: "PATCH",
     body: mapBookToUpdatePayload(changes),
   });
-  return mapApiBookSummaryToBook(apiBook);
+  return mapApiLibraryEntryToBook(entry);
 }
 
 export async function deleteBook(id: string): Promise<void> {
-  await apiFetch<void>(`/books/${id}/delete/`, { method: "DELETE" });
+  await apiFetch<void>(`/library/books/${id}/`, { method: "DELETE" });
 }

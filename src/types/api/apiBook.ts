@@ -3,7 +3,9 @@ import type { ApiQuoteNested } from "./apiQuote";
 
 export type ApiBookStatus = "current" | "tbr" | "read";
 
-type ApiBookCore = {
+// The shared catalog row — one per book, regardless of how many
+// users have it in their library. Nested inside every library entry.
+export type ApiCatalogBook = {
   id: number;
   external_id: string;
   title: string;
@@ -11,37 +13,48 @@ type ApiBookCore = {
   summary: string;
   cover_url: string;
   total_pages: number;
-};
-
-// GET /books/ · POST /books/create/ · PATCH|PUT /books/{id}/update/
-export type ApiBookSummary = ApiBookCore & {
-  current_page: number;
-  status: ApiBookStatus;
-  rating: number | null;
   created_at: string;
   updated_at: string;
 };
 
-// GET /books/{id}/ — the only book endpoint that includes quotes + photos.
-export type ApiBookDetail = ApiBookSummary & {
-  quotes: ApiQuoteNested[];
-  aesthetic_photos: ApiAestheticPhoto[];
+// GET /library/ (list). This is the "through" record: your relationship
+// to a book (status, progress, rating), with the shared book nested in.
+export type ApiLibraryEntry = {
+  id: number; // the library entry's own pk
+  book: ApiCatalogBook;
+  status: ApiBookStatus;
+  current_page: number;
+  rating: number | null;
+  added_at: string; // when YOU added it — not the book's created_at
+  updated_at: string; // when your progress last changed
 };
 
-export type ApiBookCreatePayload = Pick<
-  ApiBookSummary,
-  | "external_id"
-  | "title"
-  | "author"
-  | "summary"
-  | "cover_url"
-  | "current_page"
-  | "total_pages"
-  | "status"
-  | "rating"
->;
+// GET /library/books/{book_pk}/
+// ⚠️ Docs show no quotes/aesthetic_photos here — fields are optional
+// below so a missing backend field doesn't crash the mapper. Verify
+// against a real network response and tighten this once confirmed.
+export type ApiLibraryEntryDetail = ApiLibraryEntry & {
+  quotes?: ApiQuoteNested[];
+  aesthetic_photos?: ApiAestheticPhoto[];
+};
 
-export type ApiBookUpdatePayload = Omit<
-  ApiBookSummary,
-  "id" | "created_at" | "updated_at"
->;
+// POST /books/add/ — flat, NOT nested like the responses above.
+export type ApiBookCreatePayload = {
+  external_id: string;
+  title: string;
+  author: string;
+  summary: string;
+  cover_url: string;
+  total_pages: number;
+  status: ApiBookStatus;
+  current_page: number;
+  rating: number;
+};
+
+// PUT/PATCH /library/books/{book_pk}/ — progress fields ONLY.
+// The backend has no way to accept title/author/cover/total_pages here.
+export type ApiLibraryUpdatePayload = Partial<{
+  status: ApiBookStatus;
+  current_page: number;
+  rating: number;
+}>;

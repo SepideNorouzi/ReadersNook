@@ -1,4 +1,4 @@
-import type { ApiBookSummary } from "./apiBook";
+import type { ApiCatalogBook } from "./apiBook";
 
 type ApiCollectionCore = {
   id: number;
@@ -29,7 +29,7 @@ export type ApiCollectionListItem = ApiCollectionCore & {
 
 // GET /collections/{id}/ — detail view
 export type ApiCollectionDetail = ApiCollectionCore & {
-  books: ApiBookSummary[];
+  books: ApiCatalogBook[];
   created_by: number;
   created_at: string;
   updated_at: string;

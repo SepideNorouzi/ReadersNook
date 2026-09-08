@@ -5,7 +5,7 @@ import type {
   ApiCollectionUpdatePayload,
 } from "../types/api/apiCollection";
 import type { Collection, CollectionWithBooks } from "../types/collection";
-import { mapApiBookSummaryToBook } from "./MapApiToBook";
+import { mapApiCatalogBookToBook } from "./MapApiToBook";
 
 export function mapApiCollectionListItemToCollection(
   api: ApiCollectionListItem,
@@ -25,7 +25,7 @@ export function mapApiCollectionDetailToCollectionWithBooks(
     id: String(api.id),
     name: api.name,
     description: api.description || undefined,
-    books: api.books.map(mapApiBookSummaryToBook),
+    books: api.books.map(mapApiCatalogBookToBook),
   };
 }
 

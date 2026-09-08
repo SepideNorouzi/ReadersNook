@@ -151,8 +151,13 @@ export const adminBookRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: ({ id, changes }: { id: string; changes: Partial<Book> }) =>
-        updateBook(id, changes),
+      mutationFn: ({
+        id,
+        changes,
+      }: {
+        id: string;
+        changes: Partial<Pick<Book, "status" | "currentPage" | "rating">>;
+      }) => updateBook(id, changes),
 
       onSuccess: (_book, { id }) => {
         const username = useAuthStore.getState().username;

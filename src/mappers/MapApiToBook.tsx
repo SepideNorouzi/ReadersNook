@@ -1,40 +1,43 @@
 import type { Book } from "../types/book";
 import type {
-  ApiBookSummary,
-  ApiBookDetail,
+  ApiLibraryEntry,
+  ApiLibraryEntryDetail,
   ApiBookCreatePayload,
-  ApiBookUpdatePayload,
+  ApiLibraryUpdatePayload,
+  ApiCatalogBook,
 } from "../types/api/apiBook";
 import { mapApiQuoteNestedToQuote } from "./MapApiToQuote";
 import { mapApiAestheticPhoto } from "./MapApiToAestheticPhoto";
 
-export function mapApiBookSummaryToBook(apiBook: ApiBookSummary): Book {
+export function mapApiLibraryEntryToBook(entry: ApiLibraryEntry): Book {
   return {
-    id: String(apiBook.id),
-    title: apiBook.title,
-    author: apiBook.author,
-    summary: apiBook.summary,
-    coverUrl: apiBook.cover_url,
-    currentPage: apiBook.current_page,
-    totalPages: apiBook.total_pages,
-    status: apiBook.status,
-    rating: apiBook.rating ?? 0,
-    addedAt: apiBook.created_at,
+    id: String(entry.book.id), // ⚠️ assumes book_pk = catalog book id — verify
+    title: entry.book.title,
+    author: entry.book.author,
+    summary: entry.book.summary,
+    coverUrl: entry.book.cover_url,
+    currentPage: entry.current_page,
+    totalPages: entry.book.total_pages,
+    status: entry.status,
+    rating: entry.rating ?? 0,
+    addedAt: entry.added_at,
     quotes: [],
     aestheticImages: [],
     genres: [],
-    sourceId: undefined,
+    sourceId: entry.book.external_id,
   };
 }
 
-export function mapApiBookDetailToBook(apiBook: ApiBookDetail): Book {
-  const photos = [...apiBook.aesthetic_photos].sort(
-    (a, b) => a.order - b.order,
-  );
+export function mapApiLibraryEntryDetailToBook(
+  entry: ApiLibraryEntryDetail,
+): Book {
+  const photos = entry.aesthetic_photos
+    ? [...entry.aesthetic_photos].sort((a, b) => a.order - b.order)
+    : [];
 
   return {
-    ...mapApiBookSummaryToBook(apiBook),
-    quotes: apiBook.quotes.map(mapApiQuoteNestedToQuote),
+    ...mapApiLibraryEntryToBook(entry),
+    quotes: entry.quotes ? entry.quotes.map(mapApiQuoteNestedToQuote) : [],
     aestheticImages: photos.map(
       (photo) => mapApiAestheticPhoto(photo).imageUrl,
     ),
@@ -57,16 +60,16 @@ function toCoverUrl(url: string): string {
   return "";
 }
 
+// Unchanged in substance — this one was already correct, since
+// the create payload genuinely is flat.
 export function mapBookToCreatePayload(
   book: Omit<Book, "id" | "addedAt">,
 ): ApiBookCreatePayload {
   if (!book.sourceId) {
     throw new Error("Cannot add book: missing external_id.");
   }
-
   const totalPages = Math.max(0, Math.round(book.totalPages || 0));
   const currentPage = Math.max(0, Math.round(book.currentPage || 0));
-
   return {
     external_id: book.sourceId,
     title: clip(book.title, 255),
@@ -80,19 +83,39 @@ export function mapBookToCreatePayload(
   };
 }
 
+// Narrowed to the three fields the backend will actually accept.
 export function mapBookToUpdatePayload(
-  changes: Partial<Book>,
-): Partial<ApiBookUpdatePayload> {
-  const payload: Partial<ApiBookUpdatePayload> = {};
-  if (changes.title !== undefined) payload.title = changes.title;
-  if (changes.author !== undefined) payload.author = changes.author;
-  if (changes.summary !== undefined) payload.summary = changes.summary;
-  if (changes.coverUrl !== undefined) payload.cover_url = changes.coverUrl;
+  changes: Partial<Pick<Book, "status" | "currentPage" | "rating">>,
+): ApiLibraryUpdatePayload {
+  const payload: ApiLibraryUpdatePayload = {};
+  if (changes.status !== undefined) payload.status = changes.status;
   if (changes.currentPage !== undefined)
     payload.current_page = changes.currentPage;
-  if (changes.totalPages !== undefined)
-    payload.total_pages = changes.totalPages;
-  if (changes.status !== undefined) payload.status = changes.status;
   if (changes.rating !== undefined) payload.rating = changes.rating;
   return payload;
+}
+
+export function mapApiCatalogBookToBook(
+  book: ApiCatalogBook,
+): Book {
+  return {
+    id: String(book.id),
+    title: book.title,
+    author: book.author,
+    summary: book.summary,
+    coverUrl: book.cover_url,
+    totalPages: book.total_pages,
+
+    // Collection doesn't provide personal library state
+    currentPage: 0,
+    status: "tbr",
+    rating: 0,
+
+    quotes: [],
+    aestheticImages: [],
+    genres: [],
+
+    sourceId: book.external_id,
+    addedAt: book.created_at,
+  };
 }
