@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from rest_framework import serializers
 
 from .models import (
@@ -13,10 +12,14 @@ from .models import (
 )
 
 
+# --- Quotes ---
+
+
 class QuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quote
         fields = "__all__"
+        # book is set from the URL; created_by is set from the request user
         read_only_fields = ("id", "created_at", "updated_at", "created_by", "book")
 
 
@@ -28,12 +31,12 @@ class ShortQuoteSerializer(serializers.ModelSerializer):
 
 
 class QuoteCreateSerializer(QuoteSerializer):
-    class Meta(QuoteSerializer.Meta):
-        read_only_fields = QuoteSerializer.Meta.read_only_fields + ("book",)
-
     def create(self, validated_data):
         validated_data["created_by"] = self.context["request"].user
         return super().create(validated_data)
+
+
+# --- Catalog books ---
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -66,7 +69,6 @@ class BookDetailSerializer(BookSerializer):
     aesthetic_photos = AestheticPhotoSerializer(many=True, read_only=True)
 
     class Meta(BookSerializer.Meta):
-        model = Book
         fields = (
             "id",
             "external_id",
@@ -80,44 +82,15 @@ class BookDetailSerializer(BookSerializer):
             "quotes",
             "aesthetic_photos",
         )
-        read_only_fields = ("id", "created_at", "updated_at")
-
-
-class UserBookSerializer(serializers.ModelSerializer):
-    book = BookSerializer(read_only=True)
-
-    class Meta:
-        model = UserBook
-        fields = (
-            "id",
-            "book",
-            "status",
-            "current_page",
-            "rating",
-            "added_at",
-            "updated_at",
-        )
-        read_only_fields = ("id", "book", "added_at", "updated_at")
-
-    def validate(self, attrs):
-        current_page = attrs.get("current_page")
-        if self.instance is not None:
-            if current_page is None:
-                current_page = self.instance.current_page
-            total_pages = self.instance.book.total_pages
-            if current_page is not None and current_page > total_pages:
-                raise serializers.ValidationError(
-                    {
-                        "current_page": (
-                            "Current page cannot be greater than total pages."
-                        )
-                    }
-                )
-        return attrs
 
 
 class AddLibraryBookSerializer(serializers.Serializer):
-    # Book fields
+    """Payload for adding a book to the caller's library.
+
+    external_id comes from the upstream book API. Catalog fields create the
+    Book row when it is not in our database yet.
+    """
+
     external_id = serializers.CharField(max_length=50)
     title = serializers.CharField(max_length=255)
     author = serializers.CharField(max_length=255)
@@ -125,18 +98,13 @@ class AddLibraryBookSerializer(serializers.Serializer):
     cover_url = serializers.URLField(
         max_length=500, required=False, allow_blank=True, default=""
     )
-    total_pages = serializers.IntegerField(
-        min_value=0, required=False, default=0
-    )
+    total_pages = serializers.IntegerField(min_value=0, required=False, default=0)
 
-    # UserBook fields
     status = serializers.ChoiceField(
         choices=ReadingStatus.choices,
         default=ReadingStatus.TBR,
     )
-    current_page = serializers.IntegerField(
-        min_value=0, required=False, default=0
-    )
+    current_page = serializers.IntegerField(min_value=0, required=False, default=0)
     rating = serializers.FloatField(
         min_value=0,
         max_value=5,
@@ -146,13 +114,15 @@ class AddLibraryBookSerializer(serializers.Serializer):
     )
 
     def validate_current_page(self, value):
-        """validating current page to ensure it does not exceed total pages"""
         total_pages = self.initial_data.get("total_pages")
         if total_pages and value > int(total_pages):
             raise serializers.ValidationError(
                 "Current page cannot exceed total pages."
             )
         return value
+
+
+# --- Collections ---
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -174,10 +144,12 @@ class CollectionSerializer(serializers.ModelSerializer):
         }
 
     def validate_name(self, value):
+        # Names are unique per library, not globally.
         request = self.context.get("request")
         user = getattr(request, "user", None)
         if user is None or not getattr(user, "is_authenticated", False):
             return value
+
         library = Library.for_user(user)
         queryset = Collection.objects.filter(library=library, name=value)
         if self.instance is not None:
@@ -220,6 +192,51 @@ class CollectionDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "library", "created_at", "updated_at"]
 
 
+
+# --- Library (per-user copies of catalog books) ---
+
+
+class UserBookSerializer(serializers.ModelSerializer):
+    book = BookSerializer(read_only=True)
+
+    class Meta:
+        model = UserBook
+        fields = (
+            "id",
+            "book",
+            "status",
+            "current_page",
+            "rating",
+            "added_at",
+            "updated_at",
+        )
+        read_only_fields = ("id", "book", "added_at", "updated_at")
+
+    def validate(self, attrs):
+        # PATCH may omit current_page; compare against the stored book length.
+        if self.instance is None:
+            return attrs
+
+        current_page = attrs.get("current_page", self.instance.current_page)
+        if current_page > self.instance.book.total_pages:
+            raise serializers.ValidationError(
+                {"current_page": "Current page cannot be greater than total pages."}
+            )
+        return attrs
+
+
+class LibrarySerializer(serializers.ModelSerializer):
+    """Full library payload: the user's books and their collections."""
+
+    books = UserBookSerializer(source="user_books", many=True, read_only=True)
+    collections = CollectionDetailSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Library
+        fields = ("id", "books", "collections", "created_at", "updated_at")
+        read_only_fields = fields
+
+
 class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Achievement
@@ -228,4 +245,6 @@ class AchievementSerializer(serializers.ModelSerializer):
 
 
 class DetailMessageSerializer(serializers.Serializer):
+    """Simple ``{"detail": "..."}`` body used in OpenAPI responses."""
+
     detail = serializers.CharField()

@@ -19,7 +19,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id" , "first_name", "last_name", "username", "password", "password2")
+        fields = ("id", "first_name", "last_name", "username", "password", "password2")
         read_only_fields = ("id",)
         extra_kwargs = {
             "first_name": {"required": True, "allow_blank": False},
@@ -32,6 +32,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 {"password2": "Passwords do not match."}
             )
 
+        # Run Django's validators against an unsaved user so similarity checks work.
         user = User(
             **{
                 key: value
@@ -53,13 +54,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         user.set_password(password)
         user.save()
-
         return user
-        
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id" , "first_name", "last_name", "username")
+        fields = ("id", "first_name", "last_name", "username")
         read_only_fields = fields

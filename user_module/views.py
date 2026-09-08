@@ -16,7 +16,7 @@ from .serializers import UserProfileSerializer, UserRegistrationSerializer
 class UserRegistrationView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny]
-    authentication_classes = []
+    authentication_classes = []  # public: skip JWT so signup works without a token
 
 
 @extend_schema_view(
@@ -28,7 +28,7 @@ class UserRegistrationView(generics.CreateAPIView):
 )
 class UserTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
-    authentication_classes = []
+    authentication_classes = []  # public: login cannot require an existing token
 
 
 @extend_schema_view(
@@ -40,7 +40,7 @@ class UserTokenObtainPairView(TokenObtainPairView):
 )
 class UserTokenRefreshView(TokenRefreshView):
     permission_classes = [AllowAny]
-    authentication_classes = []
+    authentication_classes = []  # public: refresh is authenticated by the refresh token body
 
 
 @extend_schema_view(
