@@ -88,7 +88,13 @@ class LibraryAPITests(APITestCase):
         self._auth(self.user)
         created = self.client.post(reverse("books:book-create"), payload, format="json")
         self.assertEqual(created.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(created.data["title"], "Neuromancer")
+        self.assertEqual(created.data["book"]["title"], "Neuromancer")
+        self.assertEqual(created.data["book"]["author"], "William Gibson")
+        self.assertEqual(created.data["book"]["external_id"], "ol-neuromancer")
+        self.assertEqual(created.data["book"]["total_pages"], 50)
+        self.assertIn("status", created.data)
+        self.assertIn("current_page", created.data)
+        self.assertIn("rating", created.data)
         self.assertTrue(
             UserBook.objects.filter(
                 library=self.user.library,

@@ -90,7 +90,7 @@ class AddLibraryBookSerializer(serializers.Serializer):
     external_id comes from the upstream book API. Catalog fields create the
     Book row when it is not in our database yet.
     """
-
+    
     external_id = serializers.CharField(max_length=50)
     title = serializers.CharField(max_length=255)
     author = serializers.CharField(max_length=255)

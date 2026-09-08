@@ -48,8 +48,10 @@ from .services import _library_books_qs, _library_collections_qs, _user_library
 # --- Library ---
 
 
-@extend_schema_view(
-    post=extend_schema(
+class BookCreateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
         tags=["Library"],
         summary="Add a book to my library",
         description=(
@@ -57,14 +59,17 @@ from .services import _library_books_qs, _library_collections_qs, _user_library
             "If it already exists, add it to the caller's library. "
             "If it does not, create the catalog book first, then add it."
         ),
+        request=AddLibraryBookSerializer,
+        responses={
+            201: UserBookSerializer,
+            409: DetailMessageSerializer,
+        },
     )
-)
-class BookCreateAPIView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = AddLibraryBookSerializer
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = AddLibraryBookSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
@@ -98,14 +103,7 @@ class BookCreateAPIView(generics.CreateAPIView):
             )
 
         return Response(
-            {
-                "detail": "Book added to your library successfully.",
-                "user_book_id": user_book.id,
-                "book_id": book.id,
-                "external_id": book.external_id,
-                "title": book.title,
-                "status": user_book.status,
-            },
+            UserBookSerializer(user_book, context={"request": request}).data,
             status=status.HTTP_201_CREATED,
         )
 
