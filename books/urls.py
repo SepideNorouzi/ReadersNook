@@ -6,7 +6,8 @@ from .views import (
     BookDetailAPIView,
     BookListAPIView,
     BookUpdateAPIView,
-    LibraryBookUpdateAPIView,
+    LibraryBookDetailAPIView,
+    LibraryBookDeleteAPIView,
     CollectionDetailAPIView,
     QuoteCreateAPIView,
     QuoteListAPIView,
@@ -17,15 +18,22 @@ from .views import (
     CollectionAddRemoveBooksAPIView,
     AchievementCreateAPIView,
     BookSearchAPIView,
+    CatalogBookDetailAPIView,
 )
 
 app_name = "books"
 
 urlpatterns = [
     path("search/books/", BookSearchAPIView.as_view(), name="book-search"),
+    path(
+        "books/external/<str:external_id>/",
+        CatalogBookDetailAPIView.as_view(),
+        name="catalog-book-detail",
+    ),
     path("library/", BookListAPIView.as_view(), name="book-list"),
     path("library/add/", BookCreateAPIView.as_view(), name="book-create"),
-    path("library/books/<int:book_pk>/", LibraryBookUpdateAPIView.as_view(), name="library-book-update"),
+    path("library/books/<int:book_pk>/", LibraryBookDetailAPIView.as_view(), name="library-book-detail"),
+    path("library/books/<int:book_pk>/delete/", LibraryBookDeleteAPIView.as_view(), name="library-book-delete"),
     path("books/<int:pk>/", BookDetailAPIView.as_view(), name="book-detail"),
     path("books/<int:pk>/update/", BookUpdateAPIView.as_view(), name="book-update"),
     path("books/<int:pk>/quotes/", QuoteListAPIView.as_view(), name="quote-list"),

@@ -257,6 +257,8 @@ class BookCardSerializer(serializers.Serializer):
     summary = serializers.CharField()
     cover_url = serializers.CharField(allow_blank=True)
     total_pages = serializers.IntegerField()
+    genres = serializers.ListField(child=serializers.CharField(), required=False)
+    rating = serializers.FloatField(allow_null=True, required=False)
     in_library = serializers.BooleanField()
 
 
@@ -265,3 +267,8 @@ class BookSearchResponseSerializer(serializers.Serializer):
     page = serializers.IntegerField()
     per_page = serializers.IntegerField()
     results = BookCardSerializer(many=True)
+
+
+class CatalogBookDetailSerializer(BookCardSerializer):
+    id = serializers.IntegerField(allow_null=True)
+    user_book = UserBookSerializer(allow_null=True)

@@ -9,6 +9,8 @@ class BookCard:
     summary: str = ""
     cover_url: str = ""
     total_pages: int = 0
+    genres: list[str] = field(default_factory=list)
+    rating: float | None = None
     in_library: bool = False
 
     def to_dict(self):
