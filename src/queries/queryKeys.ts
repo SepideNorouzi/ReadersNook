@@ -13,4 +13,6 @@ export const queryKeys = {
   readingGoal: (username: string) => ["reading-goal", username] as const,
 
   stats: (username: string) => ["stats", username] as const,
+
+  search: (query: string) => ["search", query] as const,
 };

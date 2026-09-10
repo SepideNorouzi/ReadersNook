@@ -6,7 +6,7 @@ import {
   mapCollectionToUpdatePayload,
 } from "./MapApiToCollection";
 
-import { mockApiCollection, mockApiBook } from "../test/fixtures";
+import { mockApiCollection, mockApiCatalogBook } from "../test/fixtures";
 
 describe("mapApiCollectionDetailToCollectionWithBooks", () => {
   it("normalizes an empty description to undefined", () => {
@@ -20,7 +20,7 @@ describe("mapApiCollectionDetailToCollectionWithBooks", () => {
   it("maps nested books through the book mapper", () => {
     const result = mapApiCollectionDetailToCollectionWithBooks(
       mockApiCollection({
-        books: [mockApiBook({ id: 7, title: "The Hobbit" })],
+        books: [mockApiCatalogBook({ id: 7, title: "The Hobbit" })],
       }),
     );
 

@@ -8,7 +8,7 @@ import {
   addBookToCollection,
   removeBookFromCollection,
 } from "./collection";
-import { mockApiCollection, mockApiBook } from "../test/fixtures";
+import { mockApiCollection, mockApiCatalogBook } from "../test/fixtures";
 
 beforeEach(() => resetCollectionsDb());
 
@@ -37,7 +37,7 @@ describe("collection service", () => {
     resetCollectionsDb([
       mockApiCollection({
         id: 1,
-        books: [mockApiBook({ id: 5 })],
+        books: [mockApiCatalogBook({ id: 5 })],
       }),
     ]);
 
@@ -66,7 +66,7 @@ describe("collection service", () => {
     resetCollectionsDb([
       mockApiCollection({
         id: 1,
-        books: [mockApiBook({ id: 5 })],
+        books: [mockApiCatalogBook({ id: 5 })],
       }),
     ]);
 

@@ -1,6 +1,6 @@
-import { BookApiError } from "../../types/searchResults";
 import { useSearchBooks } from "../../hooks/useSearchBooks";
 import SearchResultCard from "./SearchResultCard";
+import { ApiError } from "../../lib/apiClient";
 
 type Props = {
   query: string;
@@ -10,8 +10,7 @@ export default function SearchResults({ query }: Props) {
   const trimmed = query.trim();
   const { data: results, isLoading, isError, error } = useSearchBooks(query);
 
-  const isRateLimited =
-    error instanceof BookApiError && error.status === 429;
+  const isRateLimited = error instanceof ApiError && error.status === 429;
 
   if (!trimmed) {
     return (
@@ -100,7 +99,7 @@ export default function SearchResults({ query }: Props) {
       "
     >
       {results.map((result) => (
-        <SearchResultCard key={result.id} result={result} />
+        <SearchResultCard key={result.externalId} result={result} />
       ))}
     </div>
   );

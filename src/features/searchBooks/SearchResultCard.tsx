@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BookOpen, Check, Plus, Star } from "lucide-react";
+import { BookOpen, Check, Plus } from "lucide-react";
 
 import type { BookSearchResult } from "../../types/searchResults";
 import Card from "../../ui/Card";
@@ -11,36 +11,29 @@ type Props = {
 };
 
 export default function SearchResultCard({ result }: Props) {
-  const [isHydrating, setIsHydrating] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { mutateAsync: addBook, isPending } = useCreateBook();
 
-  const alreadySaved = useIsBookSaved(result.id, {
+  const savedLocally = useIsBookSaved(result.externalId, {
     title: result.title,
     author: result.author,
   });
-
-  const isAdding = isHydrating || isPending;
-  const hasRating = typeof result.averageRating === "number";
+  const alreadySaved = result.inLibrary || savedLocally;
 
   const handleAdd = async () => {
-    if (alreadySaved || isAdding) return;
+    if (alreadySaved || isPending) return;
 
     setErrorMessage(null);
-    setIsHydrating(true);
 
     try {
-      const book = await bookFromSearchResult(result);
-      await addBook(book);
+      await addBook(bookFromSearchResult(result));
     } catch (error) {
       setErrorMessage(
         error instanceof Error
           ? error.message
           : "Couldn't add this book. Please try again.",
       );
-    } finally {
-      setIsHydrating(false);
     }
   };
 
@@ -128,8 +121,7 @@ export default function SearchResultCard({ result }: Props) {
           "
         />
 
-        {/* Page count */}
-        {result.pageCount && (
+        {result.totalPages > 0 && (
           <span
             className="
               absolute bottom-2.5 right-2.5
@@ -137,13 +129,13 @@ export default function SearchResultCard({ result }: Props) {
               text-white/85 drop-shadow
             "
           >
-            {result.pageCount} pages
+            {result.totalPages} pages
           </span>
         )}
       </div>
 
       {/* Content */}
-      <div className="flex min-h-[145px] flex-col gap-2.5 p-3.5">
+      <div className="flex min-h-[120px] flex-col gap-2.5 p-3.5">
         <div className="min-w-0">
           <h3
             className="
@@ -163,32 +155,10 @@ export default function SearchResultCard({ result }: Props) {
           </p>
         </div>
 
-        <div className="flex items-center justify-between">
-          {hasRating ? (
-            <div
-              className="flex items-center gap-1"
-              aria-label={`${result.averageRating} out of 5`}
-            >
-              <Star
-                size={11}
-                className="fill-[var(--gold)] text-[var(--gold)]"
-              />
-
-              <span className="text-[10px] font-medium text-[var(--text-muted)]">
-                {result.averageRating!.toFixed(1)}
-              </span>
-            </div>
-          ) : (
-            <span className="text-[10px] text-[var(--text-muted)]">
-              No rating
-            </span>
-          )}
-        </div>
-
         <button
           type="button"
           onClick={handleAdd}
-          disabled={alreadySaved || isAdding}
+          disabled={alreadySaved || isPending}
           aria-pressed={alreadySaved}
           className={`
             mt-auto
@@ -221,7 +191,7 @@ export default function SearchResultCard({ result }: Props) {
         >
           {alreadySaved ? <Check size={13} /> : <Plus size={13} />}
 
-          {alreadySaved ? "Added" : isAdding ? "Adding..." : "Add to Library"}
+          {alreadySaved ? "Added" : isPending ? "Adding..." : "Add to Library"}
         </button>
 
         {errorMessage && (

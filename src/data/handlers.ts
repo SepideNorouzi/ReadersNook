@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 
-import { mockApiBook, mockApiCollection } from "../test/fixtures";
+import { mockApiCatalogBook, mockApiCollection } from "../test/fixtures";
 
 import type {
   ApiCollectionDetail,
@@ -100,7 +100,7 @@ export const handlers = [
       const bookId = Number(params.bookId);
 
       if (!collection.books.some((book) => book.id === bookId)) {
-        collection.books.push(mockApiBook({ id: bookId }));
+        collection.books.push(mockApiCatalogBook({ id: bookId }));
       }
 
       return HttpResponse.json({

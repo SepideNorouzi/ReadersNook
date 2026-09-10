@@ -105,6 +105,10 @@ export const adminBookRepo = {
         queryClient.invalidateQueries({
           queryKey: queryKeys.books(username),
         });
+
+        queryClient.invalidateQueries({
+          queryKey: ["search"],
+        });
       },
     });
   },
