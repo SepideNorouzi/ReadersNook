@@ -11,7 +11,6 @@ from drf_spectacular.utils import (
 from rest_framework import generics, status
 from rest_framework.permissions import (
     AllowAny,
-    AllowAny,
     IsAdminUser,
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
@@ -96,45 +95,44 @@ def _catalog_error_response(exc: CatalogError) -> Response:
 )
 class BookSearchAPIView(APIView):
     permission_classes = [AllowAny]
-    permission_classes = [AllowAny]
 
 
-def get(self, request):
-    query = (request.query_params.get("q") or "").strip()
+    def get(self, request):
+        query = (request.query_params.get("q") or "").strip()
 
-    if not query:
-        return Response(
-            {"q": "This field is required."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    try:
-        page = max(1, int(request.query_params.get("page") or 1))
-        per_page = int(request.query_params.get("per_page") or 10)
-    except (TypeError, ValueError):
-        return Response(
-            {"detail": "page and per_page must be integers."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    per_page = min(max(per_page, 1), 25)
-
-    try:
-        payload = get_search().search(query, page, per_page)
-    except CatalogError as exc:
-        return _catalog_error_response(exc)
-
-        owned = set()
-        if request.user.is_authenticated:
-            owned = set(
-                UserBook.objects.filter(
-                    library=_user_library(request.user)
-                ).values_list("book__external_id", flat=True)
+        if not query:
+            return Response(
+                {"q": "This field is required."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-        for card in payload.results:
-            card.in_library = card.external_id in owned
 
-    return Response(payload.to_dict(), status=status.HTTP_200_OK)
+        try:
+            page = max(1, int(request.query_params.get("page") or 1))
+            per_page = int(request.query_params.get("per_page") or 10)
+        except (TypeError, ValueError):
+            return Response(
+                {"detail": "page and per_page must be integers."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        per_page = min(max(per_page, 1), 25)
+
+        try:
+            payload = get_search().search(query, page, per_page)
+        except CatalogError as exc:
+            return _catalog_error_response(exc)
+
+            owned = set()
+            if request.user.is_authenticated:
+                owned = set(
+                    UserBook.objects.filter(
+                        library=_user_library(request.user)
+                    ).values_list("book__external_id", flat=True)
+                )
+            for card in payload.results:
+                card.in_library = card.external_id in owned
+
+        return Response(payload.to_dict(), status=status.HTTP_200_OK)
 
 
 # ________________________________________________
