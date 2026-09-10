@@ -1,13 +1,19 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
+from django.test import SimpleTestCase, override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from .catalog.dto import BookCard, SearchPage
+from .catalog.hardcover.mapping import parse_search_hits
 from .models import Book, Collection, Library, Quote, UserBook
 
 User = get_user_model()
 
 
+@override_settings(SEARCH_BACKEND="local", CATALOG_PROVIDER="local")
 class LibraryAPITests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -123,16 +129,14 @@ class LibraryAPITests(APITestCase):
             UserBook.objects.filter(library=self.admin.library, book=self.book).exists()
         )
 
-    def test_new_book_requires_title_and_author(self):
+    def test_unknown_external_id_without_metadata_is_not_found(self):
         self._auth(self.user)
         response = self.client.post(
             reverse("books:book-create"),
             {"external_id": "ol-new-book"},
             format="json",
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("title", response.data)
-        self.assertIn("author", response.data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_two_users_can_own_the_same_catalog_book(self):
         other = User.objects.create_user(
@@ -284,3 +288,116 @@ class RegistrationCreatesLibraryTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         user = User.objects.get(username="jane_reader")
         self.assertTrue(Library.objects.filter(user=user).exists())
+
+
+class HardcoverMappingTests(SimpleTestCase):
+    def test_parse_typesense_hits_with_ids(self):
+        results = {
+            "hits": [
+                {
+                    "document": {
+                        "title": "Dune",
+                        "author_names": ["Frank Herbert"],
+                        "description": "Sand.",
+                        "pages": 412,
+                    }
+                }
+            ]
+        }
+        cards = parse_search_hits(results, ids=[101])
+        self.assertEqual(len(cards), 1)
+        self.assertEqual(cards[0].external_id, "hc:101")
+        self.assertEqual(cards[0].title, "Dune")
+        self.assertEqual(cards[0].author, "Frank Herbert")
+        self.assertEqual(cards[0].total_pages, 412)
+
+
+@override_settings(SEARCH_BACKEND="local", CATALOG_PROVIDER="local")
+class CatalogSearchAPITests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="searcher",
+            password="Strong-Test-Password-947!",
+        )
+        self.book = Book.objects.create(
+            external_id="hc:101",
+            title="Dune",
+            author="Frank Herbert",
+            total_pages=412,
+        )
+        UserBook.objects.create(library=self.user.library, book=self.book)
+
+    def test_search_requires_query_and_auth(self):
+        url = reverse("books:book-search")
+        self.assertEqual(self.client.get(url).status_code, status.HTTP_401_UNAUTHORIZED)
+        self.client.force_authenticate(user=self.user)
+        self.assertEqual(
+            self.client.get(url).status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_local_search_marks_in_library(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(
+            reverse("books:book-search"),
+            {"q": "dune"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertTrue(response.data["results"][0]["in_library"])
+        self.assertEqual(response.data["results"][0]["external_id"], "hc:101")
+
+    @override_settings(SEARCH_BACKEND="hardcover")
+    @patch("books.catalog.hardcover.search.HardcoverClient.execute")
+    def test_hardcover_search_maps_results(self, execute):
+        execute.return_value = {
+            "search": {
+                "ids": [9],
+                "page": 1,
+                "per_page": 10,
+                "results": {
+                    "hits": [
+                        {
+                            "document": {
+                                "title": "Neuromancer",
+                                "author_names": ["William Gibson"],
+                                "pages": 271,
+                            }
+                        }
+                    ]
+                },
+            }
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(
+            reverse("books:book-search"),
+            {"q": "neuromancer"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["results"][0]["external_id"], "hc:9")
+        self.assertFalse(response.data["results"][0]["in_library"])
+
+    @override_settings(CATALOG_PROVIDER="hardcover")
+    @patch("books.catalog.hardcover.provider.HardcoverClient.execute")
+    def test_add_by_external_id_fetches_from_provider(self, execute):
+        execute.return_value = {
+            "books_by_pk": {
+                "id": 9,
+                "title": "Neuromancer",
+                "description": "Cyberpunk.",
+                "pages": 271,
+                "cached_image": {"url": "https://example.com/cover.jpg"},
+                "cached_contributors": [{"author": {"name": "William Gibson"}}],
+            }
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(
+            reverse("books:book-create"),
+            {"external_id": "hc:9"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["book"]["title"], "Neuromancer")
+        self.assertEqual(response.data["book"]["author"], "William Gibson")
+        self.assertEqual(response.data["book"]["external_id"], "hc:9")
+        execute.assert_called_once()

@@ -16,11 +16,13 @@ from .views import (
     CollectionUpdateDeleteAPIView,
     CollectionAddRemoveBooksAPIView,
     AchievementCreateAPIView,
+    BookSearchAPIView,
 )
 
 app_name = "books"
 
 urlpatterns = [
+    path("search/books/", BookSearchAPIView.as_view(), name="book-search"),
     path("library/", BookListAPIView.as_view(), name="book-list"),
     path("library/add/", BookCreateAPIView.as_view(), name="book-create"),
     path("library/books/<int:book_pk>/", LibraryBookUpdateAPIView.as_view(), name="library-book-update"),

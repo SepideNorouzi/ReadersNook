@@ -40,9 +40,91 @@ from .serializers import (
     ShortCollectionSerializer,
     LibrarySerializer,
     UserBookSerializer,
+    BookSearchResponseSerializer,
 )
 
+from .catalog import get_search
+from .catalog.exceptions import CatalogError
+from .catalog.ingest import resolve_book
 from .services import _library_books_qs, _library_collections_qs, _user_library
+
+
+def _catalog_error_response(exc: CatalogError) -> Response:
+    response = Response({"detail": exc.detail}, status=exc.status_code)
+    retry_after = getattr(exc, "retry_after", None)
+    if retry_after:
+        response["Retry-After"] = str(retry_after)
+    return response
+
+
+# --- Search ---
+
+@extend_schema(
+    tags=["Search"],
+    summary="Search books",
+    description=(
+        "Search the catalog. Prototype uses Hardcover; "
+        "the response shape stays the same when search becomes local."
+    ),
+    parameters=[
+        OpenApiParameter(
+            name="q",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            required=True,
+            description="Search query.",
+        ),
+        OpenApiParameter(
+            name="page",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            required=False,
+        ),
+        OpenApiParameter(
+            name="per_page",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            required=False,
+        ),
+    ],
+    responses={200: BookSearchResponseSerializer},
+)
+class BookSearchAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+
+    def get(self, request):
+        query = (request.query_params.get("q") or "").strip()
+        if not query:
+            return Response(
+                {"q": "This field is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            page = max(1, int(request.query_params.get("page") or 1))
+            per_page = int(request.query_params.get("per_page") or 10)
+        except (TypeError, ValueError):
+            return Response(
+                {"detail": "page and per_page must be integers."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        per_page = min(max(per_page, 1), 25)
+
+        try:
+            payload = get_search().search(query, page, per_page)
+        except CatalogError as exc:
+            return _catalog_error_response(exc)
+
+        owned = set(
+            UserBook.objects.filter(
+                library=_user_library(request.user)
+            ).values_list("book__external_id", flat=True)
+        )
+        for card in payload.results:
+            card.in_library = card.external_id in owned
+
+        return Response(payload.to_dict(), status=status.HTTP_200_OK)
 
 
 # --- Library ---
@@ -73,17 +155,10 @@ class BookCreateAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        # Reuse the catalog row when this external_id was imported before.
-        book, _ = Book.objects.get_or_create(
-            external_id=data["external_id"],
-            defaults={
-                "title": data["title"],
-                "author": data["author"],
-                "summary": data["summary"],
-                "cover_url": data["cover_url"],
-                "total_pages": data["total_pages"],
-            },
-        )
+        try:
+            book = resolve_book(data)
+        except CatalogError as exc:
+            return _catalog_error_response(exc)
 
         # Reading progress lives on UserBook, not on the shared catalog Book.
         user_book, created = UserBook.objects.get_or_create(

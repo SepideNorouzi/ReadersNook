@@ -8,11 +8,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from datetime import timedelta
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
@@ -165,3 +169,11 @@ SPECTACULAR_SETTINGS = {
         "persistAuthorization": True,
     },
 }
+
+HARDCOVER_API_URL = os.environ.get(
+    "HARDCOVER_API_URL", "https://api.hardcover.app/v1/graphql"
+)
+HARDCOVER_API_TOKEN = os.environ.get("HARDCOVER_API_TOKEN", "")
+HARDCOVER_USER_AGENT = os.environ.get("HARDCOVER_USER_AGENT", "ReadersNook/0.1")
+SEARCH_BACKEND = os.environ.get("SEARCH_BACKEND", "hardcover")
+CATALOG_PROVIDER = os.environ.get("CATALOG_PROVIDER", "hardcover")

@@ -92,8 +92,8 @@ class AddLibraryBookSerializer(serializers.Serializer):
     """
     
     external_id = serializers.CharField(max_length=50)
-    title = serializers.CharField(max_length=255)
-    author = serializers.CharField(max_length=255)
+    title = serializers.CharField(max_length=255, required=False)
+    author = serializers.CharField(max_length=255, required=False)
     summary = serializers.CharField(required=False, allow_blank=True, default="")
     cover_url = serializers.URLField(
         max_length=500, required=False, allow_blank=True, default=""
@@ -248,3 +248,20 @@ class DetailMessageSerializer(serializers.Serializer):
     """Simple ``{"detail": "..."}`` body used in OpenAPI responses."""
 
     detail = serializers.CharField()
+
+
+class BookCardSerializer(serializers.Serializer):
+    external_id = serializers.CharField()
+    title = serializers.CharField()
+    author = serializers.CharField()
+    summary = serializers.CharField()
+    cover_url = serializers.CharField(allow_blank=True)
+    total_pages = serializers.IntegerField()
+    in_library = serializers.BooleanField()
+
+
+class BookSearchResponseSerializer(serializers.Serializer):
+    query = serializers.CharField()
+    page = serializers.IntegerField()
+    per_page = serializers.IntegerField()
+    results = BookCardSerializer(many=True)
