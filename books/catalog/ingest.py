@@ -4,6 +4,29 @@ from .exceptions import CatalogNotFoundError
 from .factory import get_provider
 
 
+def book_to_card(book: Book) -> BookCard:
+    return BookCard(
+        external_id=book.external_id,
+        title=book.title,
+        author=book.author,
+        summary=book.summary,
+        cover_url=book.cover_url,
+        total_pages=book.total_pages,
+    )
+
+
+def get_book_card(external_id: str) -> tuple[Book | None, BookCard]:
+    """Local catalog first; Hardcover only if we have never ingested this book."""
+    book = Book.objects.filter(external_id=external_id).first()
+    if book is not None:
+        return book, book_to_card(book)
+
+    card = get_provider().fetch(external_id)
+    if card is None:
+        raise CatalogNotFoundError()
+    return None, card
+
+
 def _create_book(card: BookCard) -> Book:
     book, _ = Book.objects.get_or_create(
         external_id=card.external_id,

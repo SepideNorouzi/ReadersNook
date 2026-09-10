@@ -33,6 +33,31 @@ def _author(doc: dict) -> str:
     return ", ".join(authors)
 
 
+def _genres(doc: dict) -> list[str]:
+    raw = doc.get("genres") or []
+    if not isinstance(raw, list):
+        return []
+    names = []
+    for item in raw:
+        if isinstance(item, str) and item.strip():
+            names.append(item.strip())
+        elif isinstance(item, dict):
+            name = item.get("name") or item.get("tag") or ""
+            if name:
+                names.append(str(name).strip())
+    return names[:5]
+
+
+def _rating(doc: dict) -> float | None:
+    value = doc.get("rating")
+    if value is None or value == "":
+        return None
+    try:
+        return round(float(value), 2)
+    except (TypeError, ValueError):
+        return None
+
+
 def _cover_url(doc: dict) -> str:
     image = doc.get("cached_image") or doc.get("image") or doc.get("cover")
     if isinstance(image, dict):
@@ -63,6 +88,8 @@ def document_to_card(hardcover_id, doc: dict) -> BookCard | None:
         summary=doc.get("description") or doc.get("summary") or "",
         cover_url=_cover_url(doc),
         total_pages=_as_int(doc.get("pages") or doc.get("page_count")),
+        genres=_genres(doc),
+        rating=_rating(doc),
     )
 
 

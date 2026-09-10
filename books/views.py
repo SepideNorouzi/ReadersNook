@@ -42,11 +42,12 @@ from .serializers import (
     LibrarySerializer,
     UserBookSerializer,
     BookSearchResponseSerializer,
+    CatalogBookDetailSerializer,
 )
 
 from .catalog import get_search
 from .catalog.exceptions import CatalogError
-from .catalog.ingest import resolve_book
+from .catalog.ingest import get_book_card, resolve_book
 from .services import _library_books_qs, _library_collections_qs, _user_library
 
 
@@ -58,7 +59,9 @@ def _catalog_error_response(exc: CatalogError) -> Response:
     return response
 
 
-# --- Search ---
+# ________________________________________________
+# Search
+# ________________________________________________
 
 @extend_schema(
     tags=["Search"],
@@ -134,7 +137,54 @@ def get(self, request):
     return Response(payload.to_dict(), status=status.HTTP_200_OK)
 
 
-# --- Library ---
+# ________________________________________________
+# Book detail api view by external_id (e.g. hc:312460)
+# ________________________________________________
+
+@extend_schema(
+    tags=["Search"],
+    summary="Retrieve a catalog book",
+    description=(
+        "Look up by external_id (e.g. hc:312460). "
+        "Uses our catalog when the book was already ingested; "
+        "otherwise fetches from the book provider. Does not add it to the library."
+    ),
+    responses={200: CatalogBookDetailSerializer, 404: DetailMessageSerializer},
+)
+class CatalogBookDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, external_id):
+        try:
+            book, card = get_book_card(external_id)
+        except CatalogError as exc:
+            return _catalog_error_response(exc)
+
+        user_book = None
+        if book is not None:
+            user_book = (
+                UserBook.objects.filter(
+                    library=_user_library(request.user),
+                    book=book,
+                )
+                .select_related("book")
+                .first()
+            )
+        card.in_library = user_book is not None
+
+        payload = card.to_dict()
+        payload["id"] = book.pk if book is not None else None
+        payload["user_book"] = (
+            UserBookSerializer(user_book, context={"request": request}).data
+            if user_book
+            else None
+        )
+        return Response(payload, status=status.HTTP_200_OK)
+
+
+# _______________________________________________
+# Add a book to the library and add it to the database if it doesn't exist yet. (POST /library/add/)
+# _______________________________________________
 
 
 class BookCreateAPIView(APIView):
@@ -190,6 +240,9 @@ class BookCreateAPIView(APIView):
         )
 
 
+# _______________________________________________
+# Retrieve the authenticated user's library
+# _______________________________________________
 @extend_schema_view(
     get=extend_schema(
         tags=["Library"],
@@ -215,24 +268,12 @@ class BookListAPIView(generics.RetrieveAPIView):
 
 
 @extend_schema_view(
-    put=extend_schema(
-        tags=["Library"],
-        summary="Replace library book progress",
-    ),
-    patch=extend_schema(
-        tags=["Library"],
-        summary="Update library book progress",
-    ),
-    delete=extend_schema(
-        tags=["Library"],
-        summary="Remove a book from my library",
-    ),
     get=extend_schema(
         tags=["Library"],
         summary="Retrieve a library book",
     ),
 )
-class LibraryBookUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
+class LibraryBookDetailAPIView(generics.RetrieveAPIView):
     serializer_class = UserBookSerializer
     permission_classes = [IsAuthenticated]
     lookup_url_kwarg = "book_pk"
@@ -240,6 +281,15 @@ class LibraryBookUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return _library_books_qs(self.request.user)
+
+
+
+
+class LibraryBookDeleteAPIView(generics.DestroyAPIView):
+    serializer_class = UserBookSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_url_kwarg = "book_pk"
+    lookup_field = "book_id"
 
     def perform_destroy(self, instance):
         book = instance.book

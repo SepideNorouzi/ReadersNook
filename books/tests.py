@@ -300,6 +300,8 @@ class HardcoverMappingTests(SimpleTestCase):
                         "author_names": ["Frank Herbert"],
                         "description": "Sand.",
                         "pages": 412,
+                        "genres": ["Science Fiction", "Fantasy"],
+                        "rating": 4.42,
                     }
                 }
             ]
@@ -310,6 +312,8 @@ class HardcoverMappingTests(SimpleTestCase):
         self.assertEqual(cards[0].title, "Dune")
         self.assertEqual(cards[0].author, "Frank Herbert")
         self.assertEqual(cards[0].total_pages, 412)
+        self.assertEqual(cards[0].genres, ["Science Fiction", "Fantasy"])
+        self.assertEqual(cards[0].rating, 4.42)
 
 
 @override_settings(SEARCH_BACKEND="local", CATALOG_PROVIDER="local")
@@ -362,6 +366,8 @@ class CatalogSearchAPITests(APITestCase):
                                 "title": "Neuromancer",
                                 "author_names": ["William Gibson"],
                                 "pages": 271,
+                                "genres": ["Science Fiction"],
+                                "rating": 4.2,
                             }
                         }
                     ]
@@ -375,6 +381,8 @@ class CatalogSearchAPITests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["results"][0]["external_id"], "hc:9")
+        self.assertEqual(response.data["results"][0]["genres"], ["Science Fiction"])
+        self.assertEqual(response.data["results"][0]["rating"], 4.2)
         self.assertFalse(response.data["results"][0]["in_library"])
 
     @override_settings(CATALOG_PROVIDER="hardcover")
@@ -401,3 +409,48 @@ class CatalogSearchAPITests(APITestCase):
         self.assertEqual(response.data["book"]["author"], "William Gibson")
         self.assertEqual(response.data["book"]["external_id"], "hc:9")
         execute.assert_called_once()
+
+    def test_catalog_detail_uses_local_book_and_in_library(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(
+            reverse("books:catalog-book-detail", kwargs={"external_id": "hc:101"})
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["id"], self.book.pk)
+        self.assertEqual(response.data["title"], "Dune")
+        self.assertTrue(response.data["in_library"])
+        self.assertIsNotNone(response.data["user_book"])
+
+    @override_settings(CATALOG_PROVIDER="hardcover")
+    @patch("books.catalog.hardcover.provider.HardcoverClient.execute")
+    def test_catalog_detail_fetches_unknown_book(self, execute):
+        execute.return_value = {
+            "books_by_pk": {
+                "id": 9,
+                "title": "Neuromancer",
+                "description": "Cyberpunk.",
+                "pages": 271,
+                "cached_image": {"url": "https://example.com/cover.jpg"},
+                "cached_contributors": [{"author": {"name": "William Gibson"}}],
+            }
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(
+            reverse("books:catalog-book-detail", kwargs={"external_id": "hc:9"})
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNone(response.data["id"])
+        self.assertEqual(response.data["title"], "Neuromancer")
+        self.assertFalse(response.data["in_library"])
+        self.assertIsNone(response.data["user_book"])
+        self.assertFalse(Book.objects.filter(external_id="hc:9").exists())
+
+    def test_catalog_detail_unknown_local_book_is_not_found(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(
+            reverse(
+                "books:catalog-book-detail",
+                kwargs={"external_id": "hc:missing"},
+            )
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
