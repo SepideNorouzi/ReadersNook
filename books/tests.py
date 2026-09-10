@@ -331,14 +331,16 @@ class CatalogSearchAPITests(APITestCase):
         )
         UserBook.objects.create(library=self.user.library, book=self.book)
 
-    def test_search_requires_query_and_auth(self):
+    def test_search_allows_anonymous_but_requires_query(self):
         url = reverse("books:book-search")
-        self.assertEqual(self.client.get(url).status_code, status.HTTP_401_UNAUTHORIZED)
-        self.client.force_authenticate(user=self.user)
         self.assertEqual(
             self.client.get(url).status_code,
             status.HTTP_400_BAD_REQUEST,
         )
+        response = self.client.get(url, {"q": "dune"})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertFalse(response.data["results"][0]["in_library"])
 
     def test_local_search_marks_in_library(self):
         self.client.force_authenticate(user=self.user)

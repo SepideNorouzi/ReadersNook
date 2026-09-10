@@ -10,6 +10,7 @@ from drf_spectacular.utils import (
 )
 from rest_framework import generics, status
 from rest_framework.permissions import (
+    AllowAny,
     IsAdminUser,
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
@@ -93,7 +94,7 @@ def _catalog_error_response(exc: CatalogError) -> Response:
     responses={200: BookSearchResponseSerializer},
 )
 class BookSearchAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 
     def get(self, request):
@@ -119,11 +120,13 @@ class BookSearchAPIView(APIView):
         except CatalogError as exc:
             return _catalog_error_response(exc)
 
-        owned = set(
-            UserBook.objects.filter(
-                library=_user_library(request.user)
-            ).values_list("book__external_id", flat=True)
-        )
+        owned = set()
+        if request.user.is_authenticated:
+            owned = set(
+                UserBook.objects.filter(
+                    library=_user_library(request.user)
+                ).values_list("book__external_id", flat=True)
+            )
         for card in payload.results:
             card.in_library = card.external_id in owned
 
