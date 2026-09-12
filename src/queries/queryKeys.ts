@@ -14,5 +14,6 @@ export const queryKeys = {
 
   stats: (username: string) => ["stats", username] as const,
 
-  search: (query: string) => ["search", query] as const,
+  search: (query: string, page: number, perPage: number) =>
+    ["search", query, page, perPage] as const,
 };
