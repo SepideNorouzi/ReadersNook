@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useBookStore } from "../../store/demoBookStore";
 import type { Book } from "../../types/book";
+import { isBookInLibrary } from "./isBookInLibrary";
 
 type UpdateBookInput = {
   id: string;
@@ -36,13 +37,22 @@ export const demoBookRepo = {
       mutationFn: async (
         book: Omit<Book, "id" | "addedAt">,
       ): Promise<void> => {
-        const newBook: Book = {
+        const { books, addBook } = useBookStore.getState();
+
+        if (
+          isBookInLibrary(books, book.sourceId, {
+            title: book.title,
+            author: book.author,
+          })
+        ) {
+          return;
+        }
+
+        addBook({
           ...book,
           id: crypto.randomUUID(),
           addedAt: new Date().toISOString(),
-        };
-
-        useBookStore.getState().addBook(newBook);
+        });
       },
     });
   },

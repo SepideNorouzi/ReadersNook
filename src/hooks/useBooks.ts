@@ -1,4 +1,5 @@
 import { bookRepository } from "../repo/book/bookRepo";
+import { isBookInLibrary } from "../repo/book/isBookInLibrary";
 
 export function useBooks() {
   return bookRepository.useBooks();
@@ -21,17 +22,5 @@ export function useIsBookSaved(
   identity?: { title: string; author: string },
 ) {
   const { data: books } = useBooks();
-  if (!books?.length) return false;
-
-  return books.some((book) => {
-    if (sourceId && book.sourceId === sourceId) return true;
-    if (
-      identity &&
-      book.title === identity.title &&
-      book.author === identity.author
-    ) {
-      return true;
-    }
-    return false;
-  });
+  return isBookInLibrary(books, sourceId, identity);
 }

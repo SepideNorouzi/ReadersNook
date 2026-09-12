@@ -5,6 +5,7 @@ import type { BookSearchResult } from "../../types/searchResults";
 import Card from "../../ui/Card";
 import { useCreateBook, useIsBookSaved } from "../../hooks/useBooks";
 import { bookFromSearchResult } from "../../services/bookFromSearch";
+import { useModeStore } from "../../store/modeStore";
 
 type Props = {
   result: BookSearchResult;
@@ -12,14 +13,23 @@ type Props = {
 
 export default function SearchResultCard({ result }: Props) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [justAdded, setJustAdded] = useState(false);
 
+  const mode = useModeStore((state) => state.mode);
   const { mutateAsync: addBook, isPending } = useCreateBook();
 
   const savedLocally = useIsBookSaved(result.externalId, {
     title: result.title,
     author: result.author,
   });
-  const alreadySaved = result.inLibrary || savedLocally;
+
+  // Demo membership lives in the Zustand store. The search API's
+  // `inLibrary` flag is the backend user's library and must not
+  // disable Add while browsing in demo (including leftover admin tokens).
+  const alreadySaved =
+    justAdded ||
+    savedLocally ||
+    (mode === "admin" && result.inLibrary);
 
   const handleAdd = async () => {
     if (alreadySaved || isPending) return;
@@ -28,6 +38,7 @@ export default function SearchResultCard({ result }: Props) {
 
     try {
       await addBook(bookFromSearchResult(result));
+      setJustAdded(true);
     } catch (error) {
       setErrorMessage(
         error instanceof Error
