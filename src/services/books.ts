@@ -27,7 +27,7 @@ export async function getBook(id: string): Promise<Book> {
 export async function createBook(
   book: Omit<Book, "id" | "addedAt">,
 ): Promise<void> {
-  await apiFetch<ApiBookCreateResponse>("/books/add/", {
+  await apiFetch<ApiBookCreateResponse>("/library/add/", {
     method: "POST",
     body: mapBookToCreatePayload(book),
   });
