@@ -19,7 +19,9 @@ export async function getBooks(): Promise<Book[]> {
 }
 
 export async function getBook(id: string): Promise<Book> {
-  const entry = await apiFetch<ApiLibraryEntryDetail>(`/library/books/${id}/`);
+  // TEMP: backend bug on /library/books/{id}/.
+  // This endpoint is keyed by catalog external_id, not the library-entry id.
+  const entry = await apiFetch<ApiLibraryEntryDetail>(`/books/external/${id}/`);
   return mapApiLibraryEntryDetailToBook(entry);
 }
 
