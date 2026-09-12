@@ -1,16 +1,23 @@
 import { useSearchBooks } from "../../hooks/useSearchBooks";
 import SearchResultCard from "./SearchResultCard";
 import { ApiError } from "../../lib/apiClient";
-
 type Props = {
   query: string;
+  page: number;
+  onPageChange: (page: number) => void;
 };
 
-export default function SearchResults({ query }: Props) {
+export default function SearchResults({ query, page, onPageChange }: Props) {
   const trimmed = query.trim();
-  const { data: results, isLoading, isError, error } = useSearchBooks(query);
+  const { data, isLoading, isError, error, isFetching } = useSearchBooks(
+    query,
+    page,
+  );
 
   const isRateLimited = error instanceof ApiError && error.status === 429;
+
+  const results = data?.results ?? [];
+  const hasMore = data?.hasMore ?? false;
 
   if (!trimmed) {
     return (
@@ -87,20 +94,44 @@ export default function SearchResults({ query }: Props) {
   }
 
   return (
-    <div
-      className="
-        grid
-        grid-cols-2
-        gap-4
-        sm:grid-cols-3
-        sm:gap-5
-        lg:grid-cols-4
-        lg:gap-6
-      "
-    >
-      {results.map((result) => (
-        <SearchResultCard key={result.externalId} result={result} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
+        {results.map((result) => (
+          <SearchResultCard key={result.externalId} result={result} />
+        ))}
+      </div>
+
+      <div className="mt-6 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          onClick={() => onPageChange(page - 1)}
+          disabled={page <= 1 || isFetching}
+          className="
+            rounded-xl border border-[var(--brown-200)]
+            px-4 py-2 text-xs font-semibold
+            text-[var(--brown-700)]
+            disabled:cursor-not-allowed disabled:opacity-50
+          "
+        >
+          Previous
+        </button>
+
+        <span className="text-xs text-[var(--text-muted)]">Page {page}</span>
+
+        <button
+          type="button"
+          onClick={() => onPageChange(page + 1)}
+          disabled={!hasMore || isFetching}
+          className="
+            rounded-xl border border-[var(--brown-200)]
+            px-4 py-2 text-xs font-semibold
+            text-[var(--brown-700)]
+            disabled:cursor-not-allowed disabled:opacity-50
+          "
+        >
+          Next
+        </button>
+      </div>
+    </>
   );
 }
