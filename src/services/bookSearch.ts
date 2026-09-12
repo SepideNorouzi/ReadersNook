@@ -1,3 +1,4 @@
+// services/bookSearch.ts
 import { apiFetch } from "../lib/apiClient";
 import type { ApiSearchResponse, ApiSearchResult } from "../types/api/apiSearch";
 import type { BookSearchResult } from "../types/searchResults";
@@ -14,25 +15,43 @@ function mapApiSearchResult(result: ApiSearchResult): BookSearchResult {
   };
 }
 
-/**
- * Hits our own `/search/books/` through `apiFetch` so the search
- * route gets the same 401-refresh-and-retry handling as every
- * other first-party endpoint.
- */
+export type SearchPage = {
+  results: BookSearchResult[];
+  page: number;
+  perPage: number;
+  hasMore: boolean;
+};
+
+const DEFAULT_PER_PAGE = 10;
+
 export async function searchBooks(
   query: string,
   opts: { page?: number; perPage?: number } = {},
-): Promise<BookSearchResult[]> {
+): Promise<SearchPage> {
   const trimmed = query.trim();
-  if (!trimmed) return [];
+  const page = opts.page ?? 1;
+  const perPage = opts.perPage ?? DEFAULT_PER_PAGE;
 
-  const params = new URLSearchParams({ q: trimmed });
-  if (opts.page !== undefined) params.set("page", String(opts.page));
-  if (opts.perPage !== undefined) params.set("per_page", String(opts.perPage));
+  if (!trimmed) {
+    return { results: [], page, perPage, hasMore: false };
+  }
+
+  const params = new URLSearchParams({
+    q: trimmed,
+    page: String(page),
+    per_page: String(perPage),
+  });
 
   const data = await apiFetch<ApiSearchResponse>(
     `/search/books/?${params.toString()}`,
   );
 
-  return data.results.map(mapApiSearchResult);
+  return {
+    results: data.results.map(mapApiSearchResult),
+    page: data.page,
+    perPage: data.per_page,
+    // No total count from the backend, so infer "more pages exist"
+    // from whether this page came back full.
+    hasMore: data.results.length === data.per_page,
+  };
 }
