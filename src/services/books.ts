@@ -8,19 +8,18 @@ import {
 import type { Book } from "../types/book";
 import type {
   ApiBookCreateResponse,
+  ApiLibrary,
   ApiLibraryEntry,
   ApiLibraryEntryDetail,
 } from "../types/api/apiBook";
 
 export async function getBooks(): Promise<Book[]> {
-  const entries = await apiFetch<ApiLibraryEntry[]>("/library/");
-  return entries.map(mapApiLibraryEntryToBook);
+  const library = await apiFetch<ApiLibrary>("/library/");
+  return library.books.map(mapApiLibraryEntryToBook);
 }
 
 export async function getBook(id: string): Promise<Book> {
-  const entry = await apiFetch<ApiLibraryEntryDetail>(
-    `/library/books/${id}/`,
-  );
+  const entry = await apiFetch<ApiLibraryEntryDetail>(`/library/books/${id}/`);
   return mapApiLibraryEntryDetailToBook(entry);
 }
 
@@ -45,5 +44,5 @@ export async function updateBook(
 }
 
 export async function deleteBook(id: string): Promise<void> {
-  await apiFetch<void>(`/library/books/${id}/`, { method: "DELETE" });
+  await apiFetch<void>(`/library/books/${id}/delete/`, { method: "DELETE" });
 }
