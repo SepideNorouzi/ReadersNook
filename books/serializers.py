@@ -92,8 +92,8 @@ class AddLibraryBookSerializer(serializers.Serializer):
     """
     
     external_id = serializers.CharField(max_length=50)
-    title = serializers.CharField(max_length=255)
-    author = serializers.CharField(max_length=255)
+    title = serializers.CharField(max_length=255 , required=False)
+    author = serializers.CharField(max_length=255 , required=False)
     genres = serializers.ListField(
         child=serializers.CharField(max_length=100),
         required=False,
@@ -211,7 +211,6 @@ class UserBookSerializer(serializers.ModelSerializer):
             "book",
             "status",
             "current_page",
-            "rating",
             "added_at",
             "updated_at",
         )

@@ -9,9 +9,11 @@ query GetBook($id: Int!) {
     id
     title
     description
+    rating
     pages
     cached_image
     cached_contributors
+    cached_tags
   }
 }
 """

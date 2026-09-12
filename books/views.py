@@ -222,7 +222,6 @@ class BookCreateAPIView(APIView):
             defaults={
                 "status": data["status"],
                 "current_page": data["current_page"],
-                "rating": data["rating"],
             },
         )
 

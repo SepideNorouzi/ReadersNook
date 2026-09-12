@@ -33,19 +33,49 @@ def _author(doc: dict) -> str:
     return ", ".join(authors)
 
 
+# _________________________________________________
+# get the first 5 genres from the cached_tags field, which is a dict of lists of dicts
+# _________________________________________________
 def _genres(doc: dict) -> list[str]:
-    raw = doc.get("genres") or []
+    # Format 1: direct genres list
+    genres = doc.get("genres")
+    if isinstance(genres, list):
+        return [
+            str(genre).strip()
+            for genre in genres
+            if str(genre).strip()
+        ][:5]
+
+    # Format 2: cached_tags -> Genre
+    cached_tags = doc.get("cached_tags") or {}
+
+    if isinstance(cached_tags, str):
+        try:
+            cached_tags = json.loads(cached_tags)
+        except json.JSONDecodeError:
+            return []
+
+    if not isinstance(cached_tags, dict):
+        return []
+
+    raw = cached_tags.get("Genre") or []
+
     if not isinstance(raw, list):
         return []
+
     names = []
+
     for item in raw:
         if isinstance(item, str) and item.strip():
             names.append(item.strip())
+
         elif isinstance(item, dict):
-            name = item.get("name") or item.get("tag") or ""
+            name = item.get("tag") or item.get("name") or ""
             if name:
                 names.append(str(name).strip())
+
     return names[:5]
+
 
 
 def _rating(doc: dict) -> float | None:
