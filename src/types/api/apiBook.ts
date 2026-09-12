@@ -67,3 +67,25 @@ export type ApiLibraryUpdatePayload = Partial<{
   current_page?: number;
   rating?: number;
 }>;
+
+// GET /library/ — the top-level object: entries + collections.
+export type ApiLibraryCollectionSummary = {
+  id: number;
+  name: string;
+  description: string;
+  books: Pick<
+    ApiCatalogBook,
+    "id" | "external_id" | "title" | "author" | "cover_url" | "total_pages"
+  >[];
+  library: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ApiLibrary = {
+  id: number;
+  books: ApiLibraryEntry[];
+  collections: ApiLibraryCollectionSummary[];
+  created_at: string;
+  updated_at: string;
+};
