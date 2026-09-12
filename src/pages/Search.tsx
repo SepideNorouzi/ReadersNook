@@ -6,6 +6,12 @@ import SearchResults from "../features/searchBooks/SearchResults";
 
 export default function Search() {
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+
+  const handleSearch = (newQuery: string) => {
+    setQuery(newQuery);
+    setPage(1); // every new search starts back at page 1
+  };
 
   return (
     <main className="flex flex-col gap-7 p-4 pt-20 sm:p-6 lg:p-12 lg:pt-20">
@@ -41,11 +47,11 @@ export default function Search() {
           </p>
         </div>
 
-        <SearchBar onSearch={setQuery} />
+        <SearchBar onSearch={handleSearch} />
       </section>
 
       <section className="mx-auto w-full max-w-6xl">
-        <SearchResults query={query} />
+        <SearchResults query={query} page={page} onPageChange={setPage} />
       </section>
     </main>
   );
