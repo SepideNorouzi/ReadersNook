@@ -60,7 +60,7 @@ def _catalog_error_response(exc: CatalogError) -> Response:
 
 
 # ________________________________________________
-# Search
+# Search books (GET /search/)
 # ________________________________________________
 
 @extend_schema(
@@ -150,7 +150,7 @@ class BookSearchAPIView(APIView):
     responses={200: CatalogBookDetailSerializer, 404: DetailMessageSerializer},
 )
 class CatalogBookDetailAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, external_id):
         try:
@@ -265,6 +265,9 @@ class BookListAPIView(generics.RetrieveAPIView):
         )
 
 
+# _______________________________________________
+# Retrieve a library book
+# _______________________________________________
 @extend_schema_view(
     get=extend_schema(
         tags=["Library"],
@@ -283,6 +286,9 @@ class LibraryBookDetailAPIView(generics.RetrieveAPIView):
 
 
 
+# _______________________________________________
+# Delete a library book
+# _______________________________________________
 class LibraryBookDeleteAPIView(generics.DestroyAPIView):
     serializer_class = UserBookSerializer
     permission_classes = [IsAuthenticated]
@@ -298,8 +304,9 @@ class LibraryBookDeleteAPIView(generics.DestroyAPIView):
             collection.books.remove(book)
 
 
-# --- Catalog books ---
-
+# _______________________________________________
+# Book detail api view (GET /books/<pk>/)
+# _______________________________________________
 
 @extend_schema_view(
     get=extend_schema(
@@ -316,6 +323,9 @@ class BookDetailAPIView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
+# _______________________________________________
+# Book update api view (PUT /books/<pk>/, PATCH /books/<pk>/)
+# _______________________________________________
 @extend_schema_view(
     put=extend_schema(
         tags=["Books"],
@@ -334,6 +344,15 @@ class BookUpdateAPIView(generics.UpdateAPIView):
     permission_classes = [IsAdminUser]
 
 
+
+
+
+
+
+
+
+
+# ___________________________________________________________________________________ #
 # --- Quotes ---
 
 

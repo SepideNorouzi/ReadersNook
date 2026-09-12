@@ -28,7 +28,7 @@ class LibraryAdmin(admin.ModelAdmin):
 
 @admin.register(UserBook)
 class UserBookAdmin(admin.ModelAdmin):
-    list_display = ("library", "book", "status", "current_page", "rating")
+    list_display = ("library", "book", "status", "current_page", "added_at")
     list_filter = ("status",)
     search_fields = ("book__title", "library__user__username")
 

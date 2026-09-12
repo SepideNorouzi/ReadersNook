@@ -92,8 +92,13 @@ class AddLibraryBookSerializer(serializers.Serializer):
     """
     
     external_id = serializers.CharField(max_length=50)
-    title = serializers.CharField(max_length=255, required=False)
-    author = serializers.CharField(max_length=255, required=False)
+    title = serializers.CharField(max_length=255)
+    author = serializers.CharField(max_length=255)
+    genres = serializers.ListField(
+        child=serializers.CharField(max_length=100),
+        required=False,
+        default=list
+    )
     summary = serializers.CharField(required=False, allow_blank=True, default="")
     cover_url = serializers.URLField(
         max_length=500, required=False, allow_blank=True, default=""
@@ -110,7 +115,7 @@ class AddLibraryBookSerializer(serializers.Serializer):
         max_value=5,
         required=False,
         allow_null=True,
-        default=None,
+        default=0.0,
     )
 
     def validate_current_page(self, value):

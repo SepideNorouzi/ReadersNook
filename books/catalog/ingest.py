@@ -9,9 +9,11 @@ def book_to_card(book: Book) -> BookCard:
         external_id=book.external_id,
         title=book.title,
         author=book.author,
+        genres=book.genres,
         summary=book.summary,
         cover_url=book.cover_url,
         total_pages=book.total_pages,
+        rating=book.rating,
     )
 
 
@@ -33,9 +35,11 @@ def _create_book(card: BookCard) -> Book:
         defaults={
             "title": card.title,
             "author": card.author,
+            "genres" : card.genres,
             "summary": card.summary,
             "cover_url": card.cover_url,
             "total_pages": card.total_pages,
+            "rating": card.rating,
         },
     )
     return book
@@ -54,9 +58,11 @@ def resolve_book(data: dict) -> Book:
                 external_id=external_id,
                 title=data["title"],
                 author=data["author"],
+                genres=data.get("genres") or [],
                 summary=data.get("summary") or "",
                 cover_url=data.get("cover_url") or "",
                 total_pages=data.get("total_pages") or 0,
+                rating=data.get("rating") or 0.0,
             )
         )
 

@@ -17,9 +17,19 @@ class Book(models.Model):
     )
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
+    genres = models.JSONField(
+        default=list,
+        blank=True,
+    )
     summary = models.TextField(blank=True)
     cover_url = models.URLField(max_length=500, blank=True)
     total_pages = models.PositiveIntegerField(default=0)
+    rating = models.FloatField(
+        validators=[MinValueValidator(0.0), MaxValueValidator(5.0)],
+        null=True,
+        blank=True,
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -99,11 +109,6 @@ class UserBook(models.Model):
         db_index=True,
     )
     current_page = models.PositiveIntegerField(default=0)
-    rating = models.FloatField(
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0), MaxValueValidator(5)],
-    )
     added_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
