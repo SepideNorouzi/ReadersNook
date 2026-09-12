@@ -73,7 +73,22 @@ export const adminBookRepo = {
           throw new Error("Cannot fetch book without an authenticated user.");
         }
 
-        const book = await getBook(id);
+        // The new detail endpoint wants the catalog external_id, not the
+        // library-entry id from the route. ensureQueryData reuses the list
+        // cache if it's already warm, or fetches it if this is a direct
+        // link / fresh page load with nothing cached yet.
+        const books = await queryClient.ensureQueryData({
+          queryKey: queryKeys.books(username),
+          queryFn: getBooks,
+        });
+
+        const externalId = books.find((b) => b.id === id)?.sourceId;
+
+        if (!externalId) {
+          throw new Error(`No catalog entry found for library book ${id}.`);
+        }
+
+        const book = await getBook(externalId);
 
         updateBookInList(queryClient, username, book);
 
