@@ -1,5 +1,5 @@
 import { Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import SearchBar from "../features/searchBooks/SearchBar";
 import SearchResults from "../features/searchBooks/SearchResults";
@@ -8,10 +8,10 @@ export default function Search() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  const handleSearch = (newQuery: string) => {
+  const handleSearch = useCallback((newQuery: string) => {
     setQuery(newQuery);
-    setPage(1); // every new search starts back at page 1
-  };
+    setPage(1);
+  }, []); // setQuery/setPage are stable across renders.
 
   return (
     <main className="flex flex-col gap-7 p-4 pt-20 sm:p-6 lg:p-12 lg:pt-20">
