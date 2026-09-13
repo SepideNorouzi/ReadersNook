@@ -1,52 +1,17 @@
-import { useState } from "react";
 import { BookOpen, Check, Plus } from "lucide-react";
 
 import type { BookSearchResult } from "../../types/searchResults";
 import Card from "../../ui/Card";
-import { useCreateBook, useIsBookSaved } from "../../hooks/useBooks";
-import { bookFromSearchResult } from "../../services/bookFromSearch";
-import { useModeStore } from "../../store/modeStore";
+import { useAddToLibrary } from "../../hooks/useBooks";
+import { Link } from "react-router";
 
 type Props = {
   result: BookSearchResult;
 };
 
 export default function SearchResultCard({ result }: Props) {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [justAdded, setJustAdded] = useState(false);
-
-  const mode = useModeStore((state) => state.mode);
-  const { mutateAsync: addBook, isPending } = useCreateBook();
-
-  const savedLocally = useIsBookSaved(result.externalId, {
-    title: result.title,
-    author: result.author,
-  });
-
-  // Demo membership lives in the Zustand store. The search API's
-  // `inLibrary` flag is the backend user's library and must not
-  // disable Add while browsing in demo (including leftover admin tokens).
-  const alreadySaved =
-    justAdded ||
-    savedLocally ||
-    (mode === "admin" && result.inLibrary);
-
-  const handleAdd = async () => {
-    if (alreadySaved || isPending) return;
-
-    setErrorMessage(null);
-
-    try {
-      await addBook(bookFromSearchResult(result));
-      setJustAdded(true);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Couldn't add this book. Please try again.",
-      );
-    }
-  };
+  const { alreadySaved, isPending, errorMessage, handleAdd } =
+    useAddToLibrary(result);
 
   return (
     <Card
@@ -62,6 +27,11 @@ export default function SearchResultCard({ result }: Props) {
         hover:shadow-[0_16px_36px_rgba(72,45,30,0.14)]
       "
     >
+      <Link
+        to={`/book/${result.externalId}`}
+        aria-label={`View details for ${result.title} by ${result.author}`}
+        className="absolute inset-0 z-10"
+      />
       {/* Ambient glow */}
       <div
         className="
@@ -172,7 +142,7 @@ export default function SearchResultCard({ result }: Props) {
           disabled={alreadySaved || isPending}
           aria-pressed={alreadySaved}
           className={`
-            mt-auto
+            relative z-20 mt-auto
             flex w-full
             items-center justify-center gap-1.5
             rounded-xl
