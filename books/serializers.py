@@ -65,6 +65,7 @@ class AestheticPhotoCreateSerializer(AestheticPhotoSerializer):
 
 
 class BookDetailSerializer(BookSerializer):
+    user_book = serializers.SerializerMethodField()
     quotes = ShortQuoteSerializer(many=True, read_only=True)
     aesthetic_photos = AestheticPhotoSerializer(many=True, read_only=True)
 
@@ -77,11 +78,25 @@ class BookDetailSerializer(BookSerializer):
             "summary",
             "cover_url",
             "total_pages",
+            "genres",
+            "rating",
             "created_at",
             "updated_at",
+            "user_book",
             "quotes",
             "aesthetic_photos",
         )
+
+    def get_user_book(self, obj):
+        user_book = self.context.get("user_book")
+
+        if not user_book:
+            return None
+
+        return ShortUserBookSerializer(
+            user_book,
+            context=self.context,
+        ).data
 
 
 class AddLibraryBookSerializer(serializers.Serializer):
@@ -227,6 +242,17 @@ class UserBookSerializer(serializers.ModelSerializer):
                 {"current_page": "Current page cannot be greater than total pages."}
             )
         return attrs
+
+class ShortUserBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserBook
+        fields = (
+            "status",
+            "current_page",
+            "added_at",
+            "updated_at",
+        )
+        read_only_fields = ("id", "book", "added_at", "updated_at")
 
 
 class LibrarySerializer(serializers.ModelSerializer):

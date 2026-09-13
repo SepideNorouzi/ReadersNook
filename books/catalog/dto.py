@@ -12,6 +12,7 @@ class BookCard:
     genres: list[str] = field(default_factory=list)
     rating: float | None = None
     in_library: bool = False
+    database_id: int | None = None
 
     def to_dict(self):
         return asdict(self)
