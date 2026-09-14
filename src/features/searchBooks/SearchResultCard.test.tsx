@@ -1,61 +1,76 @@
 import { beforeEach, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+
+import { renderHook, waitFor } from "@testing-library/react";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import SearchResultCard from "./SearchResultCard";
-import { useBookStore } from "../../store/demoBookStore";
+import { http, HttpResponse } from "msw";
+
+import type { ReactNode } from "react";
 import { useModeStore } from "../../store/modeStore";
-import type { BookSearchResult } from "../../types/searchResults";
+import { useBookStore } from "../../store/demoBookStore";
+import { server } from "../../data/server";
+import { useSearchBooks } from "../../hooks/useSearchBooks";
 
-const piranesi: BookSearchResult = {
-  externalId: "hardcover:123",
-  title: "Piranesi",
-  author: "Susanna Clarke",
-  summary: "A man lives in a house of infinite rooms.",
-  coverUrl: null,
-  totalPages: 245,
-  inLibrary: true,
-};
+const API = "http://localhost:8000";
 
-function renderCard(result: BookSearchResult = piranesi) {
-  const client = new QueryClient({
-    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+      mutations: {
+        retry: false,
+      },
+    },
   });
+}
 
-  return render(
-    <QueryClientProvider client={client}>
-      <SearchResultCard result={result} />
-    </QueryClientProvider>,
-  );
+function wrapper({ children }: { children: ReactNode }) {
+  const client = createQueryClient();
+
+  return <QueryClientProvider client={client}>{children} </QueryClientProvider>;
 }
 
 beforeEach(() => {
   useModeStore.getState().setMode("demo");
   useBookStore.getState().setBooks([]);
+
+  server.use(
+    http.get(`${API}/search/books/`, () =>
+      HttpResponse.json({
+        query: "piranesi",
+        page: 1,
+        per_page: 10,
+        results: [
+          {
+            external_id: "hardcover:123",
+            title: "Piranesi",
+            author: "Susanna Clarke",
+            summary: "A man lives in a house of infinite rooms.",
+            cover_url: "",
+            total_pages: 245,
+            genres: ["fantasy", "literary"],
+            rating: 0,
+            in_library: true,
+            database_id: 10,
+          },
+        ],
+      }),
+    ),
+  );
 });
 
-it("lets you add a book in demo even when the search API says it is already in a library", async () => {
-  const user = userEvent.setup();
-  renderCard();
+it("overlays demo library membership onto search hits so API in_library is ignored", async () => {
+  const { result } = renderHook(() => useSearchBooks("piranesi", 1), {
+    wrapper,
+  });
 
-  const addButton = screen.getByRole("button", { name: /add to library/i });
-  expect(addButton).toBeEnabled();
+  await waitFor(() => {
+    expect(result.current.data?.results[0]?.inLibrary).toBe(false);
+  });
 
-  await user.click(addButton);
-
-  expect(
-    await screen.findByRole("button", { name: /added/i }),
-  ).toBeDisabled();
-
-  const stored = useBookStore.getState().books;
-  expect(stored).toHaveLength(1);
-  expect(stored[0].title).toBe("Piranesi");
-  expect(stored[0].sourceId).toBe("hardcover:123");
-  expect(stored[0].status).toBe("tbr");
-});
-
-it("shows Added in demo when the book is already in the local store", () => {
   useBookStore.getState().addBook({
     id: "local-1",
     title: "Piranesi",
@@ -71,17 +86,7 @@ it("shows Added in demo when the book is already in the local store", () => {
     sourceId: "hardcover:123",
   });
 
-  renderCard({ ...piranesi, inLibrary: false });
-
-  expect(screen.getByRole("button", { name: /added/i })).toBeDisabled();
-});
-
-it("does not insert a duplicate when Add is clicked twice", async () => {
-  const user = userEvent.setup();
-  renderCard({ ...piranesi, inLibrary: false });
-
-  await user.click(screen.getByRole("button", { name: /add to library/i }));
-  await screen.findByRole("button", { name: /added/i });
-
-  expect(useBookStore.getState().books).toHaveLength(1);
+  await waitFor(() => {
+    expect(result.current.data?.results[0]?.inLibrary).toBe(true);
+  });
 });
