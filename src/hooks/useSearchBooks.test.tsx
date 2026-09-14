@@ -45,28 +45,27 @@ beforeEach(() => {
 });
 
 it("overlays demo library membership onto search hits so API in_library is ignored", async () => {
-  const { result } = renderHook(() => useSearchBooks("piranesi"), { wrapper });
-
+  const { result } = renderHook(() => useSearchBooks("piranesi", 20), { wrapper });
   await waitFor(() => {
-    expect(result.current.data?.[0]?.inLibrary).toBe(false);
+    expect(result.current.data?.results?.[0]?.inLibrary).toBe(false);
   });
-
-  useBookStore.getState().addBook({
-    id: "local-1",
-    title: "Piranesi",
-    author: "Susanna Clarke",
-    summary: "",
-    coverUrl: "",
-    currentPage: 0,
-    totalPages: 245,
-    status: "tbr",
-    rating: 0,
-    quotes: [],
-    aestheticImages: [],
-    sourceId: "hardcover:123",
-  });
-
+  useBookStore
+    .getState()
+    .addBook({
+      id: "local-1",
+      title: "Piranesi",
+      author: "Susanna Clarke",
+      summary: "",
+      coverUrl: "",
+      currentPage: 0,
+      totalPages: 245,
+      status: "tbr",
+      rating: 0,
+      quotes: [],
+      aestheticImages: [],
+      sourceId: "hardcover:123",
+    });
   await waitFor(() => {
-    expect(result.current.data?.[0]?.inLibrary).toBe(true);
+    expect(result.current.data?.results?.[0]?.inLibrary).toBe(true);
   });
 });
