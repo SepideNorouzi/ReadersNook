@@ -12,9 +12,16 @@ import { mapApiAestheticPhoto } from "./MapApiToAestheticPhoto";
 // ASSUMPTION: comma-separated. Confirm the real delimiter with
 // [[backend-teammate]] — nothing in the given Swagger docs states how
 // the nested `book.genres` string is joined server-side.
-function parseGenres(genres: string): string[] {
+function parseGenres(genres: string | string[]): string[] {
+  if (Array.isArray(genres)) {
+    return genres.filter(Boolean);
+  }
+
   return genres
-    ? genres.split(",").map((g) => g.trim()).filter(Boolean)
+    ? genres
+        .split(",")
+        .map((g) => g.trim())
+        .filter(Boolean)
     : [];
 }
 
@@ -38,7 +45,9 @@ export function mapApiLibraryEntryToBook(entry: ApiLibraryEntry): Book {
   };
 }
 
-export function mapApiCatalogBookDetailToBook(entry: ApiCatalogBookDetail): Book {
+export function mapApiCatalogBookDetailToBook(
+  entry: ApiCatalogBookDetail,
+): Book {
   const userBook = entry.user_book;
 
   const photos = userBook?.aesthetic_photos
@@ -61,8 +70,12 @@ export function mapApiCatalogBookDetailToBook(entry: ApiCatalogBookDetail): Book
     status: userBook?.status ?? "tbr",
     rating: entry.rating,
     addedAt: userBook?.added_at,
-    quotes: userBook?.quotes ? userBook.quotes.map(mapApiQuoteNestedToQuote) : [],
-    aestheticImages: photos.map((photo) => mapApiAestheticPhoto(photo).imageUrl),
+    quotes: userBook?.quotes
+      ? userBook.quotes.map(mapApiQuoteNestedToQuote)
+      : [],
+    aestheticImages: photos.map(
+      (photo) => mapApiAestheticPhoto(photo).imageUrl,
+    ),
     genres: entry.genres,
     sourceId: entry.external_id,
   };
@@ -110,7 +123,13 @@ export function mapBookToCatalogUpdatePayload(
   changes: Partial<
     Pick<
       Book,
-      "title" | "author" | "genres" | "summary" | "coverUrl" | "totalPages" | "rating"
+      | "title"
+      | "author"
+      | "genres"
+      | "summary"
+      | "coverUrl"
+      | "totalPages"
+      | "rating"
     >
   >,
 ): ApiCatalogBookUpdatePayload {
@@ -122,7 +141,9 @@ export function mapBookToCatalogUpdatePayload(
     ...(changes.coverUrl !== undefined && {
       cover_url: toCoverUrl(changes.coverUrl),
     }),
-    ...(changes.totalPages !== undefined && { total_pages: changes.totalPages }),
+    ...(changes.totalPages !== undefined && {
+      total_pages: changes.totalPages,
+    }),
     ...(changes.rating !== undefined && { rating: changes.rating }),
   };
 }

@@ -34,33 +34,36 @@ function updateBookInList(
 }
 
 export const adminBookRepo = {
-  useBooks(enabled = true) {
-    const username = useAuthStore((state) => state.username);
+useBooks(enabled = true) {
+  const username = useAuthStore((state) => state.username);
 
-    const queryEnabled = enabled && Boolean(username);
+  const queryEnabled = enabled && Boolean(username);
 
-    const {
-      data = [],
-      isLoading,
-      isError,
-      error,
-    } = useQuery({
-      queryKey: username
-        ? queryKeys.books(username)
-        : ["books", "anonymous"],
+  const query = useQuery({
+    queryKey: username
+      ? queryKeys.books(username)
+      : ["books", "anonymous"],
+    queryFn: getBooks,
+    enabled: queryEnabled,
+  });
 
-      queryFn: getBooks,
+  console.log("BOOK QUERY", {
+    mode: enabled ? "admin" : "disabled",
+    username,
+    queryEnabled,
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+  });
 
-      enabled: queryEnabled,
-    });
-
-    return {
-      data,
-      isLoading: queryEnabled && isLoading,
-      isError,
-      error,
-    };
-  },
+  return {
+    data: query.data ?? [],
+    isLoading: queryEnabled && query.isLoading,
+    isError: query.isError,
+    error: query.error,
+  };
+},
 
   /**
    * `externalId` is the identifier used by the /book/:id route.

@@ -19,7 +19,7 @@ export type ApiCatalogBook = {
   total_pages: number;
   created_at: string;
   updated_at: string;
-  genres: string;
+  genres: string[];
   rating: number;
 };
 
