@@ -46,9 +46,20 @@ export default function BookCard({ book }: { book: Book }) {
   const status = STATUS_OPTIONS.find((item) => item.value === book.status)!;
   const styles = STATUS_STYLES[book.status];
 
+  /**
+   * Admin:
+   *   sourceId = external book id
+   *   id       = user's library-entry id
+   *
+   * Demo:
+   *   sourceId may not exist
+   *   id remains the mock-book id
+   */
+  const detailId = book.sourceId ?? book.id;
+
   return (
     <Link
-      to={`/book/${book.id}`}
+      to={`/book/${encodeURIComponent(detailId)}`}
       className="group block transition-transform duration-300 active:scale-[0.985]"
     >
       <Card

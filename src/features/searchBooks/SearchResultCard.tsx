@@ -28,7 +28,8 @@ export default function SearchResultCard({ result }: Props) {
       "
     >
       <Link
-        to={`/book/${result.externalId}`}
+        to={`/book/${encodeURIComponent(result.externalId)}`}
+        state={{ searchResult: result }}
         aria-label={`View details for ${result.title} by ${result.author}`}
         className="absolute inset-0 z-10"
       />
