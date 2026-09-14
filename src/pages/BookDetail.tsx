@@ -82,11 +82,11 @@ export default function BookDetail() {
         onClick={() => navigate(-1)}
         aria-label="Go back"
         className="
+        hidden
 fixed
-left-80
 top-6
 z-[100]
-flex
+lg:flex
 h-10
 w-10
 items-center
