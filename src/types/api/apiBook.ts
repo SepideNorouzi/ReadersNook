@@ -1,11 +1,14 @@
 import type { BookStatus } from "../book";
 import type { ApiAestheticPhoto } from "./apiAestheticPhoto";
 import type { ApiQuoteNested } from "./apiQuote";
+import type { ApiCatalogPreview } from "./apiSearch";
 
 export type ApiBookStatus = BookStatus;
 
-// The shared catalog row — one per book, regardless of how many
-// users have it in their library. Nested inside every library entry.
+/**
+ * Shared catalog book.
+ * This is the actual database/catalog record.
+ */
 export type ApiCatalogBook = {
   id: number;
   external_id: string;
@@ -20,25 +23,38 @@ export type ApiCatalogBook = {
   rating: number;
 };
 
-// GET /library/ (list). This is the "through" record: your relationship
-// to a book (status, progress, rating), with the shared book nested in.
+/**
+ * One user's library relationship to a catalog book.
+ *
+ * `id` is the library-entry id.
+ * `book.id` is the catalog/database id.
+ */
 export type ApiLibraryEntry = {
-  id: number; // the library entry's own pk
+  id: number;
   book: ApiCatalogBook;
   status: ApiBookStatus;
   current_page: number;
-  rating: number | null;
-  added_at: string; // when YOU added it — not the book's created_at
-  updated_at: string; // when your progress last changed
+  added_at: string;
+  updated_at: string;
 };
 
-// GET /library/books/{book_pk}/
-export type ApiLibraryEntryDetail = ApiLibraryEntry & {
-  quotes?: ApiQuoteNested[];
-  aesthetic_photos?: ApiAestheticPhoto[];
+/**
+ * GET /books/{id}/ and
+ * GET /books/external/{external_id}/
+ */
+export type ApiCatalogBookDetail = ApiCatalogPreview & {
+  id: number;
+  user_book:
+    | (ApiLibraryEntry & {
+        quotes?: ApiQuoteNested[];
+        aesthetic_photos?: ApiAestheticPhoto[];
+      })
+    | null;
 };
 
-// POST /books/add/ — flat, NOT nested like the responses above.
+/**
+ * POST /library/add/
+ */
 export type ApiBookCreatePayload = {
   external_id: string;
   title?: string;
@@ -46,31 +62,33 @@ export type ApiBookCreatePayload = {
   summary?: string;
   cover_url?: string;
   total_pages?: number;
+  genres?: string[];
   status?: ApiBookStatus;
   current_page?: number;
   rating?: number;
 };
 
-export type ApiBookCreateResponse = {
+export type ApiBookCreateResponse = ApiLibraryEntry;
+
+/**
+ * PATCH/PUT /books/{id}/update/
+ *
+ * Shared catalog fields.
+ */
+export type ApiCatalogBookUpdatePayload = Partial<{
   external_id: string;
   title: string;
   author: string;
+  genres: string[];
   summary: string;
   cover_url: string;
   total_pages: number;
-  status: ApiBookStatus;
-  current_page: number;
-  rating: number | null;
-};
-
-// PUT/PATCH /library/books/{book_pk}/ — progress fields ONLY.
-export type ApiLibraryUpdatePayload = Partial<{
-  status?: ApiBookStatus;
-  current_page?: number;
-  rating?: number;
+  rating: number;
 }>;
 
-// GET /library/ — the top-level object: entries + collections.
+/**
+ * Collection summary returned as part of library-related data.
+ */
 export type ApiLibraryCollectionSummary = {
   id: number;
   name: string;
@@ -84,10 +102,9 @@ export type ApiLibraryCollectionSummary = {
   updated_at: string;
 };
 
-export type ApiLibrary = {
-  id: number;
-  books: ApiLibraryEntry[];
-  collections: ApiLibraryCollectionSummary[];
-  created_at: string;
-  updated_at: string;
-};
+/**
+ * GET /library/
+ * The endpoint returns the user's library entries directly.
+ * It is NOT a wrapper object containing `books`.
+ */
+export type ApiLibrary = ApiLibraryEntry[];
