@@ -107,4 +107,13 @@ export type ApiLibraryCollectionSummary = {
  * The endpoint returns the user's library entries directly.
  * It is NOT a wrapper object containing `books`.
  */
-export type ApiLibrary = ApiLibraryEntry[];
+/**
+ * GET /library/
+ */
+export type ApiLibrary = {
+  id: number;
+  books: ApiLibraryEntry[];
+  collections: ApiLibraryCollectionSummary[];
+  created_at: string;
+  updated_at: string;
+};
