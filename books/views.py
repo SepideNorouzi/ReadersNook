@@ -50,7 +50,7 @@ def catalog_error_response(exc: CatalogError) -> Response:
 
 
 @extend_schema(
-    tags=["Search"],
+    tags=["Library"],
     summary="Search books",
     description=(
         "Search the catalog. The prototype uses Hardcover; the response shape "
@@ -134,7 +134,7 @@ class BookSearchAPIView(APIView):
 
 
 @extend_schema(
-    tags=["Search"],
+    tags=["Library"],
     summary="Retrieve a catalog book",
     description=(
         "Look up a book by external_id (e.g. hc:312460). Uses our catalog when "
