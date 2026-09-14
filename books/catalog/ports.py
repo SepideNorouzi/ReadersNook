@@ -1,4 +1,4 @@
-from typing import Optional, Protocol
+from typing import Protocol
 
 from .dto import BookCard, SearchPage
 
@@ -8,4 +8,4 @@ class CatalogSearchPort(Protocol):
 
 
 class CatalogProviderPort(Protocol):
-    def fetch(self, external_id: str) -> Optional[BookCard]: ...
+    def fetch(self, external_id: str) -> BookCard | None: ...

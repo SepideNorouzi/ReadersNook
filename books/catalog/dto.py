@@ -3,6 +3,8 @@ from dataclasses import asdict, dataclass, field
 
 @dataclass
 class BookCard:
+    """Provider-agnostic book shape returned to the API."""
+
     external_id: str
     title: str
     author: str

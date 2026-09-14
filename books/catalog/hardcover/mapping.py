@@ -33,49 +33,35 @@ def _author(doc: dict) -> str:
     return ", ".join(authors)
 
 
-# _________________________________________________
-# get the first 5 genres from the cached_tags field, which is a dict of lists of dicts
-# _________________________________________________
 def _genres(doc: dict) -> list[str]:
-    # Format 1: direct genres list
+    """First 5 genres, from either a direct list or the cached_tags blob."""
     genres = doc.get("genres")
     if isinstance(genres, list):
-        return [
-            str(genre).strip()
-            for genre in genres
-            if str(genre).strip()
-        ][:5]
+        names = [str(genre).strip() for genre in genres if str(genre).strip()]
+        return names[:5]
 
-    # Format 2: cached_tags -> Genre
     cached_tags = doc.get("cached_tags") or {}
-
     if isinstance(cached_tags, str):
         try:
             cached_tags = json.loads(cached_tags)
         except json.JSONDecodeError:
             return []
-
     if not isinstance(cached_tags, dict):
         return []
 
     raw = cached_tags.get("Genre") or []
-
     if not isinstance(raw, list):
         return []
 
     names = []
-
     for item in raw:
         if isinstance(item, str) and item.strip():
             names.append(item.strip())
-
         elif isinstance(item, dict):
             name = item.get("tag") or item.get("name") or ""
             if name:
                 names.append(str(name).strip())
-
     return names[:5]
-
 
 
 def _rating(doc: dict) -> float | None:
@@ -102,6 +88,7 @@ def _cover_url(doc: dict) -> str:
 
 
 def document_to_card(hardcover_id, doc: dict) -> BookCard | None:
+    """Map one Hardcover document to our BookCard, or None if unusable."""
     if hardcover_id is None:
         hardcover_id = doc.get("id") or doc.get("book_id")
     if hardcover_id is None:
@@ -124,17 +111,19 @@ def document_to_card(hardcover_id, doc: dict) -> BookCard | None:
 
 
 def parse_search_hits(results, ids=None) -> list[BookCard]:
+    """Turn a Hardcover search payload (JSON string or dict) into BookCards."""
     if isinstance(results, str):
         try:
             results = json.loads(results)
         except json.JSONDecodeError:
             return []
 
-    hits = []
     if isinstance(results, dict):
         hits = results.get("hits") or []
     elif isinstance(results, list):
         hits = results
+    else:
+        hits = []
 
     ids = list(ids or [])
     cards = []

@@ -3,6 +3,8 @@ from ..dto import BookCard
 
 
 class LocalCatalogProvider:
+    """Serve books from our own catalog. The local backend for CATALOG_PROVIDER."""
+
     def fetch(self, external_id: str) -> BookCard | None:
         book = Book.objects.filter(external_id=external_id).first()
         if book is None:
@@ -14,4 +16,6 @@ class LocalCatalogProvider:
             summary=book.summary,
             cover_url=book.cover_url,
             total_pages=book.total_pages,
+            genres=book.genres or [],
+            rating=book.rating,
         )

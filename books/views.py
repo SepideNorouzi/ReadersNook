@@ -9,66 +9,52 @@ from drf_spectacular.utils import (
     extend_schema_view,
 )
 from rest_framework import generics, status
-from rest_framework.permissions import (
-    AllowAny,
-    IsAdminUser,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import (
-    Achievement,
-    AestheticPhoto,
-    Book,
-    Collection,
-    Library,
-    Quote,
-    UserBook,
-)
+from .catalog import get_search
+from .catalog.exceptions import CatalogError
+from .catalog.ingest import get_book_card, resolve_book
+from .models import Achievement, AestheticPhoto, Book, Collection, Library, Quote, UserBook
 from .serializers import (
     AchievementSerializer,
     AddLibraryBookSerializer,
     AestheticPhotoCreateSerializer,
     BookDetailSerializer,
+    BookSearchResponseSerializer,
     BookSerializer,
+    CatalogBookDetailSerializer,
     CollectionDetailSerializer,
     CollectionSerializer,
     DetailMessageSerializer,
+    LibrarySerializer,
     QuoteCreateSerializer,
     QuoteSerializer,
     ShortCollectionSerializer,
-    LibrarySerializer,
     UserBookSerializer,
-    BookSearchResponseSerializer,
-    CatalogBookDetailSerializer,
 )
-
-from .catalog import get_search
-from .catalog.exceptions import CatalogError
-from .catalog.ingest import get_book_card, resolve_book
-from .services import _library_books_qs, _library_collections_qs, _user_library
+from .services import library_books_qs, library_collections_qs, user_library
 
 
-def _catalog_error_response(exc: CatalogError) -> Response:
+def catalog_error_response(exc: CatalogError) -> Response:
     response = Response({"detail": exc.detail}, status=exc.status_code)
-    retry_after = getattr(exc, "retry_after", None)
-    if retry_after:
-        response["Retry-After"] = str(retry_after)
+    if getattr(exc, "retry_after", None):
+        response["Retry-After"] = str(exc.retry_after)
     return response
 
 
-# ________________________________________________
-# Search books (GET /search/)
-# ________________________________________________
+# ---------------------------------------------------------------------------
+# Search
+# ---------------------------------------------------------------------------
+
 
 @extend_schema(
-    tags=["Library"],
+    tags=["Search"],
     summary="Search books",
     description=(
-        "Search the catalog. Prototype uses Hardcover; "
-        "the response shape stays the same when search becomes local."
+        "Search the catalog. The prototype uses Hardcover; the response shape "
+        "stays the same when search moves to our own database."
     ),
     parameters=[
         OpenApiParameter(
@@ -94,11 +80,12 @@ def _catalog_error_response(exc: CatalogError) -> Response:
     responses={200: BookSearchResponseSerializer},
 )
 class BookSearchAPIView(APIView):
+    """Public book search."""
+
     permission_classes = [AllowAny]
 
     def get(self, request):
         query = (request.query_params.get("q") or "").strip()
-
         if not query:
             return Response(
                 {"q": "This field is required."},
@@ -113,142 +100,97 @@ class BookSearchAPIView(APIView):
                 {"detail": "page and per_page must be integers."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
         per_page = min(max(per_page, 1), 25)
 
         try:
             payload = get_search().search(query, page, per_page)
         except CatalogError as exc:
-            return _catalog_error_response(exc)
+            return catalog_error_response(exc)
 
-        # --------------------------------
-        # 1. Find books already in database
-        # --------------------------------
+        external_ids = [card.external_id for card in payload.results]
 
-        external_ids = [
-            card.external_id
-            for card in payload.results
-        ]
-
-        books_in_database = Book.objects.filter(
-            external_id__in=external_ids
-        )
-
-        books_by_external_id = {
+        # Flag catalog books we have stored and items already in the caller's library.
+        stored = {
             book.external_id: book
-            for book in books_in_database
+            for book in Book.objects.filter(external_id__in=external_ids)
         }
 
-        # --------------------------------
-        # 2. Find books already in user's library
-        # --------------------------------
-
         owned = set()
-
         if request.user.is_authenticated:
             owned = set(
                 UserBook.objects.filter(
-                    library=_user_library(request.user),
+                    library=user_library(request.user),
                     book__external_id__in=external_ids,
-                ).values_list(
-                    "book__external_id",
-                    flat=True,
-                )
+                ).values_list("book__external_id", flat=True)
             )
 
-        # --------------------------------
-        # 3. Enrich search results
-        # --------------------------------
-
         for card in payload.results:
-            book = books_by_external_id.get(card.external_id)
-
-            if book is not None:
-                card.database_id = book.pk
-
+            stored_book = stored.get(card.external_id)
+            if stored_book is not None:
+                card.database_id = stored_book.pk
             card.in_library = card.external_id in owned
 
-        return Response(
-            payload.to_dict(),
-            status=status.HTTP_200_OK,
-        )
+        return Response(payload.to_dict(), status=status.HTTP_200_OK)
 
-
-# ________________________________________________
-# Book detail api view by external_id (e.g. hc:312460)
-# ________________________________________________
 
 @extend_schema(
-    tags=["Library"],
+    tags=["Search"],
     summary="Retrieve a catalog book",
     description=(
-        "Look up by external_id (e.g. hc:312460). "
-        "Uses our catalog when the book was already ingested; "
-        "otherwise fetches from the book provider. Does not add it to the library."
+        "Look up a book by external_id (e.g. hc:312460). Uses our catalog when "
+        "the book was already ingested, otherwise fetches from the provider. "
+        "This does not add the book to a library."
     ),
     responses={200: CatalogBookDetailSerializer, 404: DetailMessageSerializer},
 )
 class CatalogBookDetailAPIView(APIView):
+    """Public catalog lookup by external_id."""
+
     permission_classes = [AllowAny]
 
     def get(self, request, external_id):
         try:
             book, card = get_book_card(external_id)
         except CatalogError as exc:
-            return _catalog_error_response(exc)
+            return catalog_error_response(exc)
 
         user_book = None
-
         if request.user.is_authenticated and book is not None:
             user_book = (
-                UserBook.objects
-                .filter(
-                    library=_user_library(request.user),
-                    book=book,
+                UserBook.objects.filter(
+                    library=user_library(request.user), book=book
                 )
                 .select_related("book")
                 .first()
             )
 
         card.in_library = user_book is not None
-
         payload = card.to_dict()
-
         payload["id"] = book.pk if book else None
-
         payload["user_book"] = (
-            UserBookSerializer(
-                user_book,
-                context={"request": request},
-            ).data
+            UserBookSerializer(user_book, context={"request": request}).data
             if user_book
             else None
         )
-
-        return Response(
-            payload,
-            status=status.HTTP_200_OK,
-        )
+        return Response(payload, status=status.HTTP_200_OK)
 
 
-# _______________________________________________
-# Add a book to the library and add it to the database if it doesn't exist yet. (POST /library/add/)
-# _______________________________________________
+# ---------------------------------------------------------------------------
+# Library
+# ---------------------------------------------------------------------------
+
 
 @extend_schema(
-        tags=["Library"],
-        summary="Add a book to my library",
-        description=(
-            "Look up the catalog book by external_id. "
-            "If it already exists, add it to the caller's library. "
-            "If it does not, create the catalog book first, then add it."
-        ),
-        request=AddLibraryBookSerializer,
-        responses={
-            201: UserBookSerializer,
-            409: DetailMessageSerializer,
-        },
-    )
+    tags=["Library"],
+    summary="Add a book to my library",
+    description=(
+        "Look up the catalog book by external_id. If it already exists, add it "
+        "to the caller's library. If it does not, create the catalog book first, "
+        "then add it."
+    ),
+    request=AddLibraryBookSerializer,
+    responses={201: UserBookSerializer, 409: DetailMessageSerializer},
+)
 class BookCreateAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -263,11 +205,11 @@ class BookCreateAPIView(APIView):
         try:
             book = resolve_book(data)
         except CatalogError as exc:
-            return _catalog_error_response(exc)
+            return catalog_error_response(exc)
 
         # Reading progress lives on UserBook, not on the shared catalog Book.
         user_book, created = UserBook.objects.get_or_create(
-            library=_user_library(request.user),
+            library=user_library(request.user),
             book=book,
             defaults={
                 "status": data["status"],
@@ -287,9 +229,6 @@ class BookCreateAPIView(APIView):
         )
 
 
-# _______________________________________________
-# Retrieve the authenticated user's library
-# _______________________________________________
 @extend_schema_view(
     get=extend_schema(
         tags=["Library"],
@@ -304,26 +243,24 @@ class BookListAPIView(generics.RetrieveAPIView):
     def get_object(self):
         return get_object_or_404(
             Library.objects.prefetch_related(
-                Prefetch("user_books", queryset=_library_books_qs(self.request.user)),
+                Prefetch("user_books", queryset=library_books_qs(self.request.user)),
                 Prefetch(
                     "collections",
-                    queryset=_library_collections_qs(self.request.user),
+                    queryset=library_collections_qs(self.request.user),
                 ),
             ),
             user=self.request.user,
         )
 
 
-# _______________________________________________
-# Retrieve a library book
-# _______________________________________________
-@extend_schema_view(
-    get=extend_schema(
-        tags=["Library"],
-        summary="Retrieve a library book",
-    ),
+@extend_schema(
+    tags=["Library"],
+    summary="Retrieve a book",
+    responses={200: BookDetailSerializer, 404: DetailMessageSerializer},
 )
 class BookDetailAPIView(APIView):
+    """Public book page by our database id."""
+
     permission_classes = [AllowAny]
 
     def get(self, request, pk):
@@ -336,13 +273,10 @@ class BookDetailAPIView(APIView):
             )
 
         user_book = None
-
         if request.user.is_authenticated:
             user_book = (
-                UserBook.objects
-                .filter(
-                    library=_user_library(request.user),
-                    book=book,
+                UserBook.objects.filter(
+                    library=user_library(request.user), book=book
                 )
                 .select_related("book")
                 .first()
@@ -350,35 +284,47 @@ class BookDetailAPIView(APIView):
 
         serializer = BookDetailSerializer(
             book,
-            context={
-                "request": request,
-                "user_book": user_book,
-            },
+            context={"request": request, "user_book": user_book},
         )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(
-            serializer.data,
-            status=status.HTTP_200_OK,
-        )
 
-# _______________________________________________
-# Delete a library book
-# _______________________________________________
+@extend_schema_view(
+    put=extend_schema(
+        tags=["Library"],
+        summary="Replace library book progress",
+        description="Full update: every writable field must be supplied.",
+    ),
+    patch=extend_schema(
+        tags=["Library"],
+        summary="Update library book progress",
+        description="Partial update: only the supplied fields are changed.",
+    ),
+)
+class LibraryBookUpdateAPIView(generics.UpdateAPIView):
+    serializer_class = UserBookSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return library_books_qs(self.request.user)
+
+
 @extend_schema_view(
     delete=extend_schema(
         tags=["Library"],
         summary="Delete a library book",
         description=(
             "Remove a book from the authenticated user's library. "
-            "Also removes it from any collections in that library."
+            "Also removes it from any of that library's collections."
         ),
     )
 )
 class LibraryBookDeleteAPIView(generics.DestroyAPIView):
     serializer_class = UserBookSerializer
     permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = "book_pk"
-    lookup_field = "book_id"
+
+    def get_queryset(self):
+        return library_books_qs(self.request.user)
 
     def perform_destroy(self, instance):
         book = instance.book
@@ -389,20 +335,14 @@ class LibraryBookDeleteAPIView(generics.DestroyAPIView):
             collection.books.remove(book)
 
 
-# _______________________________________________
-# Book update api view (PUT /books/<pk>/, PATCH /books/<pk>/)
-# _______________________________________________
+# ---------------------------------------------------------------------------
+# Catalog (admin)
+# ---------------------------------------------------------------------------
+
+
 @extend_schema_view(
-    put=extend_schema(
-        tags=["Library"],
-        summary="Replace a book",
-        description="Full update: every writable field must be supplied.",
-    ),
-    patch=extend_schema(
-        tags=["Library"],
-        summary="Partially update a book",
-        description="Partial update: only the supplied fields are changed.",
-    ),
+    put=extend_schema(tags=["Catalog"], summary="Replace a book"),
+    patch=extend_schema(tags=["Catalog"], summary="Partially update a book"),
 )
 class BookUpdateAPIView(generics.UpdateAPIView):
     queryset = Book.objects.all()
@@ -410,23 +350,13 @@ class BookUpdateAPIView(generics.UpdateAPIView):
     permission_classes = [IsAdminUser]
 
 
-
-
-
-
-
-
-
-
-# ___________________________________________________________________________________ #
-# --- Quotes ---
+# ---------------------------------------------------------------------------
+# Quotes
+# ---------------------------------------------------------------------------
 
 
 @extend_schema_view(
-    post=extend_schema(
-        tags=["Quotes"],
-        summary="Create a quote",
-    )
+    post=extend_schema(tags=["Quotes"], summary="Create a quote")
 )
 class QuoteCreateAPIView(generics.CreateAPIView):
     queryset = Quote.objects.all()
@@ -439,10 +369,7 @@ class QuoteCreateAPIView(generics.CreateAPIView):
 
 
 @extend_schema_view(
-    get=extend_schema(
-        tags=["Quotes"],
-        summary="List my quotes",
-    )
+    get=extend_schema(tags=["Quotes"], summary="List my quotes")
 )
 class QuoteListAPIView(generics.ListAPIView):
     serializer_class = QuoteSerializer
@@ -456,14 +383,8 @@ class QuoteListAPIView(generics.ListAPIView):
 
 
 @extend_schema_view(
-    put=extend_schema(
-        tags=["Quotes"],
-        summary="Replace a quote",
-    ),
-    patch=extend_schema(
-        tags=["Quotes"],
-        summary="Partially update a quote",
-    ),
+    put=extend_schema(tags=["Quotes"], summary="Replace a quote"),
+    patch=extend_schema(tags=["Quotes"], summary="Partially update a quote"),
 )
 class QuoteUpdateAPIView(generics.UpdateAPIView):
     serializer_class = QuoteSerializer
@@ -477,14 +398,13 @@ class QuoteUpdateAPIView(generics.UpdateAPIView):
         )
 
 
-# --- Aesthetic photos ---
+# ---------------------------------------------------------------------------
+# Aesthetic photos
+# ---------------------------------------------------------------------------
 
 
 @extend_schema_view(
-    post=extend_schema(
-        tags=["Aesthetic Photos"],
-        summary="Create an aesthetic photo",
-    )
+    post=extend_schema(tags=["Aesthetic Photos"], summary="Create an aesthetic photo")
 )
 class AestheticPhotoCreateAPIView(generics.CreateAPIView):
     queryset = AestheticPhoto.objects.all()
@@ -496,14 +416,13 @@ class AestheticPhotoCreateAPIView(generics.CreateAPIView):
         serializer.save(book=book)
 
 
-# --- Collections ---
+# ---------------------------------------------------------------------------
+# Collections
+# ---------------------------------------------------------------------------
 
 
 @extend_schema_view(
-    post=extend_schema(
-        tags=["Collections"],
-        summary="Create a Collection",
-    )
+    post=extend_schema(tags=["Collections"], summary="Create a collection")
 )
 class CollectionCreateAPIView(generics.CreateAPIView):
     queryset = Collection.objects.all()
@@ -512,31 +431,25 @@ class CollectionCreateAPIView(generics.CreateAPIView):
 
 
 @extend_schema_view(
-    get=extend_schema(
-        tags=["Collections"],
-        summary="List my collection",
-    )
+    get=extend_schema(tags=["Collections"], summary="List my collections")
 )
 class CollectionListAPIView(generics.ListAPIView):
     serializer_class = CollectionSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return _library_collections_qs(self.request.user)
+        return library_collections_qs(self.request.user)
 
 
 @extend_schema_view(
-    get=extend_schema(
-        tags=["Collections"],
-        summary="Retrieve a collection",
-    )
+    get=extend_schema(tags=["Collections"], summary="Retrieve a collection")
 )
 class CollectionDetailAPIView(generics.RetrieveAPIView):
     serializer_class = CollectionDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return _library_collections_qs(self.request.user)
+        return library_collections_qs(self.request.user)
 
 
 @extend_schema_view(
@@ -550,10 +463,7 @@ class CollectionDetailAPIView(generics.RetrieveAPIView):
         summary="Partially update a collection",
         description="Partial update: only the supplied fields are changed.",
     ),
-    delete=extend_schema(
-        tags=["Collections"],
-        summary="Delete a collection",
-    ),
+    delete=extend_schema(tags=["Collections"], summary="Delete a collection"),
 )
 class CollectionUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     """Name and description only. Membership changes use CollectionAddRemoveBooksAPIView."""
@@ -562,7 +472,7 @@ class CollectionUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return _library_collections_qs(self.request.user)
+        return library_collections_qs(self.request.user)
 
 
 COLLECTION_MEMBERSHIP_PARAMETERS = [
@@ -587,9 +497,8 @@ COLLECTION_MEMBERSHIP_PARAMETERS = [
         operation_id="collections_add_book",
         summary="Add a book to a collection",
         description=(
-            "Add an existing book to a collection you own. "
-            "The collection id and book id come from the URL; there is no request body. "
-            "Books already in the collection are left untouched."
+            "Add an existing book to a collection you own. The collection id and "
+            "book id come from the URL; there is no request body."
         ),
         parameters=COLLECTION_MEMBERSHIP_PARAMETERS,
         request=None,
@@ -627,15 +536,13 @@ COLLECTION_MEMBERSHIP_PARAMETERS = [
         operation_id="collections_remove_book",
         summary="Remove a book from a collection",
         description=(
-            "Remove a book from a collection you own. "
-            "The book record itself is not deleted."
+            "Remove a book from a collection you own. The book record itself is "
+            "not deleted."
         ),
         parameters=COLLECTION_MEMBERSHIP_PARAMETERS,
         request=None,
         responses={
-            204: OpenApiResponse(
-                description="Book removed from the collection.",
-            ),
+            204: OpenApiResponse(description="Book removed from the collection."),
             401: OpenApiResponse(
                 description="Authentication credentials were not provided.",
             ),
@@ -660,7 +567,7 @@ class CollectionAddRemoveBooksAPIView(APIView):
 
     def _get_owned_collection(self, request, pk):
         return get_object_or_404(
-            Collection, pk=pk, library=_user_library(request.user)
+            Collection, pk=pk, library=user_library(request.user)
         )
 
     def post(self, request, pk, book_pk):
@@ -695,14 +602,13 @@ class CollectionAddRemoveBooksAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# --- Achievements ---
+# ---------------------------------------------------------------------------
+# Achievements
+# ---------------------------------------------------------------------------
 
 
 @extend_schema_view(
-    post=extend_schema(
-        tags=["Achievements"],
-        summary="Create an Achievements",
-    )
+    post=extend_schema(tags=["Achievements"], summary="Create an achievement")
 )
 class AchievementCreateAPIView(generics.CreateAPIView):
     queryset = Achievement.objects.all()

@@ -5,6 +5,7 @@ from django.dispatch import receiver
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_library_for_user(sender, instance, created, **kwargs):
+    """Give every new user their own library."""
     if created:
         from .models import Library
 

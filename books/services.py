@@ -1,24 +1,22 @@
-from books.models import Library, UserBook , Collection
+from books.models import Collection, Library, UserBook
 
 
-# get the library for the given user, creating it if it doesn't exist
-def _user_library(user):
+def user_library(user):
+    """Return the user's library, creating it on first access."""
     return Library.for_user(user)
 
 
-# get the user's books in their library, with related book data
-def _library_books_qs(user):
+def library_books_qs(user):
+    """The user's library items with book data, newest first."""
     return (
-        UserBook.objects.filter(library=_user_library(user))
+        UserBook.objects.filter(library=user_library(user))
         .select_related("book")
         .order_by("-added_at")
     )
 
-    
-# get the user's collections in their library, with related book data
-def _library_collections_qs(user):
-    return (
-        Collection.objects.filter(library=_user_library(user))
-        .prefetch_related("books")
-    )
 
+def library_collections_qs(user):
+    """The user's collections with their books prefetched."""
+    return Collection.objects.filter(library=user_library(user)).prefetch_related(
+        "books"
+    )

@@ -1,6 +1,11 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 
 
+# ---------------------------------------------------------------------------
+# Managers
+# ---------------------------------------------------------------------------
+
+
 class UsernameUserManager(UserManager):
     """Create users without accepting or injecting an email address."""
 
@@ -31,6 +36,11 @@ class UsernameUserManager(UserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(username, password, **extra_fields)
+
+
+# ---------------------------------------------------------------------------
+# User
+# ---------------------------------------------------------------------------
 
 
 class User(AbstractUser):

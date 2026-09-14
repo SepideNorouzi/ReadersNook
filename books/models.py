@@ -1,6 +1,12 @@
-from user_module.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from user_module.models import User
+
+
+# ---------------------------------------------------------------------------
+# Choices
+# ---------------------------------------------------------------------------
 
 
 class ReadingStatus(models.TextChoices):
@@ -9,27 +15,27 @@ class ReadingStatus(models.TextChoices):
     READ = "read", "Read"
 
 
+# ---------------------------------------------------------------------------
+# Catalog
+# ---------------------------------------------------------------------------
+
+
 class Book(models.Model):
-    external_id = models.CharField(
-        max_length=50,
-        unique=True,
-        db_index=True,
-    )
+    """Shared book metadata that any library can reference."""
+
+    external_id = models.CharField(max_length=50, unique=True, db_index=True)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
-    genres = models.JSONField(
-        default=list,
-        blank=True,
-    )
+    genres = models.JSONField(default=list, blank=True)
     summary = models.TextField(blank=True)
     cover_url = models.URLField(max_length=500, blank=True)
     total_pages = models.PositiveIntegerField(default=0)
     rating = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(5.0)],
         null=True,
         blank=True,
+        validators=[MinValueValidator(0.0), MaxValueValidator(5.0)],
     )
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -45,11 +51,10 @@ class Quote(models.Model):
     text = models.TextField()
     page = models.PositiveIntegerField(null=True, blank=True)
     favorite = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["created_at"]
@@ -75,7 +80,14 @@ class AestheticPhoto(models.Model):
         return self.caption or self.image_url
 
 
+# ---------------------------------------------------------------------------
+# Library
+# ---------------------------------------------------------------------------
+
+
 class Library(models.Model):
+    """A user's personal collection of books. Created automatically on signup."""
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="library")
     books = models.ManyToManyField(
         Book,
@@ -83,6 +95,7 @@ class Library(models.Model):
         related_name="libraries",
         blank=True,
     )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -96,6 +109,8 @@ class Library(models.Model):
 
 
 class UserBook(models.Model):
+    """A catalog book inside one library, with that user's reading progress."""
+
     library = models.ForeignKey(
         Library, on_delete=models.CASCADE, related_name="user_books"
     )
@@ -109,6 +124,7 @@ class UserBook(models.Model):
         db_index=True,
     )
     current_page = models.PositiveIntegerField(default=0)
+
     added_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -131,6 +147,7 @@ class Collection(models.Model):
     library = models.ForeignKey(
         Library, on_delete=models.CASCADE, related_name="collections"
     )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -145,6 +162,11 @@ class Collection(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# ---------------------------------------------------------------------------
+# Achievements
+# ---------------------------------------------------------------------------
 
 
 class Achievement(models.Model):
@@ -162,6 +184,9 @@ class Achievement(models.Model):
     class Meta:
         ordering = ["category", "threshold"]
 
+    def __str__(self):
+        return self.name
+
 
 class UserAchievement(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="achievements")
@@ -175,3 +200,6 @@ class UserAchievement(models.Model):
                 name="uq_user_achievement",
             ),
         ]
+
+    def __str__(self):
+        return f"{self.user.username} - {self.achievement.code}"

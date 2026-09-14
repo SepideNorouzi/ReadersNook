@@ -100,7 +100,6 @@ class LibraryAPITests(APITestCase):
         self.assertEqual(created.data["book"]["total_pages"], 50)
         self.assertIn("status", created.data)
         self.assertIn("current_page", created.data)
-        self.assertIn("rating", created.data)
         self.assertTrue(
             UserBook.objects.filter(
                 library=self.user.library,
@@ -161,7 +160,7 @@ class LibraryAPITests(APITestCase):
     def test_library_book_rejects_current_page_greater_than_total(self):
         self._auth(self.user)
         response = self.client.patch(
-            reverse("books:library-book-update", kwargs={"book_pk": self.book.pk}),
+            reverse("books:library-book-update", kwargs={"pk": self.book.pk}),
             {"current_page": 200},
             format="json",
         )

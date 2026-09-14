@@ -5,12 +5,14 @@ from ..dto import BookCard, SearchPage
 
 
 class LocalCatalogSearch:
+    """Search our own catalog. The local backend for SEARCH_BACKEND."""
+
     def search(self, query: str, page: int, per_page: int) -> SearchPage:
-        qs = Book.objects.filter(
+        queryset = Book.objects.filter(
             Q(title__icontains=query) | Q(author__icontains=query)
         )
         start = (page - 1) * per_page
-        books = qs[start : start + per_page]
+        books = queryset[start : start + per_page]
         return SearchPage(
             query=query,
             page=page,
@@ -23,6 +25,8 @@ class LocalCatalogSearch:
                     summary=book.summary,
                     cover_url=book.cover_url,
                     total_pages=book.total_pages,
+                    genres=book.genres or [],
+                    rating=book.rating,
                 )
                 for book in books
             ],

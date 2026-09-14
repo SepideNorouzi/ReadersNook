@@ -5,6 +5,7 @@ from .factory import get_provider
 
 
 def book_to_card(book: Book) -> BookCard:
+    """Convert a stored Book into the shared BookCard shape."""
     return BookCard(
         external_id=book.external_id,
         title=book.title,
@@ -35,7 +36,7 @@ def _create_book(card: BookCard) -> Book:
         defaults={
             "title": card.title,
             "author": card.author,
-            "genres" : card.genres,
+            "genres": card.genres,
             "summary": card.summary,
             "cover_url": card.cover_url,
             "total_pages": card.total_pages,

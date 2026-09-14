@@ -8,6 +8,8 @@ from ..exceptions import CatalogConfigError, CatalogError, CatalogRateLimitError
 
 
 class HardcoverClient:
+    """Thin GraphQL client for the Hardcover API. Token stays server-side."""
+
     def execute(self, query: str, variables: dict | None = None) -> dict:
         token = settings.HARDCOVER_API_TOKEN
         if not token:
