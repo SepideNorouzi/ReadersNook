@@ -1,13 +1,22 @@
 import type { Book } from "../types/book";
 import type {
   ApiLibraryEntry,
-  ApiLibraryEntryDetail,
+  ApiCatalogBookDetail,
   ApiBookCreatePayload,
-  ApiLibraryUpdatePayload,
+  ApiCatalogBookUpdatePayload,
   ApiCatalogBook,
 } from "../types/api/apiBook";
 import { mapApiQuoteNestedToQuote } from "./MapApiToQuote";
 import { mapApiAestheticPhoto } from "./MapApiToAestheticPhoto";
+
+// ASSUMPTION: comma-separated. Confirm the real delimiter with
+// [[backend-teammate]] — nothing in the given Swagger docs states how
+// the nested `book.genres` string is joined server-side.
+function parseGenres(genres: string): string[] {
+  return genres
+    ? genres.split(",").map((g) => g.trim()).filter(Boolean)
+    : [];
+}
 
 export function mapApiLibraryEntryToBook(entry: ApiLibraryEntry): Book {
   return {
@@ -20,28 +29,42 @@ export function mapApiLibraryEntryToBook(entry: ApiLibraryEntry): Book {
     currentPage: entry.current_page,
     totalPages: entry.book.total_pages,
     status: entry.status,
-    rating: entry.rating ?? 0,
+    rating: entry.book.rating,
     addedAt: entry.added_at,
     quotes: [],
     aestheticImages: [],
-    genres: [],
+    genres: parseGenres(entry.book.genres),
     sourceId: entry.book.external_id,
   };
 }
 
-export function mapApiLibraryEntryDetailToBook(
-  entry: ApiLibraryEntryDetail,
-): Book {
-  const photos = entry.aesthetic_photos
-    ? [...entry.aesthetic_photos].sort((a, b) => a.order - b.order)
+export function mapApiCatalogBookDetailToBook(entry: ApiCatalogBookDetail): Book {
+  const userBook = entry.user_book;
+
+  const photos = userBook?.aesthetic_photos
+    ? [...userBook.aesthetic_photos].sort((a, b) => a.order - b.order)
     : [];
 
   return {
-    ...mapApiLibraryEntryToBook(entry),
-    quotes: entry.quotes ? entry.quotes.map(mapApiQuoteNestedToQuote) : [],
-    aestheticImages: photos.map(
-      (photo) => mapApiAestheticPhoto(photo).imageUrl,
-    ),
+    // Falls back to the catalog id when there's no library entry yet
+    // (a not-yet-saved preview). Fine for display/keys — don't feed
+    // this into deleteBook or a status update, which expect a real
+    // library-entry id.
+    id: userBook ? String(userBook.id) : String(entry.id),
+    catalogId: String(entry.id),
+    title: entry.title,
+    author: entry.author,
+    summary: entry.summary,
+    coverUrl: entry.cover_url,
+    currentPage: userBook?.current_page ?? 0,
+    totalPages: entry.total_pages,
+    status: userBook?.status ?? "tbr",
+    rating: entry.rating,
+    addedAt: userBook?.added_at,
+    quotes: userBook?.quotes ? userBook.quotes.map(mapApiQuoteNestedToQuote) : [],
+    aestheticImages: photos.map((photo) => mapApiAestheticPhoto(photo).imageUrl),
+    genres: entry.genres,
+    sourceId: entry.external_id,
   };
 }
 
@@ -61,8 +84,6 @@ function toCoverUrl(url: string): string {
   return "";
 }
 
-// Unchanged in substance — this one was already correct, since
-// the create payload genuinely is flat.
 export function mapBookToCreatePayload(
   book: Omit<Book, "id" | "addedAt">,
 ): ApiBookCreatePayload {
@@ -81,25 +102,28 @@ export function mapBookToCreatePayload(
     total_pages: totalPages,
     status: book.status || "tbr",
     rating: book.rating ?? 0,
+    genres: book.genres ?? [],
   };
 }
 
-// Narrowed to the three fields the backend will actually accept.
-export function mapBookToUpdatePayload(
-  changes: Partial<Pick<Book, "status" | "currentPage" | "rating">>,
-): ApiLibraryUpdatePayload {
+export function mapBookToCatalogUpdatePayload(
+  changes: Partial<
+    Pick<
+      Book,
+      "title" | "author" | "genres" | "summary" | "coverUrl" | "totalPages" | "rating"
+    >
+  >,
+): ApiCatalogBookUpdatePayload {
   return {
-    ...(changes.status !== undefined && {
-      status: changes.status,
+    ...(changes.title !== undefined && { title: clip(changes.title, 255) }),
+    ...(changes.author !== undefined && { author: clip(changes.author, 255) }),
+    ...(changes.genres !== undefined && { genres: changes.genres }),
+    ...(changes.summary !== undefined && { summary: changes.summary }),
+    ...(changes.coverUrl !== undefined && {
+      cover_url: toCoverUrl(changes.coverUrl),
     }),
-
-    ...(changes.currentPage !== undefined && {
-      current_page: changes.currentPage,
-    }),
-
-    ...(changes.rating !== undefined && {
-      rating: changes.rating,
-    }),
+    ...(changes.totalPages !== undefined && { total_pages: changes.totalPages }),
+    ...(changes.rating !== undefined && { rating: changes.rating }),
   };
 }
 
@@ -114,10 +138,10 @@ export function mapApiCatalogBookToBook(book: ApiCatalogBook): Book {
     totalPages: book.total_pages,
     currentPage: 0,
     status: "tbr",
-    rating: 0,
+    rating: book.rating,
     quotes: [],
     aestheticImages: [],
-    genres: [],
+    genres: parseGenres(book.genres),
     sourceId: book.external_id,
   };
 }
