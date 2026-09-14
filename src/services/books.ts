@@ -24,7 +24,7 @@ import type {
 export async function getBooks(): Promise<Book[]> {
   const library = await apiFetch<ApiLibrary>("/library/");
 
-  return library.map(mapApiLibraryEntryToBook);
+  return library.books.map(mapApiLibraryEntryToBook);
 }
 
 /**
