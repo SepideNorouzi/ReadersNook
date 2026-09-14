@@ -1,6 +1,8 @@
-// services/bookSearch.ts
 import { apiFetch } from "../lib/apiClient";
-import type { ApiSearchResponse, ApiSearchResult } from "../types/api/apiSearch";
+import type {
+  ApiSearchResponse,
+  ApiSearchResult,
+} from "../types/api/apiSearch";
 import type { BookSearchResult } from "../types/searchResults";
 
 function mapApiSearchResult(result: ApiSearchResult): BookSearchResult {
@@ -12,6 +14,9 @@ function mapApiSearchResult(result: ApiSearchResult): BookSearchResult {
     coverUrl: result.cover_url || null,
     totalPages: result.total_pages,
     inLibrary: result.in_library,
+    databaseId: result.database_id,
+    genres: result.genres,
+    rating: result.rating,
   };
 }
 
