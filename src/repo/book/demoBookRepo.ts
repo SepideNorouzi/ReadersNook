@@ -1,6 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
+
 import { useBookStore } from "../../store/demoBookStore";
+
 import type { Book } from "../../types/book";
+
 import { isBookInLibrary } from "./isBookInLibrary";
 
 type UpdateBookInput = {
@@ -22,7 +25,19 @@ export const demoBookRepo = {
 
   useBook(id: string | undefined) {
     const books = useBookStore((state) => state.books);
-    const book = id ? books.find((book) => book.id === id) : undefined;
+
+    /*
+     * A demo book can be opened through either:
+     *
+     * 1. its local/demo id
+     * 2. its external catalog id
+     *
+     * Search results and library cards use sourceId when available,
+     * while the original mock books may only have their local id.
+     */
+    const book = id
+      ? books.find((book) => book.id === id || book.sourceId === id)
+      : undefined;
 
     return {
       data: book,
@@ -34,9 +49,7 @@ export const demoBookRepo = {
 
   useCreateBook() {
     return useMutation({
-      mutationFn: async (
-        book: Omit<Book, "id" | "addedAt">,
-      ): Promise<void> => {
+      mutationFn: async (book: Omit<Book, "id" | "addedAt">): Promise<void> => {
         const { books, addBook } = useBookStore.getState();
 
         if (
@@ -59,10 +72,7 @@ export const demoBookRepo = {
 
   useUpdateBook() {
     return useMutation({
-      mutationFn: async ({
-        id,
-        changes,
-      }: UpdateBookInput): Promise<void> => {
+      mutationFn: async ({ id, changes }: UpdateBookInput): Promise<void> => {
         useBookStore.getState().updateBook(id, changes);
       },
     });
