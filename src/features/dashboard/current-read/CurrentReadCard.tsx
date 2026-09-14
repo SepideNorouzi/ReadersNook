@@ -37,9 +37,7 @@ export default function CurrentReadingCard({ className }: CurrentReadProps) {
   if (isLoading) {
     return (
       <Card className={cardClass}>
-        <p className="text-sm text-[var(--gold-light)]">
-          <Loading />
-        </p>
+        <Loading />
       </Card>
     );
   }
