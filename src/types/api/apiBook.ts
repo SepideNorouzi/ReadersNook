@@ -7,7 +7,8 @@ export type ApiBookStatus = BookStatus;
 
 /**
  * Shared catalog book.
- * This is the actual database/catalog record.
+ *
+ * This is the backend book/catalog record.
  */
 export type ApiCatalogBook = {
   id: number;
@@ -24,10 +25,11 @@ export type ApiCatalogBook = {
 };
 
 /**
- * One user's library relationship to a catalog book.
+ * One user's relationship with a catalog book.
  *
- * `id` is the library-entry id.
- * `book.id` is the catalog/database id.
+ * IMPORTANT:
+ * id      -> library-entry id
+ * book.id -> catalog/database id
  */
 export type ApiLibraryEntry = {
   id: number;
@@ -39,11 +41,12 @@ export type ApiLibraryEntry = {
 };
 
 /**
- * GET /books/{id}/ and
+ * GET /books/{id}/
  * GET /books/external/{external_id}/
  */
 export type ApiCatalogBookDetail = ApiCatalogPreview & {
   id: number;
+
   user_book:
     | (ApiLibraryEntry & {
         quotes?: ApiQuoteNested[];
@@ -71,23 +74,17 @@ export type ApiBookCreatePayload = {
 export type ApiBookCreateResponse = ApiLibraryEntry;
 
 /**
- * PATCH/PUT /books/{id}/update/
+ * PATCH /books/{id}/update/
  *
- * Shared catalog fields.
+ * `id` is the library-entry id.
  */
-export type ApiCatalogBookUpdatePayload = Partial<{
-  external_id: string;
-  title: string;
-  author: string;
-  genres: string[];
-  summary: string;
-  cover_url: string;
-  total_pages: number;
-  rating: number;
+export type ApiLibraryBookUpdatePayload = Partial<{
+  status: ApiBookStatus;
+  current_page: number;
 }>;
 
 /**
- * Collection summary returned as part of library-related data.
+ * Collection summary returned from /library/.
  */
 export type ApiLibraryCollectionSummary = {
   id: number;
@@ -102,11 +99,6 @@ export type ApiLibraryCollectionSummary = {
   updated_at: string;
 };
 
-/**
- * GET /library/
- * The endpoint returns the user's library entries directly.
- * It is NOT a wrapper object containing `books`.
- */
 /**
  * GET /library/
  */
