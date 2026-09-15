@@ -14,79 +14,40 @@ import type { Book } from "../../types/book";
 import { queryKeys } from "../../queries/queryKeys";
 import { useAuthStore } from "../../auth/store/authStore";
 
-function updateBookInList(
-  queryClient: ReturnType<typeof useQueryClient>,
-  username: string,
-  book: Book,
-) {
-  queryClient.setQueryData<Book[]>(
-    queryKeys.books(username),
-    (books) =>
-      books?.map((item) =>
-        item.id === book.id
-          ? {
-              ...item,
-              ...book,
-            }
-          : item,
-      ),
-  );
-}
+type UpdateBookInput = {
+  id: string;
+  changes: Partial<Pick<Book, "status" | "currentPage" | "rating">>;
+};
 
 export const adminBookRepo = {
-useBooks(enabled = true) {
-  const username = useAuthStore((state) => state.username);
+  useBooks(enabled = true) {
+    const username = useAuthStore((state) => state.username);
 
-  const queryEnabled = enabled && Boolean(username);
+    const queryEnabled = enabled && Boolean(username);
 
-  const query = useQuery({
-    queryKey: username
-      ? queryKeys.books(username)
-      : ["books", "anonymous"],
-    queryFn: getBooks,
-    enabled: queryEnabled,
-  });
+    const query = useQuery({
+      queryKey: username ? queryKeys.books(username) : ["books", "anonymous"],
 
-  console.log("BOOK QUERY", {
-    mode: enabled ? "admin" : "disabled",
-    username,
-    queryEnabled,
-    data: query.data,
-    isLoading: query.isLoading,
-    isError: query.isError,
-    error: query.error,
-  });
+      queryFn: getBooks,
 
-  return {
-    data: query.data ?? [],
-    isLoading: queryEnabled && query.isLoading,
-    isError: query.isError,
-    error: query.error,
-  };
-},
+      enabled: queryEnabled,
+    });
 
-  /**
-   * `externalId` is the identifier used by the /book/:id route.
-   *
-   * SearchResultCard -> external id
-   * BookCard         -> external id
-   *
-   * For an already-owned book we resolve that external id to the
-   * catalog/database id through the library cache.
-   */
+    return {
+      data: query.data ?? [],
+      isLoading: queryEnabled && query.isLoading,
+      isError: query.isError,
+      error: query.error,
+    };
+  },
+
   useBook(externalId: string | undefined, enabled = true) {
     const queryClient = useQueryClient();
     const username = useAuthStore((state) => state.username);
 
-    const canFetch =
-      enabled && Boolean(username) && Boolean(externalId);
+    const canFetch = enabled && Boolean(username) && Boolean(externalId);
 
-    const {
-      data,
-      isLoading,
-      isError,
-      error,
-    } = useQuery({
+    const { data, isLoading, isError, error } = useQuery({
       queryKey:
         username && externalId
           ? queryKeys.book(username, externalId)
@@ -94,51 +55,35 @@ useBooks(enabled = true) {
 
       queryFn: async () => {
         if (!externalId || !username) {
-          throw new Error(
-            "Cannot fetch book without an authenticated user.",
-          );
+          throw new Error("Cannot fetch book without an authenticated user.");
         }
 
-        /**
-         * Load the user's library first.
-         *
-         * This gives us:
-         * Book.id       -> library entry id
-         * Book.catalogId -> catalog/database id
-         * Book.sourceId  -> external id
-         */
         const books = await queryClient.ensureQueryData({
           queryKey: queryKeys.books(username),
           queryFn: getBooks,
         });
 
-        const owned = books.find(
-          (book) => book.sourceId === externalId,
-        );
-
-        let book: Book;
+        const owned = books.find((book) => book.sourceId === externalId);
 
         if (owned?.catalogId) {
-          /**
-           * Already in the user's library.
-           * Use the real catalog/database id.
-           */
-          book = await getBookByDatabaseId(
-            Number(owned.catalogId),
-          );
-        } else {
-          /**
-           * Search result that has not been added to this user's
-           * library yet.
-           *
-           * The backend resolves the external id.
-           */
-          book = await getBookByExternalId(externalId);
+          const detail = await getBookByDatabaseId(Number(owned.catalogId), {
+            id: owned.id,
+            catalogId: owned.catalogId,
+            sourceId: owned.sourceId,
+            status: owned.status,
+            currentPage: owned.currentPage,
+            addedAt: owned.addedAt,
+          });
+
+          return {
+            ...detail,
+            id: owned.id,
+            catalogId: owned.catalogId,
+            sourceId: owned.sourceId,
+          };
         }
 
-        updateBookInList(queryClient, username, book);
-
-        return book;
+        return getBookByExternalId(externalId);
       },
 
       enabled: canFetch,
@@ -163,9 +108,6 @@ useBooks(enabled = true) {
 
         if (!username) return;
 
-        /**
-         * The POST succeeded, so force the library to refetch.
-         */
         queryClient.invalidateQueries({
           queryKey: queryKeys.books(username),
         });
@@ -181,27 +123,83 @@ useBooks(enabled = true) {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: ({
-        id,
-        changes,
-      }: {
-        id: string;
-        changes: Partial<
-          Pick<Book, "status" | "currentPage" | "rating">
-        >;
-      }) => updateReadingProgress(id, changes),
+      mutationFn: async ({ id, changes }: UpdateBookInput) => {
+        const username = useAuthStore.getState().username;
 
-      onSuccess: (_book, { id }) => {
+        if (username) {
+          const books = await queryClient.ensureQueryData({
+            queryKey: queryKeys.books(username),
+            queryFn: getBooks,
+          });
+
+          if (!books.some((book) => book.id === id)) {
+            throw new Error(
+              "Cannot update a book that is not in the library.",
+            );
+          }
+        }
+
+        return updateReadingProgress(id, {
+          status: changes.status,
+          currentPage: changes.currentPage,
+        });
+      },
+
+      async onMutate({ id, changes }) {
+        const username = useAuthStore.getState().username;
+
+        if (!username) return undefined;
+
+        await queryClient.cancelQueries({
+          queryKey: queryKeys.books(username),
+        });
+
+        const previousBooks = queryClient.getQueryData<Book[]>(
+          queryKeys.books(username),
+        );
+
+        queryClient.setQueryData<Book[]>(queryKeys.books(username), (books) =>
+          books?.map((book) =>
+            book.id === id
+              ? {
+                  ...book,
+                  ...(changes.status !== undefined && {
+                    status: changes.status,
+                  }),
+                  ...(changes.currentPage !== undefined && {
+                    currentPage: changes.currentPage,
+                  }),
+                }
+              : book,
+          ),
+        );
+
+        return {
+          username,
+          previousBooks,
+        };
+      },
+
+      onError: (_error, _variables, context) => {
+        if (!context?.username) return;
+
+        queryClient.setQueryData<Book[]>(
+          queryKeys.books(context.username),
+          context.previousBooks,
+        );
+      },
+
+      onSettled: (_data, _error, _variables) => {
         const username = useAuthStore.getState().username;
 
         if (!username) return;
 
+        /*
+         * This also invalidates the detail queries because
+         * ["books", username, externalId] shares the same prefix.
+         */
         queryClient.invalidateQueries({
           queryKey: queryKeys.books(username),
-        });
-
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.book(username, id),
         });
       },
     });
@@ -211,7 +209,24 @@ useBooks(enabled = true) {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: deleteBook,
+      mutationFn: async (id: string) => {
+        const username = useAuthStore.getState().username;
+
+        if (username) {
+          const books = await queryClient.ensureQueryData({
+            queryKey: queryKeys.books(username),
+            queryFn: getBooks,
+          });
+
+          if (!books.some((book) => book.id === id)) {
+            throw new Error(
+              "Cannot delete a book that is not in the library.",
+            );
+          }
+        }
+
+        return deleteBook(id);
+      },
 
       onSuccess: () => {
         const username = useAuthStore.getState().username;

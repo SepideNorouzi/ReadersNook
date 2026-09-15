@@ -4,22 +4,26 @@ import {
   mapApiLibraryEntryToBook,
   mapApiCatalogBookDetailToBook,
   mapBookToCreatePayload,
-  mapBookToCatalogUpdatePayload,
+  type CatalogDetailLibraryEntry,
 } from "../mappers/MapApiToBook";
 
 import type { Book } from "../types/book";
 
 import type {
   ApiBookCreateResponse,
-  ApiCatalogBook,
   ApiCatalogBookDetail,
   ApiLibrary,
+  ApiLibraryBookUpdatePayload,
 } from "../types/api/apiBook";
+
+export type UpdateReadingProgressChanges = Partial<
+  Pick<Book, "status" | "currentPage">
+>;
 
 /**
  * GET /library/
  *
- * The backend returns the user's library entries directly.
+ * Returns the current user's library entries.
  */
 export async function getBooks(): Promise<Book[]> {
   const library = await apiFetch<ApiLibrary>("/library/");
@@ -28,22 +32,25 @@ export async function getBooks(): Promise<Book[]> {
 }
 
 /**
- * Fetch a book using the backend catalog/database id.
+ * GET /books/{id}/
+ *
+ * `id` is the backend catalog/database id.
  */
-export async function getBookByDatabaseId(id: number): Promise<Book> {
+export async function getBookByDatabaseId(
+  id: number,
+  libraryEntry?: CatalogDetailLibraryEntry,
+): Promise<Book> {
   const entry = await apiFetch<ApiCatalogBookDetail>(
     `/books/${encodeURIComponent(String(id))}/`,
   );
 
-  return mapApiCatalogBookDetailToBook(entry);
+  return mapApiCatalogBookDetailToBook(entry, libraryEntry);
 }
 
 /**
- * Fetch a book using its external catalog id.
+ * GET /books/external/{external_id}/
  */
-export async function getBookByExternalId(
-  externalId: string,
-): Promise<Book> {
+export async function getBookByExternalId(externalId: string): Promise<Book> {
   const entry = await apiFetch<ApiCatalogBookDetail>(
     `/books/external/${encodeURIComponent(externalId)}/`,
   );
@@ -52,7 +59,7 @@ export async function getBookByExternalId(
 }
 
 /**
- * Add a catalog book to the current user's library.
+ * POST /library/add/
  */
 export async function createBook(
   book: Omit<Book, "id" | "addedAt">,
@@ -64,58 +71,48 @@ export async function createBook(
 }
 
 /**
- * Update shared catalog information.
+ * PATCH /books/{id}/update/
  *
- * This is separate from the user's personal library state.
- */
-export async function updateBookCatalogInfo(
-  id: number,
-  changes: Partial<
-    Pick<
-      Book,
-      | "title"
-      | "author"
-      | "genres"
-      | "summary"
-      | "coverUrl"
-      | "totalPages"
-      | "rating"
-    >
-  >,
-): Promise<ApiCatalogBook> {
-  return apiFetch<ApiCatalogBook>(
-    `/books/${encodeURIComponent(String(id))}/update/`,
-    {
-      method: "PATCH",
-      body: mapBookToCatalogUpdatePayload(changes),
-    },
-  );
-}
-
-/**
- * Personal reading-progress update is currently not wired here because
- * the backend contract supplied for this version does not expose a
- * confirmed endpoint for it.
+ * `id` is the library-entry id, NOT the catalog/book id.
+ *
+ * Only status and current_page are sent
  */
 export async function updateReadingProgress(
-  _id: string,
-  _changes: Partial<Pick<Book, "status" | "currentPage" | "rating">>,
-): Promise<Book> {
-  throw new Error(
-    "No confirmed backend endpoint for updating reading progress/status yet.",
+  id: string,
+  changes: UpdateReadingProgressChanges,
+): Promise<ApiLibraryBookUpdatePayload> {
+  const payload: ApiLibraryBookUpdatePayload = {};
+
+  if (changes.status !== undefined) {
+    payload.status = changes.status;
+  }
+
+  if (changes.currentPage !== undefined) {
+    const currentPage = Math.max(0, Math.round(changes.currentPage));
+
+    payload.current_page = currentPage;
+  }
+
+  if (Object.keys(payload).length === 0) {
+    throw new Error("No reading progress changes were provided.");
+  }
+
+  return apiFetch<ApiLibraryBookUpdatePayload>(
+    `/books/${encodeURIComponent(id)}/update/`,
+    {
+      method: "PATCH",
+      body: payload,
+    },
   );
 }
 
 /**
- * Delete the user's library entry.
+ * DELETE /library/books/{id}/
  *
- * `id` here must be the library-entry id, not the catalog id.
+ * `id` is the library-entry id.
  */
 export async function deleteBook(id: string): Promise<void> {
-  await apiFetch<void>(
-    `/library/books/${encodeURIComponent(id)}/`,
-    {
-      method: "DELETE",
-    },
-  );
+  await apiFetch<void>(`/library/books/${encodeURIComponent(id)}/`, {
+    method: "DELETE",
+  });
 }
