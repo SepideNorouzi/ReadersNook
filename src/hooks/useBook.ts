@@ -1,5 +1,5 @@
 import { bookRepository } from "../repo/book/bookRepo";
 
-export function useBook(id: string | undefined) {
-  return bookRepository.useBook(id);
+export function useBook(externalId: string | undefined) {
+  return bookRepository.useBook(externalId);
 }

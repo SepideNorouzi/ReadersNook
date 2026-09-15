@@ -2,6 +2,7 @@ import { useState } from "react";
 import { bookRepository } from "../repo/book/bookRepo";
 import { isBookInLibrary } from "../repo/book/isBookInLibrary";
 import { bookFromSearchResult } from "../services/bookFromSearch";
+import type { Book } from "../types/book";
 import type { BookSearchResult } from "../types/searchResults";
 import { useModeStore } from "../store/modeStore";
 
@@ -27,6 +28,18 @@ export function useIsBookSaved(
 ) {
   const { data: books } = useBooks();
   return isBookInLibrary(books, sourceId, identity);
+}
+
+export function useIsOwnedLibraryBook(book: Book) {
+  const { data: books } = useBooks();
+
+  if (book.sourceId) {
+    return books.some(
+      (item) => item.sourceId === book.sourceId && item.id === book.id,
+    );
+  }
+
+  return books.some((item) => item.id === book.id);
 }
 
 // add book to library hooks :
