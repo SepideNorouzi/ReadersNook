@@ -36,52 +36,58 @@ export default function CollectionPicker({ book }: Props) {
     );
   };
 
-  async function handleToggle(collectionId: string) {
-    if (!isSavedBook) return;
+async function handleToggle(collectionId: string) {
+  if (!isSavedBook || !book.catalogId) return;
 
-    const alreadyIn = isInCollection(collectionId);
+  const alreadyIn = isInCollection(collectionId);
 
-    try {
-      setBusyId(collectionId);
+  try {
+    setBusyId(collectionId);
 
-      if (alreadyIn) {
-        await removeBookFromCollection({ collectionId, bookId: book.id });
-      } else {
-        await addBookToCollection({ collectionId, bookId: book.id });
-        setOpen(false); // keep closing only on add — let people untoggle a few in a row
-      }
-    } catch (error) {
-      console.error(
-        `Failed to ${alreadyIn ? "remove from" : "add to"} collection:`,
-        error,
-      );
-    } finally {
-      setBusyId(null);
-    }
-  }
-
-  async function handleCreate() {
-    if (!isSavedBook) return;
-
-    const trimmedName = name.trim();
-
-    if (!trimmedName) return;
-
-    try {
-      const collection = await createCollection(trimmedName);
-
-      await addBookToCollection({
-        collectionId: collection.id,
-        bookId: book.id,
+    if (alreadyIn) {
+      await removeBookFromCollection({
+        collectionId,
+        bookId: book.catalogId,
       });
-
-      setName("");
-      setCreating(false);
+    } else {
+      await addBookToCollection({
+        collectionId,
+        bookId: book.catalogId,
+      });
       setOpen(false);
-    } catch (error) {
-      console.error("Failed to create collection:", error);
     }
+  } catch (error) {
+    console.error(
+      `Failed to ${alreadyIn ? "remove from" : "add to"} collection:`,
+      error,
+    );
+  } finally {
+    setBusyId(null);
   }
+}
+
+async function handleCreate() {
+  if (!isSavedBook || !book.catalogId) return;
+
+  const trimmedName = name.trim();
+
+  if (!trimmedName) return;
+
+  try {
+    const collection = await createCollection(trimmedName);
+
+    await addBookToCollection({
+      collectionId: collection.id,
+      bookId: book.catalogId,
+    });
+
+    setName("");
+    setCreating(false);
+    setOpen(false);
+  } catch (error) {
+    console.error("Failed to create collection:", error);
+  }
+}
 
   return (
     <div className="relative">
