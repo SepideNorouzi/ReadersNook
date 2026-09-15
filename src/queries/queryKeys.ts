@@ -1,8 +1,8 @@
 export const queryKeys = {
   books: (username: string) => ["books", username] as const,
 
-  book: (username: string, bookId: string) =>
-    ["books", username, bookId] as const,
+  book: (username: string, externalId: string) =>
+    ["books", username, externalId] as const,
 
   collections: (username: string) => ["collections", username] as const,
 
