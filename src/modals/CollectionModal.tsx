@@ -247,7 +247,9 @@ export default function CollectionModal({ collection, onClose }: Props) {
                     onClick={() => {
                       if (isEditing) return;
                       onClose();
-                      navigate(`/book/${book.id}`);
+                      navigate(
+                        `/book/${encodeURIComponent(book.sourceId ?? book.id)}`,
+                      );
                     }}
                     className="
                       flex w-full flex-col items-center text-center

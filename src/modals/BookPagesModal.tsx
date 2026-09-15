@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { X, BookOpen } from "lucide-react";
 import type { Book } from "../types/book";
-import { useUpdateBook } from "../hooks/useBooks";
+import { useIsOwnedLibraryBook, useUpdateBook } from "../hooks/useBooks";
 
 interface Props {
   open: boolean;
@@ -12,6 +12,7 @@ interface Props {
 
 export default function BookPagesModal({ open, book, onClose }: Props) {
   const updateBook = useUpdateBook();
+  const isSavedBook = useIsOwnedLibraryBook(book);
 
   const [page, setPage] = useState(book.currentPage);
 
@@ -19,6 +20,8 @@ export default function BookPagesModal({ open, book, onClose }: Props) {
 
   function handleSave() {
     const value = Number(page);
+
+    if (!isSavedBook) return;
 
     if (Number.isNaN(value)) return;
 

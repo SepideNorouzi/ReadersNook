@@ -17,16 +17,16 @@ type BookDetailLocationState = {
 };
 
 export default function BookDetail() {
-  const { id } = useParams();
+  const { externalId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data: book, isLoading } = useBook(id);
+  const { data: book, isLoading } = useBook(externalId);
 
   const state = location.state as BookDetailLocationState | null;
   const searchResult = state?.searchResult;
 
-  if (!id) {
+  if (!externalId) {
     return <Navigate to="/404" replace />;
   }
 
@@ -51,7 +51,7 @@ export default function BookDetail() {
        * This is only a temporary UI identity for the unsaved preview.
        * It is NOT a library-entry id and must not be used for mutations.
        */
-      id,
+      id: externalId,
 
       addedAt: undefined,
     };
