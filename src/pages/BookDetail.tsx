@@ -170,7 +170,7 @@ lg:left-95
 
       <DetailContent
         book={detailBook}
-        searchResult={book ? undefined : searchResult}
+        searchResult={searchResult}
       />
     </main>
   );
