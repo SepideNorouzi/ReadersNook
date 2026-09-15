@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Check, ChevronDown, Plus } from "lucide-react";
 import type { Book } from "../../../types/book";
+import { useIsOwnedLibraryBook } from "../../../hooks/useBooks";
 import { useCollections } from "../../../hooks/useCollections";
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function CollectionPicker({ book }: Props) {
+  const isSavedBook = useIsOwnedLibraryBook(book);
   const {
     collections,
     isLoading,
@@ -35,6 +37,8 @@ export default function CollectionPicker({ book }: Props) {
   };
 
   async function handleToggle(collectionId: string) {
+    if (!isSavedBook) return;
+
     const alreadyIn = isInCollection(collectionId);
 
     try {
@@ -57,6 +61,8 @@ export default function CollectionPicker({ book }: Props) {
   }
 
   async function handleCreate() {
+    if (!isSavedBook) return;
+
     const trimmedName = name.trim();
 
     if (!trimmedName) return;

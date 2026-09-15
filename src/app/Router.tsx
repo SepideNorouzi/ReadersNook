@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/book/:id",
+        path: "/book/:externalId",
         element: <BookDetail />,
       },
     ],

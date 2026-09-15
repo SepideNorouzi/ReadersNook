@@ -90,7 +90,11 @@ export default function CurrentReadEmbla({
                   <img
                     src={book.coverUrl}
                     alt={book.title}
-                    onClick={() => navigate(`/book/${book.id}`)}
+                    onClick={() =>
+                      navigate(
+                        `/book/${encodeURIComponent(book.sourceId ?? book.id)}`,
+                      )
+                    }
                     className="
                       block
                       aspect-[3/4]

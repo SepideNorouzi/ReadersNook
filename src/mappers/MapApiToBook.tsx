@@ -3,7 +3,6 @@ import type {
   ApiLibraryEntry,
   ApiCatalogBookDetail,
   ApiBookCreatePayload,
-  ApiCatalogBookUpdatePayload,
   ApiCatalogBook,
 } from "../types/api/apiBook";
 import { mapApiQuoteNestedToQuote } from "./MapApiToQuote";
@@ -45,8 +44,14 @@ export function mapApiLibraryEntryToBook(entry: ApiLibraryEntry): Book {
   };
 }
 
+export type CatalogDetailLibraryEntry = Pick<Book, "id"> &
+  Partial<
+    Pick<Book, "catalogId" | "sourceId" | "status" | "currentPage" | "addedAt">
+  >;
+
 export function mapApiCatalogBookDetailToBook(
   entry: ApiCatalogBookDetail,
+  libraryEntry?: CatalogDetailLibraryEntry,
 ): Book {
   const userBook = entry.user_book;
 
@@ -54,22 +59,25 @@ export function mapApiCatalogBookDetailToBook(
     ? [...userBook.aesthetic_photos].sort((a, b) => a.order - b.order)
     : [];
 
+  const libraryId = libraryEntry?.id;
+
   return {
-    // Falls back to the catalog id when there's no library entry yet
-    // (a not-yet-saved preview). Fine for display/keys — don't feed
-    // this into deleteBook or a status update, which expect a real
-    // library-entry id.
-    id: userBook ? String(userBook.id) : String(entry.id),
-    catalogId: String(entry.id),
+    // GET /books/{id}/ does not guarantee user_book.id. The library-entry
+    // id must come from /library/. Catalog id is display-only for unsaved
+    // previews and must not be used for status/progress/delete mutations.
+    id: libraryId ?? String(entry.id),
+    catalogId: libraryEntry?.catalogId ?? String(entry.id),
     title: entry.title,
     author: entry.author,
     summary: entry.summary,
     coverUrl: entry.cover_url,
-    currentPage: userBook?.current_page ?? 0,
+    currentPage: userBook?.current_page ?? libraryEntry?.currentPage ?? 0,
     totalPages: entry.total_pages,
-    status: userBook?.status ?? "tbr",
+    status: userBook?.status ?? libraryEntry?.status ?? "tbr",
     rating: entry.rating,
-    addedAt: userBook?.added_at,
+    addedAt: libraryId
+      ? (libraryEntry?.addedAt ?? userBook?.added_at)
+      : undefined,
     quotes: userBook?.quotes
       ? userBook.quotes.map(mapApiQuoteNestedToQuote)
       : [],
@@ -77,7 +85,7 @@ export function mapApiCatalogBookDetailToBook(
       (photo) => mapApiAestheticPhoto(photo).imageUrl,
     ),
     genres: entry.genres,
-    sourceId: entry.external_id,
+    sourceId: libraryEntry?.sourceId ?? entry.external_id,
   };
 }
 
@@ -116,35 +124,6 @@ export function mapBookToCreatePayload(
     status: book.status || "tbr",
     rating: book.rating ?? 0,
     genres: book.genres ?? [],
-  };
-}
-
-export function mapBookToCatalogUpdatePayload(
-  changes: Partial<
-    Pick<
-      Book,
-      | "title"
-      | "author"
-      | "genres"
-      | "summary"
-      | "coverUrl"
-      | "totalPages"
-      | "rating"
-    >
-  >,
-): ApiCatalogBookUpdatePayload {
-  return {
-    ...(changes.title !== undefined && { title: clip(changes.title, 255) }),
-    ...(changes.author !== undefined && { author: clip(changes.author, 255) }),
-    ...(changes.genres !== undefined && { genres: changes.genres }),
-    ...(changes.summary !== undefined && { summary: changes.summary }),
-    ...(changes.coverUrl !== undefined && {
-      cover_url: toCoverUrl(changes.coverUrl),
-    }),
-    ...(changes.totalPages !== undefined && {
-      total_pages: changes.totalPages,
-    }),
-    ...(changes.rating !== undefined && { rating: changes.rating }),
   };
 }
 

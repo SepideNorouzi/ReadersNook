@@ -7,9 +7,11 @@ interface Props {
 }
 
 export default function TBRBookItem({ book, isNext = false }: Props) {
+  const detailId = book.sourceId ?? book.id;
+
   return (
     <Link
-      to={`/book/${book.id}`}
+      to={`/book/${encodeURIComponent(detailId)}`}
       className="
         group
         flex
