@@ -1,42 +1,85 @@
 import { Sparkles } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
+import { useSearchParams } from "react-router";
 
 import SearchBar from "../features/searchBooks/SearchBar";
 import SearchResults from "../features/searchBooks/SearchResults";
 
 export default function Search() {
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleSearch = useCallback((newQuery: string) => {
-    setQuery(newQuery);
-    setPage(1);
-  }, []); // setQuery/setPage are stable across renders.
+  const query = searchParams.get("q") ?? "";
+
+  const pageParam = Number(searchParams.get("page") ?? "1");
+  const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
+
+  const handleSearch = useCallback(
+    (newQuery: string) => {
+      const trimmed = newQuery.trim();
+
+      if (!trimmed) {
+        setSearchParams({});
+        return;
+      }
+
+      setSearchParams({
+        q: trimmed,
+        page: "1",
+      });
+    },
+    [setSearchParams],
+  );
+
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      if (newPage < 1) return;
+
+      setSearchParams({
+        q: query,
+        page: String(newPage),
+      });
+    },
+    [query, setSearchParams],
+  );
 
   return (
     <main className="flex flex-col gap-7 p-4 pt-20 sm:p-6 lg:p-12 lg:pt-20">
       <div
         aria-hidden="true"
         className="
-    pointer-events-none
-    absolute inset-x-0 top-0
-    z-0
-    h-24
-    bg-gradient-to-b
-    from-[rgba(35,23,17,0.10)]
-    via-[rgba(35,23,17,0.04)]
-    to-transparent
-    md:hidden
-  "
+          pointer-events-none
+          absolute inset-x-0 top-0
+          z-0
+          h-24
+          bg-gradient-to-b
+          from-[rgba(35,23,17,0.10)]
+          via-[rgba(35,23,17,0.04)]
+          to-transparent
+          md:hidden
+        "
       />
+
       <section className="mx-auto w-full max-w-4xl">
         <div className="mb-5">
           <div className="mb-2 flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--gold)]/12 text-[var(--gold)]">
+            <span
+              className="
+                flex h-7 w-7 items-center justify-center
+                rounded-full
+                bg-[var(--gold)]/12
+                text-[var(--gold)]
+              "
+            >
               <Sparkles size={14} />
             </span>
 
-            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brown-600)]">
+            <span
+              className="
+                text-xs font-semibold uppercase
+                tracking-[0.12em]
+                text-[var(--brown-600)]
+              "
+            >
               Discover
             </span>
           </div>
@@ -47,11 +90,15 @@ export default function Search() {
           </p>
         </div>
 
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar value={query} onChange={handleSearch} />
       </section>
 
       <section className="mx-auto w-full max-w-6xl">
-        <SearchResults query={query} page={page} onPageChange={setPage} />
+        <SearchResults
+          query={query}
+          page={page}
+          onPageChange={handlePageChange}
+        />
       </section>
     </main>
   );

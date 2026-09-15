@@ -1,24 +1,16 @@
-import { useEffect, useState } from "react";
 import { Search as SearchIcon, X } from "lucide-react";
 
 type Props = {
-  onSearch: (query: string) => void;
-  delay?: number;
+  value: string;
+  onChange: (value: string) => void;
   autoFocus?: boolean;
 };
 
 export default function SearchBar({
-  onSearch,
-  delay = 400,
+  value,
+  onChange,
   autoFocus = true,
 }: Props) {
-  const [rawValue, setRawValue] = useState("");
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => onSearch(rawValue), delay);
-    return () => clearTimeout(timeoutId);
-  }, [rawValue, delay, onSearch]);
-
   return (
     <div
       className="
@@ -55,8 +47,8 @@ export default function SearchBar({
 
       <input
         type="text"
-        value={rawValue}
-        onChange={(e) => setRawValue(e.target.value)}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="Search books, authors..."
         autoFocus={autoFocus}
         className="
@@ -69,10 +61,10 @@ export default function SearchBar({
         "
       />
 
-      {rawValue && (
+      {value && (
         <button
           type="button"
-          onClick={() => setRawValue("")}
+          onClick={() => onChange("")}
           aria-label="Clear search"
           className="
             absolute right-3 top-1/2
