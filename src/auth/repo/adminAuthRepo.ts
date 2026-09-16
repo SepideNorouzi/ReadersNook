@@ -8,6 +8,7 @@ import {
   register,
   toProfile,
   updateAvatar,
+  updateName,
 } from "../services/auth";
 
 import { useAuthStore } from "../store/authStore";
@@ -164,6 +165,29 @@ export const adminAuthRepo = {
             throw error;
           const tokens = await refreshSession();
           return toProfile(await updateAvatar(tokens.access, avatarUrl));
+        }
+      },
+      onSuccess: (user) => {
+        queryClient.setQueryData(authKeys.me("admin", user.username), user);
+      },
+    });
+  },
+
+  useUpdateName() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+      mutationFn: async (name: string) => {
+        const token = useAuthStore.getState().accessToken;
+        if (!token) throw new AuthHttpError("Not authenticated.", 401);
+
+        try {
+          return toProfile(await updateName(token, name));
+        } catch (error) {
+          if (!(error instanceof AuthHttpError) || error.status !== 401)
+            throw error;
+          const tokens = await refreshSession();
+          return toProfile(await updateName(tokens.access, name));
         }
       },
       onSuccess: (user) => {

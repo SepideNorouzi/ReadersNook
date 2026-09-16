@@ -27,7 +27,17 @@ export const demoAuthRepo = {
     return useMutation({
       mutationFn: async (avatarUrl: string) => {
         setAvatar(avatarUrl);
-        return avatarUrl;
+        return useDemoProfileStore.getState().profile;
+      },
+    });
+  },
+
+  useUpdateName() {
+    const setName = useDemoProfileStore((state) => state.setName);
+    return useMutation({
+      mutationFn: async (name: string) => {
+        setName(name);
+        return useDemoProfileStore.getState().profile;
       },
     });
   },
