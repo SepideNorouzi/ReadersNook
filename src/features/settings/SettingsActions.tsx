@@ -5,9 +5,12 @@ import { useNavigate } from "react-router";
 import Card from "../../ui/Card";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useModeStore } from "../../store/modeStore";
+import { useThemeStore } from "../../store/themeStore";
 
 export default function SettingsActions() {
-  const [darkMode, setDarkMode] = useState(false);
+ const theme = useThemeStore((state) => state.theme);
+const toggleTheme = useThemeStore((state) => state.toggleTheme);
+const darkMode = theme === "dark";
 
   const mode = useModeStore((state) => state.mode);
   const setMode = useModeStore((state) => state.setMode);
@@ -26,13 +29,6 @@ export default function SettingsActions() {
     await logout();
     setMode("demo");
     navigate("/");
-  };
-
-  const toggleDarkMode = () => {
-    const next = !darkMode;
-
-    setDarkMode(next);
-    document.documentElement.classList.toggle("dark", next);
   };
 
   return (
@@ -70,11 +66,11 @@ export default function SettingsActions() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={toggleDarkMode}
-          aria-label="Toggle dark mode"
-          aria-pressed={darkMode}
+<button
+  type="button"
+  onClick={toggleTheme}
+  aria-label="Toggle dark mode"
+  aria-pressed={darkMode}
           className={`
             flex h-7 w-12 shrink-0
             items-center rounded-full
