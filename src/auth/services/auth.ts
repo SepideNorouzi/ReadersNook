@@ -69,6 +69,35 @@ export function toProfile(user: AuthUser): Profile {
   };
 }
 
+function splitName(fullName: string): {
+  first_name: string;
+  last_name: string;
+} {
+  const [first_name, ...rest] = fullName.trim().split(/\s+/);
+  return { first_name: first_name ?? "", last_name: rest.join(" ") };
+}
+
+// Mirrors updateAvatar() exactly — same endpoint, different field.
+export async function updateName(
+  accessToken: string,
+  name: string,
+): Promise<AuthUser> {
+  const response = await fetch(`${API_URL}/auth/me/`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(splitName(name)),
+  });
+
+  if (!response.ok) {
+    await throwApiError(response, "Failed to update name.");
+  }
+
+  return response.json();
+}
+
 export async function login(
   credentials: LoginCredentials,
 ): Promise<TokenResponse> {
