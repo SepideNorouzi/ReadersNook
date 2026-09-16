@@ -22,6 +22,7 @@ export function useAuth() {
   const adminRegister = adminAuthRepo.useRegister();
 
   const updateAvatar = authRepository.useUpdateAvatar();
+  const updateName = authRepository.useUpdateName();
 
   const logout = useCallback(() => {
     return logoutSession();
@@ -44,6 +45,7 @@ export function useAuth() {
     register,
     adminRegister,
     updateAvatar,
+    updateName,
     logout,
   };
 }
