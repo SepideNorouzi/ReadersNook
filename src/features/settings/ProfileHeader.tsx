@@ -1,9 +1,10 @@
-import { Sparkles, UserRound, Pencil } from "lucide-react";
+import { Sparkles, UserRound, Pencil, Check, X } from "lucide-react";
+import { useState } from "react";
 
 import type { Profile } from "../../auth/types/auth";
 
 import AvatarPicker from "./AvatarPicker";
-import { useAuth } from "../../auth/hooks/useAuth";
+import { useProfileEditor } from "../../auth/hooks/useProfileEditor";
 
 interface Props {
   user: Profile;
@@ -19,15 +20,59 @@ export default function ProfileHeader({
   const account =
     user.id === "guest" ? "Browsing in demo mode" : "Reader's Nook Member";
 
-  const { updateAvatar } = useAuth();
+  const { updateAvatar, updateName, isUpdatingName } = useProfileEditor();
 
-  const handleAvatarSelect = async (avatarId: string) => {
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState(user.name);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+
+  const handleAvatarSelect = async (avatarUrl: string) => {
     try {
-      await updateAvatar.mutateAsync(avatarId);
-
+      setAvatarError(null);
+      await updateAvatar(avatarUrl);
       onAvatarPickerChange(false);
     } catch (error) {
       console.error("Failed to update avatar:", error);
+      setAvatarError(
+        error instanceof Error ? error.message : "Couldn't update avatar.",
+      );
+    }
+  };
+
+  const startEditingName = () => {
+    setNameDraft(user.name);
+    setNameError(null);
+    setIsEditingName(true);
+  };
+
+  const cancelEditingName = () => {
+    setIsEditingName(false);
+    setNameError(null);
+  };
+
+  const saveName = async () => {
+    const trimmed = nameDraft.trim();
+
+    if (!trimmed) {
+      setNameError("Name can't be empty.");
+      return;
+    }
+
+    if (trimmed === user.name) {
+      setIsEditingName(false);
+      return;
+    }
+
+    try {
+      setNameError(null);
+      await updateName(trimmed);
+      setIsEditingName(false);
+    } catch (error) {
+      console.error("Failed to update name:", error);
+      setNameError(
+        error instanceof Error ? error.message : "Couldn't save your name.",
+      );
     }
   };
 
@@ -115,7 +160,7 @@ export default function ProfileHeader({
           </span>
         </button>
 
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="mb-1.5 flex items-center gap-1.5">
             <Sparkles
               size={12}
@@ -136,17 +181,99 @@ export default function ProfileHeader({
             </span>
           </div>
 
-          <h1
-            className="
-              line-clamp-2
-              font-heading
-              text-xl font-semibold
-              text-[var(--sidebar-text)]
-              sm:text-[1.65rem]
-            "
-          >
-            Welcome back, {user.name}
-          </h1>
+          {isEditingName ? (
+            <div className="flex items-center gap-1.5">
+              <input
+                type="text"
+                value={nameDraft}
+                onChange={(event) => setNameDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") saveName();
+                  if (event.key === "Escape") cancelEditingName();
+                }}
+                disabled={isUpdatingName}
+                autoFocus
+                className="
+                  min-w-0 flex-1
+                  rounded-lg
+                  border border-[var(--gold)]/40
+                  bg-[var(--brown-700)]/60
+                  px-2 py-1
+                  font-heading text-xl font-semibold
+                  text-[var(--sidebar-text)]
+                  outline-none
+                  focus:border-[var(--gold)]
+                  disabled:opacity-60
+                  sm:text-[1.65rem]
+                "
+              />
+
+              <button
+                type="button"
+                onClick={saveName}
+                disabled={isUpdatingName}
+                aria-label="Save name"
+                className="
+                  shrink-0 rounded-full p-1
+                  text-[var(--gold)]
+                  hover:bg-[var(--gold)]/15
+                  disabled:opacity-50
+                "
+              >
+                <Check size={16} strokeWidth={2.5} />
+              </button>
+
+              <button
+                type="button"
+                onClick={cancelEditingName}
+                disabled={isUpdatingName}
+                aria-label="Cancel editing name"
+                className="
+                  shrink-0 rounded-full p-1
+                  text-[var(--sidebar-text-secondary)]
+                  hover:bg-white/10
+                  disabled:opacity-50
+                "
+              >
+                <X size={16} strokeWidth={2.5} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              <h1
+                className="
+                  line-clamp-2
+                  font-heading
+                  text-xl font-semibold
+                  text-[var(--sidebar-text)]
+                  sm:text-[1.65rem]
+                "
+              >
+                Welcome back, {user.name}
+              </h1>
+
+              <button
+                type="button"
+                onClick={startEditingName}
+                aria-label="Edit name"
+                className="
+                  shrink-0 rounded-full p-1
+                  text-[var(--sidebar-text-secondary)]
+                  hover:bg-white/10 hover:text-[var(--gold)]
+                "
+              >
+                <Pencil size={13} />
+              </button>
+            </div>
+          )}
+
+          {nameError && (
+            <p className="mt-1 text-xs text-red-300">{nameError}</p>
+          )}
+
+          {avatarError && (
+            <p className="mt-1 text-xs text-red-300">{avatarError}</p>
+          )}
 
           <p
             className="
