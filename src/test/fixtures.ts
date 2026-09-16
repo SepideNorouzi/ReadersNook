@@ -4,6 +4,7 @@ ApiLibraryEntry,
 } from "../types/api/apiBook";
 
 import type { ApiCollectionDetail } from "../types/api/apiCollection";
+import type { AuthUser, Profile } from "../auth/types/auth";
 
 export function mockApiCatalogBook(
 overrides: Partial<ApiCatalogBook> = {},
@@ -51,4 +52,28 @@ created_at: "2026-01-01T00:00:00Z",
 updated_at: "2026-01-01T00:00:00Z",
 ...overrides,
 };
+}
+
+export function mockAuthUser(
+  overrides: Partial<AuthUser> = {},
+): AuthUser {
+  return {
+    first_name: "Sepide",
+    last_name: "Norouzi",
+    username: "sepide",
+    avatar: null,
+    ...overrides,
+  };
+}
+
+export function mockProfile(
+  overrides: Partial<Profile> = {},
+): Profile {
+  return {
+    id: "sepide",
+    name: "Sepide Norouzi",
+    username: "sepide",
+    avatarUrl: null,
+    ...overrides,
+  };
 }
