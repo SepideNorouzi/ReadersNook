@@ -293,17 +293,27 @@ class BookDetailAPIView(APIView):
     put=extend_schema(
         tags=["Library"],
         summary="Replace library book progress",
-        description="Full update: every writable field must be supplied.",
+        description=(
+            "Full update: every writable field must be supplied. "
+            "The URL id is the catalog book id."
+        ),
     ),
     patch=extend_schema(
         tags=["Library"],
         summary="Update library book progress",
-        description="Partial update: only the supplied fields are changed.",
+        description=(
+            "Partial update: only the supplied fields are changed. "
+            "The URL id is the catalog book id."
+        ),
     ),
 )
 class LibraryBookUpdateAPIView(generics.UpdateAPIView):
     serializer_class = UserBookSerializer
     permission_classes = [IsAuthenticated]
+    # URL id is the catalog book id, matching /books/<pk>/. One UserBook per
+    # (library, book), so the lookup is unambiguous within the user's library.
+    lookup_field = "book_id"
+    lookup_url_kwarg = "pk"
 
     def get_queryset(self):
         return library_books_qs(self.request.user)
@@ -315,13 +325,16 @@ class LibraryBookUpdateAPIView(generics.UpdateAPIView):
         summary="Delete a library book",
         description=(
             "Remove a book from the authenticated user's library. "
-            "Also removes it from any of that library's collections."
+            "Also removes it from any of that library's collections. "
+            "The URL id is the catalog book id."
         ),
     )
 )
 class LibraryBookDeleteAPIView(generics.DestroyAPIView):
     serializer_class = UserBookSerializer
     permission_classes = [IsAuthenticated]
+    lookup_field = "book_id"
+    lookup_url_kwarg = "pk"
 
     def get_queryset(self):
         return library_books_qs(self.request.user)

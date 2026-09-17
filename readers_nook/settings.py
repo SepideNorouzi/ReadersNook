@@ -60,6 +60,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "readers_nook.urls"
+ASGI_APPLICATION = "readers_nook.asgi.application"
 
 TEMPLATES = [
     {
@@ -84,8 +85,12 @@ WSGI_APPLICATION = "readers_nook.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+        "PORT": os.environ.get("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -177,3 +182,14 @@ HARDCOVER_API_TOKEN = os.environ.get("HARDCOVER_API_TOKEN", "")
 HARDCOVER_USER_AGENT = os.environ.get("HARDCOVER_USER_AGENT", "ReadersNook/0.1")
 SEARCH_BACKEND = os.environ.get("SEARCH_BACKEND", "hardcover")
 CATALOG_PROVIDER = os.environ.get("CATALOG_PROVIDER", "hardcover")
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}

@@ -23,7 +23,7 @@ class ReadingStatus(models.TextChoices):
 class Book(models.Model):
     """Shared book metadata that any library can reference."""
 
-    external_id = models.CharField(max_length=50, unique=True, db_index=True)
+    external_id = models.CharField(max_length=50, unique=True)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     genres = models.JSONField(default=list, blank=True)

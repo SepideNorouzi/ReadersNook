@@ -54,13 +54,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="book",
             name="external_id",
-            field=models.CharField(blank=True, db_index=True, max_length=50, null=True),
+            field=models.CharField(blank=True, max_length=50, null=True),
         ),
         migrations.RunPython(fill_external_ids, migrations.RunPython.noop),
         migrations.AlterField(
             model_name="book",
             name="external_id",
-            field=models.CharField(db_index=True, max_length=50, unique=True),
+            field=models.CharField(max_length=50, unique=True),
         ),
         migrations.CreateModel(
             name="Library",

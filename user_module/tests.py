@@ -102,3 +102,115 @@ class AuthenticationAPITests(APITestCase):
             authorized_response.data["username"],
             self.registration_data["username"],
         )
+
+
+class ProfileAPITests(APITestCase):
+    def setUp(self):
+        self.password = "Strong-Test-Password-947!"
+        self.user = User.objects.create_user(
+            username="jane_reader",
+            password=self.password,
+            first_name="Jane",
+            last_name="Reader",
+        )
+        self.client.force_authenticate(user=self.user)
+
+    def test_update_username_and_names(self):
+        response = self.client.patch(
+            reverse("user_module:current-user"),
+            {"username": "jane_updated", "first_name": "Janet"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["username"], "jane_updated")
+        self.assertEqual(response.data["first_name"], "Janet")
+        self.assertEqual(response.data["last_name"], "Reader")
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, "jane_updated")
+
+    def test_update_username_rejects_taken_name(self):
+        User.objects.create_user(username="taken", password=self.password)
+        response = self.client.patch(
+            reverse("user_module:current-user"),
+            {"username": "taken"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("username", response.data)
+
+    def test_change_password(self):
+        new_password = "Even-Stronger-Password-258!"
+        response = self.client.post(
+            reverse("user_module:change-password"),
+            {
+                "current_password": self.password,
+                "new_password": new_password,
+                "new_password2": new_password,
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(new_password))
+        self.assertFalse(self.user.check_password(self.password))
+
+    def test_change_password_rejects_wrong_current(self):
+        response = self.client.post(
+            reverse("user_module:change-password"),
+            {
+                "current_password": "not-the-password",
+                "new_password": "Even-Stronger-Password-258!",
+                "new_password2": "Even-Stronger-Password-258!",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("current_password", response.data)
+
+    def test_change_password_rejects_mismatch_and_weak(self):
+        mismatch = self.client.post(
+            reverse("user_module:change-password"),
+            {
+                "current_password": self.password,
+                "new_password": "Even-Stronger-Password-258!",
+                "new_password2": "Different-Password-258!",
+            },
+            format="json",
+        )
+        self.assertEqual(mismatch.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("new_password2", mismatch.data)
+
+        weak = self.client.post(
+            reverse("user_module:change-password"),
+            {
+                "current_password": self.password,
+                "new_password": "password",
+                "new_password2": "password",
+            },
+            format="json",
+        )
+        self.assertEqual(weak.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("new_password", weak.data)
+
+    def test_profile_and_password_require_auth(self):
+        self.client.force_authenticate(user=None)
+        self.assertEqual(
+            self.client.patch(
+                reverse("user_module:current-user"),
+                {"username": "x"},
+                format="json",
+            ).status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
+        self.assertEqual(
+            self.client.post(
+                reverse("user_module:change-password"),
+                {
+                    "current_password": self.password,
+                    "new_password": "Even-Stronger-Password-258!",
+                    "new_password2": "Even-Stronger-Password-258!",
+                },
+                format="json",
+            ).status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )

@@ -1,9 +1,16 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .serializers import UserProfileSerializer, UserRegistrationSerializer
+from .serializers import (
+    ChangePasswordSerializer,
+    PasswordChangedSerializer,
+    UserProfileSerializer,
+    UserRegistrationSerializer,
+)
 
 
 @extend_schema_view(
@@ -45,12 +52,46 @@ class UserTokenRefreshView(TokenRefreshView):
 
 @extend_schema_view(
     get=extend_schema(
-        tags=["Authentication"],
+        tags=["Profile"],
         summary="Get the authenticated user",
-    )
+    ),
+    put=extend_schema(
+        tags=["Profile"],
+        summary="Replace profile",
+        description="Full update of first name, last name, and username.",
+    ),
+    patch=extend_schema(
+        tags=["Profile"],
+        summary="Update profile",
+        description="Partial update of first name, last name, and/or username.",
+    ),
 )
-class CurrentUserView(generics.RetrieveAPIView):
+class CurrentUserView(generics.RetrieveUpdateAPIView):
     serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return self.request.user
+
+
+@extend_schema(
+    tags=["Profile"],
+    summary="Change password",
+    description="Requires the current password. The new password is validated and hashed.",
+    request=ChangePasswordSerializer,
+    responses={200: PasswordChangedSerializer},
+)
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(
+            data=request.data,
+            context={"request": request},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": "Password updated."},
+            status=status.HTTP_200_OK,
+        )

@@ -32,7 +32,9 @@ class LibraryAPITests(APITestCase):
             author="Frank Herbert",
             total_pages=100,
         )
-        UserBook.objects.create(library=self.user.library, book=self.book)
+        self.user_book = UserBook.objects.create(
+            library=self.user.library, book=self.book
+        )
 
     def _auth(self, user):
         self.client.force_authenticate(user=user)
@@ -166,6 +168,29 @@ class LibraryAPITests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("current_page", response.data)
+
+    def test_delete_library_book_by_book_id(self):
+        self._auth(self.user)
+        response = self.client.delete(
+            reverse("books:library-book-delete", kwargs={"pk": self.book.pk})
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(
+            UserBook.objects.filter(
+                library=self.user.library, book=self.book
+            ).exists()
+        )
+
+    def test_library_book_update_uses_book_id(self):
+        self._auth(self.user)
+        response = self.client.patch(
+            reverse("books:library-book-update", kwargs={"pk": self.book.pk}),
+            {"current_page": 40},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user_book.refresh_from_db()
+        self.assertEqual(self.user_book.current_page, 40)
 
     def test_quote_create_and_list_are_scoped_to_user(self):
         other = User.objects.create_user(

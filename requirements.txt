@@ -4,3 +4,4 @@ djangorestframework-simplejwt[crypto]==5.5.1
 drf-spectacular==0.30.0
 django-cors-headers==4.7.0
 python-dotenv==1.2.2
+psycopg[binary]==3.3.5
