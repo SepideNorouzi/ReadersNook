@@ -3,12 +3,14 @@ import Card from "../../../ui/Card";
 import { useReadingGoal } from "../../../hooks/useReadingGoal";
 import CircularProgress from "../../../ui/CircularProgress";
 import Loading from "../../../shared/Loading";
+import { useNavigate } from "react-router";
 
 interface ProgressCardProps {
   className?: string;
 }
 
 export default function ProgressCard({ className }: ProgressCardProps) {
+  const navigate = useNavigate();
   const { booksRead, yearlyGoal, progress, isLoading } = useReadingGoal();
 
   if (isLoading) {
@@ -40,6 +42,15 @@ export default function ProgressCard({ className }: ProgressCardProps) {
 
   return (
     <Card
+      onClick={() => navigate("/settings#reading-goal")}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          navigate("/settings#reading-goal");
+        }
+      }}
       className={`
         group relative isolate h-full min-h-0 overflow-hidden
         rounded-[22px] border border-[rgba(207,162,71,0.20)]

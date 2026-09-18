@@ -8,10 +8,12 @@ import ReadingGoalSettings from "../features/settings/ReadingGoal";
 import SettingsSection from "../features/settings/SettingsSection";
 import { useEffect, useState } from "react";
 import AvatarReminderToast from "../features/settings/AvatarReminder";
+import { useLocation } from "react-router";
 
 export default function Settings() {
   const { user, userLoading } = useAuth();
   const { data: books = [], isLoading: booksLoading } = useBooks();
+  const location = useLocation();
 
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [showAvatarToast, setShowAvatarToast] = useState(false);
@@ -23,6 +25,20 @@ export default function Settings() {
       setShowAvatarToast(true);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (userLoading || booksLoading) return; // element isn't rendered yet
+    if (!location.hash) return;
+
+    const target = document.getElementById(location.hash.slice(1));
+
+    target?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "start",
+    });
+  }, [location.hash, userLoading, booksLoading]);
 
   if (userLoading || booksLoading) {
     return (
@@ -73,7 +89,9 @@ export default function Settings() {
           title="Preferences"
           description="Customize your reading experience."
         >
-          <ReadingGoalSettings />
+          <div id="reading-goal" className="scroll-mt-24">
+            <ReadingGoalSettings />
+          </div>
           <SettingsActions />
         </SettingsSection>
       </div>
