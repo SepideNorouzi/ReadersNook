@@ -68,7 +68,7 @@ export default function BookSummary({ book }: Props) {
                 className="
                   relative
                   flex
-                  min-h-8
+                  lg:min-h-8
                   items-center
                   justify-center
                   overflow-hidden
@@ -82,7 +82,8 @@ export default function BookSummary({ book }: Props) {
                   px-4
                   py-1
                   text-center
-                  text-[11px]
+                  lg:text-[11px]
+                  text-[8px]
                   font-semibold
                   tracking-[0.08em]
                   text-[#5a4031]
