@@ -52,6 +52,7 @@ const createBook = ({
   totalPages,
   status,
   rating,
+  genres,
 }: {
   id: string;
   title: string;
@@ -62,6 +63,7 @@ const createBook = ({
   totalPages: number;
   status: "current" | "tbr" | "read";
   rating: number;
+  genres: string[];
 }): Book => {
   const quotesByBook: Record<
     string,
@@ -251,6 +253,7 @@ const createBook = ({
 
     status,
     rating,
+    genres,
 
     quotes,
   };
@@ -272,6 +275,7 @@ export const books: Book[] = [
     totalPages: 432,
     status: "read",
     rating: 4,
+    genres: ["Fantasy", "Romance", "Fae", "New Adult"],
   }),
 
   createBook({
@@ -285,6 +289,7 @@ export const books: Book[] = [
     totalPages: 626,
     status: "read",
     rating: 5,
+    genres: ["Fantasy", "Romance", "Fae", "New Adult"],
   }),
 
   createBook({
@@ -298,6 +303,7 @@ export const books: Book[] = [
     totalPages: 703,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Romance", "War", "Fae"],
   }),
 
   createBook({
@@ -311,6 +317,7 @@ export const books: Book[] = [
     totalPages: 272,
     status: "tbr",
     rating: 4,
+    genres: ["Fantasy", "Romance", "Novella", "Fae"],
   }),
 
   createBook({
@@ -324,6 +331,7 @@ export const books: Book[] = [
     totalPages: 757,
     status: "current",
     rating: 5,
+    genres: ["Fantasy", "Romance", "New Adult", "Fae"],
   }),
 
   // =========================================================
@@ -341,6 +349,7 @@ export const books: Book[] = [
     totalPages: 404,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Short Stories", "Action & Adventure", "Young Adult"],
   }),
 
   createBook({
@@ -354,6 +363,7 @@ export const books: Book[] = [
     totalPages: 404,
     status: "tbr",
     rating: 4,
+    genres: ["Fantasy", "Young Adult", "Action & Adventure", "Assassins"],
   }),
 
   createBook({
@@ -367,6 +377,7 @@ export const books: Book[] = [
     totalPages: 418,
     status: "read",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "Mystery", "Action & Adventure"],
   }),
 
   createBook({
@@ -380,6 +391,7 @@ export const books: Book[] = [
     totalPages: 565,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "Adventure", "Magic"],
   }),
 
   createBook({
@@ -393,6 +405,7 @@ export const books: Book[] = [
     totalPages: 648,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "Action & Adventure", "Revenge"],
   }),
 
   createBook({
@@ -406,6 +419,7 @@ export const books: Book[] = [
     totalPages: 689,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "New Adult", "War", "Adventure"],
   }),
 
   createBook({
@@ -419,6 +433,7 @@ export const books: Book[] = [
     totalPages: 688,
     status: "tbr",
     rating: 4,
+    genres: ["Fantasy", "New Adult", "Adventure", "Healing"],
   }),
 
   createBook({
@@ -432,6 +447,7 @@ export const books: Book[] = [
     totalPages: 992,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "New Adult", "War", "Epic Fantasy"],
   }),
 
   // =========================================================
@@ -449,6 +465,7 @@ export const books: Book[] = [
     totalPages: 309,
     status: "current",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "Coming of Age", "Magic"],
   }),
 
   createBook({
@@ -462,6 +479,7 @@ export const books: Book[] = [
     totalPages: 341,
     status: "tbr",
     rating: 4,
+    genres: ["Fantasy", "Young Adult", "Mystery", "Magic"],
   }),
 
   createBook({
@@ -475,6 +493,7 @@ export const books: Book[] = [
     totalPages: 435,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "Mystery", "Magic"],
   }),
 
   createBook({
@@ -488,6 +507,7 @@ export const books: Book[] = [
     totalPages: 734,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "Adventure", "Magic"],
   }),
 
   createBook({
@@ -501,6 +521,7 @@ export const books: Book[] = [
     totalPages: 870,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "Coming of Age", "Magic"],
   }),
 
   createBook({
@@ -514,6 +535,7 @@ export const books: Book[] = [
     totalPages: 652,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "Mystery", "Magic"],
   }),
 
   createBook({
@@ -527,5 +549,6 @@ export const books: Book[] = [
     totalPages: 759,
     status: "tbr",
     rating: 5,
+    genres: ["Fantasy", "Young Adult", "War", "Magic"],
   }),
 ];
