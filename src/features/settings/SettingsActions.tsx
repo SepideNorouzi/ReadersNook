@@ -20,8 +20,8 @@ const darkMode = theme === "dark";
 
   const handleAuthAction = async () => {
     if (isDemo) {
-      // navigate("/auth");
-      navigate("/progress");
+      navigate("/auth");
+      // navigate("/progress");
       return;
     }
 

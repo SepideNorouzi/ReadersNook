@@ -21,7 +21,7 @@ export default function Intro() {
   };
 
   const handleSignUp = () => {
-    navigate("/progress");
+    navigate("/auth");
   };
 
   return (
