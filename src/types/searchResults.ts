@@ -2,9 +2,8 @@
  * Normalized search hit from `GET /search/books/`.
  * `inLibrary` is resolved by the backend for the current user.
  * `databaseId` is null until the book has been ingested into the
- * shared catalog by anyone's search — once non-null, book detail
- * should be fetched via getBookByDatabaseId instead of
- * getBookByExternalId.
+ * shared catalog. When present it is copied onto `Book.catalogId`
+ * for unsaved previews; library membership still uses `externalId`.
  */
 export type BookSearchResult = {
   externalId: string;

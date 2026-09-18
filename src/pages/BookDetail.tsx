@@ -3,7 +3,7 @@ import { Navigate, useLocation, useNavigate, useParams } from "react-router";
 import { BookOpen, ChevronLeft } from "lucide-react";
 
 import { useBook } from "../hooks/useBook";
-import { bookFromSearchResult } from "../services/bookFromSearch";
+import { mapSearchResultToBook } from "../mappers/MapApiToBook";
 
 import type { Book } from "../types/book";
 import type { BookSearchResult } from "../types/searchResults";
@@ -42,7 +42,7 @@ export default function BookDetail() {
   let detailBook: Book | null = book ?? null;
 
   if (!detailBook && searchResult) {
-    const preview = bookFromSearchResult(searchResult);
+    const preview = mapSearchResultToBook(searchResult);
 
     detailBook = {
       ...preview,

@@ -5,13 +5,15 @@ import type {
   ApiBookCreatePayload,
   ApiCatalogBook,
 } from "../types/api/apiBook";
+import type { ApiSearchResult } from "../types/api/apiSearch";
+import type { BookSearchResult } from "../types/searchResults";
 import { mapApiQuoteNestedToQuote } from "./MapApiToQuote";
 import { mapApiAestheticPhoto } from "./MapApiToAestheticPhoto";
 
 // ASSUMPTION: comma-separated. Confirm the real delimiter with
 // [[backend-teammate]] — nothing in the given Swagger docs states how
 // the nested `book.genres` string is joined server-side.
-function parseGenres(genres: string | string[]): string[] {
+function parseGenres(genres: string | string[] | undefined): string[] {
   if (Array.isArray(genres)) {
     return genres.filter(Boolean);
   }
@@ -22,6 +24,18 @@ function parseGenres(genres: string | string[]): string[] {
         .map((g) => g.trim())
         .filter(Boolean)
     : [];
+}
+
+function unsavedLibraryDefaults(): Pick<
+  Book,
+  "currentPage" | "status" | "quotes" | "aestheticImages"
+> {
+  return {
+    currentPage: 0,
+    status: "tbr",
+    quotes: [],
+    aestheticImages: [],
+  };
 }
 
 export function mapApiLibraryEntryToBook(entry: ApiLibraryEntry): Book {
@@ -84,7 +98,7 @@ export function mapApiCatalogBookDetailToBook(
     aestheticImages: photos.map(
       (photo) => mapApiAestheticPhoto(photo).imageUrl,
     ),
-    genres: entry.genres,
+    genres: parseGenres(entry.genres),
     sourceId: libraryEntry?.sourceId ?? entry.external_id,
   };
 }
@@ -134,14 +148,50 @@ export function mapApiCatalogBookToBook(book: ApiCatalogBook): Book {
     title: book.title,
     author: book.author,
     summary: book.summary,
-    coverUrl: book.cover_url,
+    coverUrl: book.cover_url || "",
     totalPages: book.total_pages,
-    currentPage: 0,
-    status: "tbr",
+    ...unsavedLibraryDefaults(),
     rating: book.rating,
-    quotes: [],
-    aestheticImages: [],
     genres: parseGenres(book.genres),
     sourceId: book.external_id,
+  };
+}
+
+export function mapApiSearchResult(result: ApiSearchResult): BookSearchResult {
+  return {
+    externalId: result.external_id,
+    title: result.title,
+    author: result.author,
+    summary: result.summary,
+    coverUrl: result.cover_url || null,
+    totalPages: result.total_pages,
+    inLibrary: result.in_library,
+    databaseId: result.database_id ?? null,
+    genres: parseGenres(result.genres),
+    rating: result.rating ?? 0,
+  };
+}
+
+/**
+ * Search hit → book payload for library add / unsaved detail preview.
+ *
+ * Catalog rating is intentionally not copied: that is a shared score,
+ * not the user's personal rating for a book they just added.
+ */
+export function mapSearchResultToBook(
+  result: BookSearchResult,
+): Omit<Book, "id" | "addedAt"> {
+  return {
+    title: result.title,
+    author: result.author,
+    summary: result.summary?.trim() || "No summary available yet.",
+    coverUrl: result.coverUrl ?? "",
+    totalPages: result.totalPages,
+    ...unsavedLibraryDefaults(),
+    rating: 0,
+    genres: result.genres,
+    sourceId: result.externalId,
+    catalogId:
+      result.databaseId != null ? String(result.databaseId) : undefined,
   };
 }

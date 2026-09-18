@@ -1,15 +1,12 @@
-// hooks/useSearchBooks.ts
 import { useMemo } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 import { ApiError } from "../lib/apiClient";
 import { queryKeys } from "../queries/queryKeys";
 import { isBookInLibrary } from "../repo/book/isBookInLibrary";
-import { searchBooks } from "../services/bookSearch";
+import { DEFAULT_SEARCH_PER_PAGE, searchBooks } from "../services/books";
 import { useBookStore } from "../store/demoBookStore";
 import { useModeStore } from "../store/modeStore";
-
-const PER_PAGE = 10;
 
 export function useSearchBooks(query: string, page: number) {
   const trimmed = query.trim();
@@ -17,8 +14,9 @@ export function useSearchBooks(query: string, page: number) {
   const demoBooks = useBookStore((state) => state.books);
 
   const queryResult = useQuery({
-    queryKey: queryKeys.search(trimmed, page, PER_PAGE),
-    queryFn: () => searchBooks(trimmed, { page, perPage: PER_PAGE }),
+    queryKey: queryKeys.search(trimmed, page, DEFAULT_SEARCH_PER_PAGE),
+    queryFn: () =>
+      searchBooks(trimmed, { page, perPage: DEFAULT_SEARCH_PER_PAGE }),
     enabled: trimmed.length > 0,
     staleTime: 1000 * 60 * 5,
     retry: (failureCount, error) => {

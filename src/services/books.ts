@@ -4,10 +4,12 @@ import {
   mapApiLibraryEntryToBook,
   mapApiCatalogBookDetailToBook,
   mapBookToCreatePayload,
+  mapApiSearchResult,
   type CatalogDetailLibraryEntry,
 } from "../mappers/MapApiToBook";
 
 import type { Book } from "../types/book";
+import type { BookSearchResult } from "../types/searchResults";
 
 import type {
   ApiBookCreateResponse,
@@ -15,6 +17,7 @@ import type {
   ApiLibrary,
   ApiLibraryBookUpdatePayload,
 } from "../types/api/apiBook";
+import type { ApiSearchResponse } from "../types/api/apiSearch";
 
 export type UpdateReadingProgressChanges = Partial<
   Pick<Book, "status" | "currentPage">
@@ -56,6 +59,50 @@ export async function getBookByExternalId(externalId: string): Promise<Book> {
   );
 
   return mapApiCatalogBookDetailToBook(entry);
+}
+
+export type SearchPage = {
+  results: BookSearchResult[];
+  page: number;
+  perPage: number;
+  hasMore: boolean;
+};
+
+export const DEFAULT_SEARCH_PER_PAGE = 10;
+
+/**
+ * GET /search/books/
+ */
+export async function searchBooks(
+  query: string,
+  opts: { page?: number; perPage?: number } = {},
+): Promise<SearchPage> {
+  const trimmed = query.trim();
+  const page = opts.page ?? 1;
+  const perPage = opts.perPage ?? DEFAULT_SEARCH_PER_PAGE;
+
+  if (!trimmed) {
+    return { results: [], page, perPage, hasMore: false };
+  }
+
+  const params = new URLSearchParams({
+    q: trimmed,
+    page: String(page),
+    per_page: String(perPage),
+  });
+
+  const data = await apiFetch<ApiSearchResponse>(
+    `/search/books/?${params.toString()}`,
+  );
+
+  return {
+    results: data.results.map(mapApiSearchResult),
+    page: data.page,
+    perPage: data.per_page,
+    // No total count from the backend, so infer "more pages exist"
+    // from whether this page came back full.
+    hasMore: data.results.length === data.per_page,
+  };
 }
 
 /**

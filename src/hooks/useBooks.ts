@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { bookRepository } from "../repo/book/bookRepo";
 import { isBookInLibrary } from "../repo/book/isBookInLibrary";
-import { bookFromSearchResult } from "../services/bookFromSearch";
+import { mapSearchResultToBook } from "../mappers/MapApiToBook";
 import type { Book } from "../types/book";
 import type { BookSearchResult } from "../types/searchResults";
 import { useModeStore } from "../store/modeStore";
@@ -64,7 +64,7 @@ export function useAddToLibrary(result: BookSearchResult) {
     if (alreadySaved || isPending) return;
     setErrorMessage(null);
     try {
-      await addBook(bookFromSearchResult(result));
+      await addBook(mapSearchResultToBook(result));
       setJustAdded(true);
     } catch (error) {
       setErrorMessage(
