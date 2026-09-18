@@ -1,0 +1,28 @@
+# Virtualenv
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.log
+
+# Local databases
+db.sqlite3
+*.sqlite3
+
+# Secrets and local env
+.env
+.env.*
+!.env.example
+
+# VCS / IDE / OS
+.git/
+.gitignore
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Local assets
+staticfiles/
+media/

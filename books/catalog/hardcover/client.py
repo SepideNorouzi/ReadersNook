@@ -4,7 +4,12 @@ import urllib.request
 
 from django.conf import settings
 
-from ..exceptions import CatalogConfigError, CatalogError, CatalogRateLimitError
+from ..exceptions import (
+    CatalogConfigError,
+    CatalogError,
+    CatalogRateLimitError,
+    CatalogTimeoutError,
+)
 
 
 class HardcoverClient:
@@ -39,7 +44,12 @@ class HardcoverClient:
             if exc.code in (401, 403):
                 raise CatalogConfigError("Hardcover rejected the API token.") from exc
             raise CatalogError(f"Hardcover HTTP {exc.code}.") from exc
+        except TimeoutError as exc:
+            # A read/TLS timeout is raised directly, not wrapped in URLError.
+            raise CatalogTimeoutError() from exc
         except urllib.error.URLError as exc:
+            if isinstance(exc.reason, TimeoutError):
+                raise CatalogTimeoutError() from exc
             raise CatalogError("Could not reach Hardcover.") from exc
 
         if body.get("errors"):

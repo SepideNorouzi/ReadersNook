@@ -21,6 +21,11 @@ class CatalogRateLimitError(CatalogError):
         self.retry_after = retry_after
 
 
+class CatalogTimeoutError(CatalogError):
+    status_code = 504
+    default_detail = "Book provider timed out."
+
+
 class CatalogNotFoundError(CatalogError):
     status_code = 404
     default_detail = "Book not found."

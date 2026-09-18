@@ -7,6 +7,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from .catalog.dto import BookCard, SearchPage
+from .catalog.exceptions import CatalogTimeoutError
+from .catalog.hardcover.client import HardcoverClient
 from .catalog.hardcover.mapping import parse_search_hits
 from .models import Book, Collection, Library, Quote, UserBook
 
@@ -338,6 +340,16 @@ class HardcoverMappingTests(SimpleTestCase):
         self.assertEqual(cards[0].total_pages, 412)
         self.assertEqual(cards[0].genres, ["Science Fiction", "Fantasy"])
         self.assertEqual(cards[0].rating, 4.42)
+
+
+class HardcoverClientTests(SimpleTestCase):
+    @override_settings(HARDCOVER_API_TOKEN="test-token")
+    @patch("books.catalog.hardcover.client.urllib.request.urlopen")
+    def test_timeout_maps_to_504(self, urlopen):
+        urlopen.side_effect = TimeoutError("timed out")
+        with self.assertRaises(CatalogTimeoutError) as ctx:
+            HardcoverClient().execute("query { me { id } }")
+        self.assertEqual(ctx.exception.status_code, 504)
 
 
 @override_settings(SEARCH_BACKEND="local", CATALOG_PROVIDER="local")
