@@ -27,7 +27,11 @@ services:
       retries: 10
 
   web:
-    build: .
+    build:
+      context: .
+      network: host
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.tuna.tsinghua.edu.cn/simple}
     restart: unless-stopped
     env_file:
       - .env
