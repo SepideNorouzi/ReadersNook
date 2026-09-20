@@ -19,4 +19,10 @@ export const collections: Collection[] = [
     description: "The Boy Who Lived, one year at a time",
     bookIds: ["14", "15", "16", "17", "18", "19", "20"],
   },
+  {
+    id: "c4",
+    name: "Fourth Wing",
+    description: "Violet Sorrengail's war college trilogy by Rebecca Yarros",
+    bookIds: ["21", "22", "23"],
+  },
 ];

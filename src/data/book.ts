@@ -27,6 +27,11 @@ import orderOfPhoenix from "../assets/covers/phoenix.jpg";
 import halfBloodPrince from "../assets/covers/prince.jpg";
 import deathlyHallows from "../assets/covers/hallows.jpg";
 
+// ---------- Fourth Wing ----------
+import fourthWing from "../assets/covers/fourthwing.jpg";
+import ironFlame from "../assets/covers/ironflame.jpg";
+import onyxStorm from "../assets/covers/onyxstorm.jpg";
+
 const imagesByBookId = aestheticPhotos.reduce<Record<string, string[]>>(
   (acc, photo) => {
     acc[photo.bookId] = [...(acc[photo.bookId] ?? []), photo.imageUrl];
@@ -224,6 +229,39 @@ const createBook = ({
         pagePercent: 0.94,
         favorite: false,
         createdAt: "2026-08-04",
+      },
+    ],
+    // =====================================================
+    // FOURTH WING COLLECTION
+    // =====================================================
+
+    "21": [
+      {
+        text: "Strength means nothing until you learn who you can trust with your weakest moment.",
+        pagePercent: 0.32,
+        favorite: true,
+        createdAt: "2026-08-06",
+      },
+      {
+        text: "Every war college has its rules, but survival always writes its own.",
+        pagePercent: 0.81,
+        favorite: false,
+        createdAt: "2026-08-08",
+      },
+    ],
+
+    "22": [
+      {
+        text: "Loyalty tested in fire either breaks or becomes unbreakable.",
+        pagePercent: 0.29,
+        favorite: true,
+        createdAt: "2026-08-10",
+      },
+      {
+        text: "The truth was never the safest thing to carry — it was just the only thing worth carrying.",
+        pagePercent: 0.66,
+        favorite: true,
+        createdAt: "2026-08-12",
       },
     ],
   };
@@ -550,5 +588,51 @@ export const books: Book[] = [
     status: "tbr",
     rating: 5,
     genres: ["Fantasy", "Young Adult", "War", "Magic"],
+  }),
+
+  // =========================================================
+  // FOURTH WING — Rebecca Yarros
+  // =========================================================
+
+  createBook({
+    id: "21",
+    title: "Fourth Wing",
+    author: "Rebecca Yarros",
+    summary:
+      "Violet Sorrengail is forced into the brutal, dragon-riding war college her mother commands, where most cadets don't survive their first year — and someone already wants her dead before she gets the chance to bond a dragon.",
+    coverUrl: fourthWing,
+    currentPage: 528,
+    totalPages: 528,
+    status: "read",
+    rating: 5,
+    genres: ["Fantasy", "Romance", "Dragons", "New Adult"],
+  }),
+
+  createBook({
+    id: "22",
+    title: "Iron Flame",
+    author: "Rebecca Yarros",
+    summary:
+      "Bonded to a fiercely unpredictable dragon and starting her second year at Basgiath War College, Violet begins to suspect the leadership she trusted is hiding a secret that could unravel everything she's fighting for.",
+    coverUrl: ironFlame,
+    currentPage: 380,
+    totalPages: 640,
+    status: "current",
+    rating: 5,
+    genres: ["Fantasy", "Romance", "War", "Dragons"],
+  }),
+
+  createBook({
+    id: "23",
+    title: "Onyx Storm",
+    author: "Rebecca Yarros",
+    summary:
+      "With the war breaking into the open and enemies closing in from every side, Violet ventures beyond Navarre's failing wards to find allies in unfamiliar lands — and uncovers a truth big enough to destroy everything she loves.",
+    coverUrl: onyxStorm,
+    currentPage: 0,
+    totalPages: 544,
+    status: "tbr",
+    rating: 5,
+    genres: ["Fantasy", "Romance", "New Adult", "War"],
   }),
 ];

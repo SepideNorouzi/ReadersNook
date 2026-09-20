@@ -9,10 +9,13 @@ function loadSortedUrls(modules: Record<string, string>): string[] {
 
 const urlsByCollectionId: Record<string, string[]> = {
   c1: loadSortedUrls(
-    import.meta.glob<string>("../assets/aesthetic/acotar/*.{jpg,jpeg,png,webp}", {
-      eager: true,
-      import: "default",
-    }),
+    import.meta.glob<string>(
+      "../assets/aesthetic/acotar/*.{jpg,jpeg,png,webp}",
+      {
+        eager: true,
+        import: "default",
+      },
+    ),
   ),
   c2: loadSortedUrls(
     import.meta.glob<string>("../assets/aesthetic/tog/*.{jpg,jpeg,png,webp}", {
@@ -25,6 +28,15 @@ const urlsByCollectionId: Record<string, string[]> = {
       eager: true,
       import: "default",
     }),
+  ),
+  c4: loadSortedUrls(
+    import.meta.glob<string>(
+      "../assets/aesthetic/fourthwing/*.{jpg,jpeg,png,webp}",
+      {
+        eager: true,
+        import: "default",
+      },
+    ),
   ),
 };
 
