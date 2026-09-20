@@ -5,10 +5,12 @@ export interface CollectionGridProps {
   collections: CollectionWithBooks[];
   onCollectionClick?: (collection: CollectionWithBooks) => void;
   /**
-   * "grid"  (default) – current dashboard behavior: horizontal scroll on
-   *          mobile/tablet, collapses to a 2-col grid at lg+ (fits a narrow tile).
-   * "shelf" – always stays a horizontal scroll row, even at lg+ (fits a
-   *          full-width section like the Library page).
+   * "grid"  (default) – horizontal scroll on mobile/tablet, collapses to a
+   *          2-col grid at lg+. Scroll axis changes by breakpoint, so the
+   *          parent (CollectionsCard) owns the overflow wrapper.
+   * "shelf" – always a horizontal scroll row, at every breakpoint. Since the
+   *          scroll axis never changes, this component owns its own
+   *          overflow-x-auto — no parent wrapper needed.
    */
   variant?: "grid" | "shelf";
 }
@@ -18,7 +20,7 @@ export default function CollectionGrid({
   onCollectionClick,
   variant = "grid",
 }: CollectionGridProps) {
-  return (
+  const row = (
     <div
       className={`
         flex w-max min-w-full items-start gap-4 px-2 py-2.5
@@ -43,4 +45,21 @@ export default function CollectionGrid({
       ))}
     </div>
   );
+
+  if (variant === "shelf") {
+    return (
+      <div
+        className="
+          overflow-x-auto
+          [-ms-overflow-style:none]
+          [scrollbar-width:none]
+          [&::-webkit-scrollbar]:hidden
+        "
+      >
+        {row}
+      </div>
+    );
+  }
+
+  return row;
 }
