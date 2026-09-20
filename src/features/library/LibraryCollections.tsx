@@ -31,6 +31,7 @@ export default function LibraryCollections() {
         border border-[rgba(164,125,93,0.28)]
         bg-gradient-to-br from-[var(--brown-200)] via-[var(--brown-100)] to-[var(--brown-300)]
           sm:p-4
+          p-3
         "
       >
         <header className="mb-2 flex items-center gap-2 px-1">
