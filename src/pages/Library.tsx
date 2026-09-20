@@ -4,6 +4,7 @@ import { useBooks } from "../hooks/useBooks";
 import type { BookStatus } from "../types/book";
 import LibraryFilters from "../features/library/LibraryFilters";
 import BookCard from "../features/library/BookCard";
+import LibraryCollections from "../features/library/LibraryCollections";
 
 export default function Library() {
   const { data: books, isLoading } = useBooks();
@@ -49,7 +50,6 @@ export default function Library() {
     md:hidden
   "
       />
-
       <div
         className="
     rounded-[20px]
@@ -62,6 +62,7 @@ export default function Library() {
       >
         <LibraryFilters active={filter} onChange={setFilter} counts={counts} />
       </div>
+      <LibraryCollections />
 
       {filteredBooks.length === 0 ? (
         <p className="text-[var(--text-muted)]">No books match this filter.</p>
