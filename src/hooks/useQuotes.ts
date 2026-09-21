@@ -11,3 +11,7 @@ export function useUpdateQuote() {
 export function useDeleteQuote() {
   return quoteRepository.useDeleteQuote();
 }
+
+export function useAllQuotes() {
+  return quoteRepository.useAllQuotes();
+}

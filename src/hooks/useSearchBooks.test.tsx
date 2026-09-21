@@ -8,8 +8,7 @@ import { server } from "../data/server";
 import { useSearchBooks } from "./useSearchBooks";
 import { useBookStore } from "../store/demoBookStore";
 import { useModeStore } from "../store/modeStore";
-
-const API = "http://localhost:8000";
+import { API_URL } from "../lib/env";
 
 function wrapper({ children }: { children: ReactNode }) {
   const client = new QueryClient({
@@ -23,7 +22,7 @@ beforeEach(() => {
   useBookStore.getState().setBooks([]);
 
   server.use(
-    http.get(`${API}/search/books/`, () =>
+    http.get(`${API_URL}/search/books/`, () =>
       HttpResponse.json({
         query: "piranesi",
         page: 1,

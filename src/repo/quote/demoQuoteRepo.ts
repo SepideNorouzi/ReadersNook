@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useBookStore } from "../../store/demoBookStore";
 import type { Quote, QuoteChanges, QuoteDraft } from "../../types/quote";
+import { useMemo } from "react";
 
 export const demoQuoteRepo = {
   useCreateQuote() {
@@ -83,5 +84,23 @@ export const demoQuoteRepo = {
         });
       },
     });
+  },
+
+  useAllQuotes() {
+    const books = useBookStore((s) => s.books); // subscribes — re-renders on store change
+
+    const data = useMemo(
+      () =>
+        books.flatMap((book) =>
+          (book.quotes ?? []).map((quote) => ({
+            ...quote,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+          })),
+        ),
+      [books],
+    );
+
+    return { data, isLoading: false };
   },
 };

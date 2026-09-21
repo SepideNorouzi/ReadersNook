@@ -40,8 +40,10 @@ export default function QuoteEmbla({ book }: Props) {
   const totalSlides = book.quotes.length + 1;
 
   function handleAddQuote(quote: QuoteDraft) {
+    if (!book.catalogId) return;
+
     createQuote.mutate(
-      { bookId: book.id, quote },
+      { bookId: book.catalogId!, quote },
       {
         onSuccess: () => {
           setOpenModal(false);

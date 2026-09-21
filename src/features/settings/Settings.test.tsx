@@ -23,8 +23,7 @@ import { useAuthStore } from "../../auth/store/authStore";
 
 import type { AuthUser } from "../../auth/types/auth";
 import type { ApiLibrary, ApiLibraryEntry } from "../../types/api/apiBook";
-
-const API = "http://localhost:8000";
+import { API_URL } from "../../lib/env";
 
 let reducedMotion = false;
 
@@ -65,18 +64,18 @@ function seedAdmin(options?: {
     .setSession("access-token", "refresh-token", currentUser.username);
 
   server.use(
-    http.get(`${API}/auth/me/`, async () => {
+    http.get(`${API_URL}/auth/me/`, async () => {
       if (options?.delayMeMs) {
         await delay(options.delayMeMs);
       }
       return HttpResponse.json(currentUser);
     }),
-    http.patch(`${API}/auth/me/`, async ({ request }) => {
+    http.patch(`${API_URL}/auth/me/`, async ({ request }) => {
       const body = (await request.json()) as Partial<AuthUser>;
       currentUser = { ...currentUser, ...body };
       return HttpResponse.json(currentUser);
     }),
-    http.get(`${API}/library/`, () =>
+    http.get(`${API_URL}/library/`, () =>
       HttpResponse.json(mockLibrary(options?.libraryBooks ?? [])),
     ),
   );
@@ -556,7 +555,7 @@ describe("settings page — admin mode", () => {
   it("surfaces avatar update failures from the admin API", async () => {
     seedAdmin();
     server.use(
-      http.patch(`${API}/auth/me/`, () =>
+      http.patch(`${API_URL}/auth/me/`, () =>
         HttpResponse.json(
           { detail: "Avatar storage is unavailable." },
           { status: 500 },

@@ -1,15 +1,15 @@
 import { Quote, Sparkles } from "lucide-react";
 import Card from "../../../ui/Card";
-import { useBooks } from "../../../hooks/useBooks";
 import QuoteItem from "./QuoteItem";
 import Loading from "../../../shared/Loading";
+import { useAllQuotes } from "../../../hooks/useQuotes";
 
 interface Props {
   className?: string;
 }
 
 export default function QuoteCard({ className }: Props) {
-  const { data: books = [], isLoading } = useBooks();
+  const { data: quotes = [], isLoading } = useAllQuotes();
 
   if (isLoading) {
     return (
@@ -24,13 +24,6 @@ export default function QuoteCard({ className }: Props) {
       </Card>
     );
   }
-
-  const quotes = books.flatMap((book) =>
-    book.quotes.map((quote) => ({
-      ...quote,
-      bookTitle: book.title,
-    })),
-  );
 
   const today = new Date().getDate();
   const quote = quotes[today % quotes.length];

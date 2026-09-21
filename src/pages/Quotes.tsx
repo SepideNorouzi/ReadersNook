@@ -1,27 +1,12 @@
-import { useMemo } from "react";
-
-import { useBooks } from "../hooks/useBooks";
-import { useDeleteQuote } from "../hooks/useQuotes";
+import { useAllQuotes, useDeleteQuote } from "../hooks/useQuotes";
 import QuotesGrid from "../features/addedQuotes/QuotesGrid";
 import QuotesEmpty from "../features/addedQuotes/QuotesEmpty";
 import QuotesHeader from "../features/addedQuotes/QuotesHeader";
 import QuotesList from "../features/addedQuotes/QuotesList";
 
 export default function Quotes() {
-  const { data: books = [], isLoading } = useBooks();
+  const { data: quotes = [], isLoading } = useAllQuotes();
   const deleteQuote = useDeleteQuote();
-
-  const quotes = useMemo(
-    () =>
-      books.flatMap((book) =>
-        (book.quotes ?? []).map((quote) => ({
-          ...quote,
-          bookTitle: book.title,
-          bookAuthor: book.author,
-        })),
-      ),
-    [books],
-  );
 
   const handleDelete = (bookId: string, quoteId: string) => {
     deleteQuote.mutate({ bookId, quoteId });
@@ -54,7 +39,7 @@ export default function Quotes() {
             <QuotesList
               quotes={quotes}
               onDelete={handleDelete}
-              isDeleting={deleteQuote.isPending}
+              isDeleting={deleteQuote.isPending} // ✅ now defined
             />
           </>
         )}

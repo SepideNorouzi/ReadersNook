@@ -23,4 +23,11 @@ export const quoteRepository = {
     const admin = adminQuoteRepo.useDeleteQuote();
     return mode === "demo" ? demo : admin;
   },
+
+  useAllQuotes() {
+    const mode = useModeStore((s) => s.mode);
+    const demo = demoQuoteRepo.useAllQuotes();
+    const admin = adminQuoteRepo.useAllQuotes(mode === "admin");
+    return mode === "demo" ? demo : admin;
+  },
 };
