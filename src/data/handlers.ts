@@ -1,13 +1,12 @@
 import { http, HttpResponse } from "msw";
 
 import { mockApiCatalogBook, mockApiCollection } from "../test/fixtures";
+import { API_URL } from "../lib/env";
 
 import type {
   ApiCollectionDetail,
   ApiCollectionListItem,
 } from "../types/api/apiCollection";
-
-const API = "http://localhost:8000";
 
 let collectionsDb: ApiCollectionDetail[] = [];
 
@@ -19,7 +18,7 @@ export function resetCollectionsDb(
 
 export const handlers = [
   // GET /collections/
-  http.get(`${API}/collections/`, () => {
+  http.get(`${API_URL}/collections/`, () => {
     const collections: ApiCollectionListItem[] = collectionsDb.map(
       ({ books, ...collection }) => ({
         ...collection,
@@ -31,7 +30,7 @@ export const handlers = [
   }),
 
   // GET /collections/:id/
-  http.get(`${API}/collections/:id/`, ({ params }) => {
+  http.get(`${API_URL}/collections/:id/`, ({ params }) => {
     const collection = collectionsDb.find(
       (c) => c.id === Number(params.id),
     );
@@ -44,7 +43,7 @@ export const handlers = [
   }),
 
   // POST /collections/create/
-  http.post(`${API}/collections/create/`, async ({ request }) => {
+  http.post(`${API_URL}/collections/create/`, async ({ request }) => {
     const body = (await request.json()) as {
       name: string;
       description: string;
@@ -64,7 +63,7 @@ export const handlers = [
 
   // PATCH /collections/:id/update/
   http.patch(
-    `${API}/collections/:id/update/`,
+    `${API_URL}/collections/:id/update/`,
     async ({ params, request }) => {
       const body = (await request.json()) as Partial<{
         name: string;
@@ -87,7 +86,7 @@ export const handlers = [
 
   // POST /collections/:id/books/:bookId/
   http.post(
-    `${API}/collections/:id/books/:bookId/`,
+    `${API_URL}/collections/:id/books/:bookId/`,
     ({ params }) => {
       const collection = collectionsDb.find(
         (c) => c.id === Number(params.id),
@@ -111,7 +110,7 @@ export const handlers = [
 
   // DELETE /collections/:id/books/:bookId/
   http.delete(
-    `${API}/collections/:id/books/:bookId/`,
+    `${API_URL}/collections/:id/books/:bookId/`,
     ({ params }) => {
       const collection = collectionsDb.find(
         (c) => c.id === Number(params.id),
@@ -133,7 +132,7 @@ export const handlers = [
 
   // DELETE /collections/:id/update/
   http.delete(
-    `${API}/collections/:id/update/`,
+    `${API_URL}/collections/:id/update/`,
     ({ params }) => {
       const index = collectionsDb.findIndex(
         (c) => c.id === Number(params.id),

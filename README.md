@@ -131,7 +131,7 @@ Create a `.env` file in the project root and add the environment variables requi
 Example:
 
 ```env
-VITE_API_URL=your_api_url
+VITE_API_URL=193.93.169.128:8000/api/docs
 ```
 
 ##  Development

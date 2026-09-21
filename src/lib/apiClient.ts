@@ -2,8 +2,7 @@ import { useAuthStore } from "../auth/store/authStore";
 import { refreshToken as refreshTokenRequest } from "../auth/services/auth";
 import { logoutSession } from "../auth/session";
 import { getAuthTransportVersion } from "../auth/authTransport";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+import { API_URL } from "./env";
 
 export class ApiError extends Error {
   status: number;
@@ -72,7 +71,7 @@ async function doFetch(
 ) {
   const { body, headers, ...rest } = options;
 
-  return fetch(`${BASE_URL}${path}`, {
+  return fetch(`${API_URL}${path}`, {
     ...rest,
     headers: {
       "Content-Type": "application/json",

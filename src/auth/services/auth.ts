@@ -5,8 +5,7 @@ import type {
   RegisterData,
   TokenResponse,
 } from "../types/auth";
-
-const API_URL = "http://localhost:8000";
+import { API_URL } from "../../lib/env";
 
 export class AuthHttpError extends Error {
   status: number;
