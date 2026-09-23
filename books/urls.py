@@ -7,6 +7,7 @@ from .views import (
     BookDetailAPIView,
     BookListAPIView,
     BookSearchAPIView,
+    AddReadingGoalAPIView,
     CatalogBookDetailAPIView,
     CollectionAddRemoveBooksAPIView,
     CollectionCreateAPIView,
@@ -32,6 +33,7 @@ urlpatterns = [
     ),
     # Library
     path("library/", BookListAPIView.as_view(), name="book-list"),
+    path("library/goal/" , AddReadingGoalAPIView.as_view() , name="reading-goal"),
     path("library/add/", BookCreateAPIView.as_view(), name="book-create"),
     path("books/<int:pk>/", BookDetailAPIView.as_view(), name="book-detail"),
     path(

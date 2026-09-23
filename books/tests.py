@@ -45,6 +45,42 @@ class LibraryAPITests(APITestCase):
         self.assertTrue(Library.objects.filter(user=self.user).exists())
         self.assertTrue(Library.objects.filter(user=self.admin).exists())
 
+    def test_library_reading_goal_defaults_to_null(self):
+        self._auth(self.user)
+        response = self.client.get(reverse("books:book-list"))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNone(response.data["reading_goal"])
+
+    def test_set_reading_goal(self):
+        self._auth(self.user)
+        response = self.client.patch(
+            reverse("books:reading-goal"),
+            {"reading_goal": 24},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["reading_goal"], 24)
+        self.user.library.refresh_from_db()
+        self.assertEqual(self.user.library.reading_goal, 24)
+
+    def test_reading_goal_rejects_negative(self):
+        self._auth(self.user)
+        response = self.client.patch(
+            reverse("books:reading-goal"),
+            {"reading_goal": -1},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("reading_goal", response.data)
+
+    def test_reading_goal_requires_auth(self):
+        response = self.client.patch(
+            reverse("books:reading-goal"),
+            {"reading_goal": 10},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_library_list_requires_auth_and_returns_own_books(self):
         other = User.objects.create_user(
             username="other",

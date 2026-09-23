@@ -233,12 +233,13 @@ class BookCreateAPIView(APIView):
     get=extend_schema(
         tags=["Library"],
         summary="Retrieve my library",
-        description="Returns the authenticated user's books and collections.",
-    )
+        description="Returns the authenticated user's books, collections, and reading goal.",
+    ),
 )
 class BookListAPIView(generics.RetrieveAPIView):
     serializer_class = LibrarySerializer
     permission_classes = [IsAuthenticated]
+    http_method_names = ["get", "head", "options"]
 
     def get_object(self):
         return get_object_or_404(
@@ -251,6 +252,23 @@ class BookListAPIView(generics.RetrieveAPIView):
             ),
             user=self.request.user,
         )
+
+@extend_schema_view(
+    patch=extend_schema(
+        tags=["Library"],
+        summary="Add a reading goal",
+        description="Set the yearly reading goal with `reading_goal`.",
+        request=LibrarySerializer,
+        responses={200: LibrarySerializer},
+    ),
+)
+class AddReadingGoalAPIView(generics.UpdateAPIView):
+    serializer_class = LibrarySerializer
+    permission_classes = [IsAuthenticated]
+    http_method_names = ["patch", "head", "options"]
+
+    def get_object(self):
+        return get_object_or_404(Library, user=self.request.user)
 
 
 @extend_schema(

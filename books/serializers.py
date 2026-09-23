@@ -223,15 +223,25 @@ class BookDetailSerializer(BookSerializer):
 
 
 class LibrarySerializer(serializers.ModelSerializer):
-    """Full library payload: the user's books and their collections."""
+    """Library payload: the user's books, collections, and yearly reading goal.
+
+    ``reading_goal`` is the only writable field.
+    """
 
     books = UserBookSerializer(source="user_books", many=True, read_only=True)
     collections = CollectionDetailSerializer(many=True, read_only=True)
 
     class Meta:
         model = Library
-        fields = ("id", "books", "collections", "created_at", "updated_at")
-        read_only_fields = fields
+        fields = (
+            "id",
+            "reading_goal",
+            "books",
+            "collections",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("id", "books", "collections", "created_at", "updated_at")
 
 
 # ---------------------------------------------------------------------------

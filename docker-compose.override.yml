@@ -1,0 +1,17 @@
+# Local development overrides. Docker Compose loads this automatically for
+# `docker compose up`, so you do NOT need to rebuild the image after changing
+# Python code: the project is bind-mounted and Django's autoreloader restarts
+# on save. The schema/docs endpoints are also served uncached.
+#
+# For a production-like run, skip this file:
+#   docker compose -f docker-compose.yml up
+services:
+  web:
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      DEBUG: "True"
+    volumes:
+      - .:/app
+      # Mask the host virtualenv so the autoreloader doesn't watch thousands
+      # of unrelated .py files.
+      - /app/venv

@@ -95,6 +95,11 @@ class Library(models.Model):
         related_name="libraries",
         blank=True,
     )
+    reading_goal = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="Target number of books to read in a year.",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
