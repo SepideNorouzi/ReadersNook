@@ -125,29 +125,16 @@ export const adminBookRepo = {
     return useMutation({
       mutationFn: async ({ id, changes }: UpdateBookInput) => {
         const username = useAuthStore.getState().username;
-
-        if (!username) {
-          throw new Error("Cannot update reading progress: not authenticated.");
+        if (username) {
+          const books = await queryClient.ensureQueryData({
+            queryKey: queryKeys.books(username),
+            queryFn: getBooks,
+          });
+          if (!books.some((book) => book.id === id)) {
+            throw new Error("Cannot update a book that is not in the library.");
+          }
         }
-
-        const books = await queryClient.ensureQueryData({
-          queryKey: queryKeys.books(username),
-          queryFn: getBooks,
-        });
-
-        const book = books.find((b) => b.id === id);
-
-        if (!book) {
-          throw new Error("Cannot update a book that is not in the library.");
-        }
-
-        if (!book.catalogId) {
-          throw new Error(
-            "Cannot update reading progress: missing catalog id.",
-          );
-        }
-
-        return updateReadingProgress(book.catalogId, {
+        return updateReadingProgress(id, {
           status: changes.status,
           currentPage: changes.currentPage,
         });
@@ -155,60 +142,41 @@ export const adminBookRepo = {
 
       async onMutate({ id, changes }) {
         const username = useAuthStore.getState().username;
-
         if (!username) return undefined;
 
         await queryClient.cancelQueries({
           queryKey: queryKeys.books(username),
         });
 
-        const previousBooks = queryClient.getQueryData<Book[]>(
-          queryKeys.books(username),
+        // Snapshot every matching query (list + detail), not just the list,
+        // so onError can roll back whichever ones we actually touched.
+        const previousData = queryClient.getQueriesData<Book[] | Book>({
+          queryKey: queryKeys.books(username),
+        });
+
+        queryClient.setQueriesData<Book[] | Book | undefined>(
+          { queryKey: queryKeys.books(username) },
+          (cached) => {
+            if (!cached) return cached;
+            const patch = (b: Book): Book =>
+              b.id === id ? { ...b, ...changes } : b;
+            return Array.isArray(cached) ? cached.map(patch) : patch(cached);
+          },
         );
 
-        queryClient.setQueryData<Book[]>(queryKeys.books(username), (books) =>
-          books?.map((book) =>
-            book.id === id
-              ? {
-                  ...book,
-                  ...(changes.status !== undefined && {
-                    status: changes.status,
-                  }),
-                  ...(changes.currentPage !== undefined && {
-                    currentPage: changes.currentPage,
-                  }),
-                }
-              : book,
-          ),
-        );
-
-        return {
-          username,
-          previousBooks,
-        };
+        return { username, previousData };
       },
 
       onError: (_error, _variables, context) => {
-        if (!context?.username) return;
-
-        queryClient.setQueryData<Book[]>(
-          queryKeys.books(context.username),
-          context.previousBooks,
-        );
+        context?.previousData.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
       },
 
-      onSettled: (_data, _error, _variables) => {
+      onSettled: () => {
         const username = useAuthStore.getState().username;
-
         if (!username) return;
-
-        /*
-         * This also invalidates the detail queries because
-         * ["books", username, externalId] shares the same prefix.
-         */
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.books(username),
-        });
+        queryClient.invalidateQueries({ queryKey: queryKeys.books(username) });
       },
     });
   },

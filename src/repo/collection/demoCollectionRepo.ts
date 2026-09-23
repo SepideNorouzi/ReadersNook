@@ -10,45 +10,124 @@ import type {
 
 export const demoCollectionRepo = {
   getCollections(): Collection[] {
-    return useCollectionStore.getState().collections;
+    return useCollectionStore
+      .getState()
+      .collections;
   },
 
   getCollectionsWithBooks(): CollectionWithBooks[] {
-    const collections = useCollectionStore.getState().collections;
-    const books = useBookStore.getState().books;
+    const collections =
+      useCollectionStore
+        .getState()
+        .collections;
 
-    const bookById = new Map(
-      books.map((book) => [String(book.id), book]),
-    );
+    const books =
+      useBookStore
+        .getState()
+        .books;
 
-    return collections.map(({ bookIds, ...collection }) => ({
-      ...collection,
-      books: bookIds
-        .map((id) => bookById.get(String(id)))
-        .filter(
-          (book): book is (typeof books)[number] => Boolean(book),
-        ),
-    }));
-  },
+    /*
+     * Collection membership is stored using the
+     * catalog/database book id.
+     *
+     * For newer books:
+     *   Book.catalogId -> collection.bookIds
+     *
+     * The fallback to Book.id keeps older demo/mock
+     * books usable if they do not have catalogId yet.
+     */
+    const bookByCatalogId =
+      new Map(
+        books.map((book) => [
+          String(
+            book.catalogId ??
+              book.id,
+          ),
+          book,
+        ]),
+      );
 
-  useCollections() {
-    const collections = useCollectionStore((state) => state.collections);
-    const books = useBookStore((state) => state.books);
-
-    const bookById = new Map(
-      books.map((book) => [String(book.id), book]),
-    );
-
-    const data: CollectionWithBooks[] = collections.map(
-      ({ bookIds, ...collection }) => ({
+    return collections.map(
+      ({
+        bookIds,
+        ...collection
+      }) => ({
         ...collection,
+
         books: bookIds
-          .map((id) => bookById.get(String(id)))
+          .map((catalogBookId) =>
+            bookByCatalogId.get(
+              String(catalogBookId),
+            ),
+          )
           .filter(
-            (book): book is (typeof books)[number] => Boolean(book),
+            (
+              book,
+            ): book is (typeof books)[number] =>
+              Boolean(book),
           ),
       }),
     );
+  },
+
+  useCollections() {
+    const collections =
+      useCollectionStore(
+        (state) =>
+          state.collections,
+      );
+
+    const books =
+      useBookStore(
+        (state) => state.books,
+      );
+
+    /*
+     * Map catalog/database id -> Book.
+     *
+     * This matches the admin/backend contract:
+     *
+     * collection.bookIds
+     *        ↓
+     * catalogBookId
+     *        ↓
+     * Book.catalogId
+     */
+    const bookByCatalogId =
+      new Map(
+        books.map((book) => [
+          String(
+            book.catalogId ??
+              book.id,
+          ),
+          book,
+        ]),
+      );
+
+    const data: CollectionWithBooks[] =
+      collections.map(
+        ({
+          bookIds,
+          ...collection
+        }) => ({
+          ...collection,
+
+          books: bookIds
+            .map((catalogBookId) =>
+              bookByCatalogId.get(
+                String(
+                  catalogBookId,
+                ),
+              ),
+            )
+            .filter(
+              (
+                book,
+              ): book is (typeof books)[number] =>
+                Boolean(book),
+            ),
+        }),
+      );
 
     return {
       data,
@@ -61,14 +140,21 @@ export const demoCollectionRepo = {
 
   useCreateCollection() {
     return useMutation({
-      mutationFn: async (name: string) => {
-        const newCollection: Collection = {
-          id: `c-${crypto.randomUUID()}`,
-          name,
-          bookIds: [],
-        };
+      mutationFn: async (
+        name: string,
+      ) => {
+        const newCollection: Collection =
+          {
+            id: `c-${crypto.randomUUID()}`,
+            name,
+            bookIds: [],
+          };
 
-        useCollectionStore.getState().addCollection(newCollection);
+        useCollectionStore
+          .getState()
+          .addCollection(
+            newCollection,
+          );
 
         return newCollection;
       },
@@ -79,25 +165,54 @@ export const demoCollectionRepo = {
     return useMutation({
       mutationFn: async ({
         collectionId,
-        bookId,
+        catalogBookId,
       }: {
         collectionId: string;
-        bookId: string;
+        catalogBookId: string;
       }) => {
-        const collection = useCollectionStore
-          .getState()
-          .collections.find(
-            (collection) => collection.id === collectionId,
-          );
+        const collection =
+          useCollectionStore
+            .getState()
+            .collections.find(
+              (item) =>
+                item.id ===
+                collectionId,
+            );
 
         if (!collection) {
-          throw new Error("Collection not found");
+          throw new Error(
+            "Collection not found",
+          );
         }
 
-        if (!collection.bookIds.includes(bookId)) {
-          useCollectionStore.getState().updateCollection(collectionId, {
-            bookIds: [...collection.bookIds, bookId],
-          });
+        /*
+         * Store the catalog/database id,
+         * not the library-entry id.
+         */
+        if (
+          !collection.bookIds.includes(
+            catalogBookId,
+          )
+        ) {
+          const updatedCollection = {
+            ...collection,
+            bookIds: [
+              ...collection.bookIds,
+              catalogBookId,
+            ],
+          };
+
+          useCollectionStore
+            .getState()
+            .updateCollection(
+              collectionId,
+              {
+                bookIds:
+                  updatedCollection.bookIds,
+              },
+            );
+
+          return updatedCollection;
         }
 
         return collection;
@@ -109,26 +224,47 @@ export const demoCollectionRepo = {
     return useMutation({
       mutationFn: async ({
         collectionId,
-        bookId,
+        catalogBookId,
       }: {
         collectionId: string;
-        bookId: string;
+        catalogBookId: string;
       }) => {
-        const collection = useCollectionStore
-          .getState()
-          .collections.find(
-            (collection) => collection.id === collectionId,
-          );
+        const collection =
+          useCollectionStore
+            .getState()
+            .collections.find(
+              (item) =>
+                item.id ===
+                collectionId,
+            );
 
         if (!collection) {
-          throw new Error("Collection not found");
+          throw new Error(
+            "Collection not found",
+          );
         }
 
-        useCollectionStore.getState().updateCollection(collectionId, {
-          bookIds: collection.bookIds.filter((id) => id !== bookId),
-        });
+        const updatedCollection = {
+          ...collection,
+          bookIds:
+            collection.bookIds.filter(
+              (id) =>
+                id !==
+                catalogBookId,
+            ),
+        };
 
-        return collection;
+        useCollectionStore
+          .getState()
+          .updateCollection(
+            collectionId,
+            {
+              bookIds:
+                updatedCollection.bookIds,
+            },
+          );
+
+        return updatedCollection;
       },
     });
   },
@@ -142,32 +278,65 @@ export const demoCollectionRepo = {
         collectionId: string;
         name: string;
       }) => {
-        const collection = useCollectionStore
-          .getState()
-          .collections.find(
-            (collection) => collection.id === collectionId,
-          );
+        const collection =
+          useCollectionStore
+            .getState()
+            .collections.find(
+              (item) =>
+                item.id ===
+                collectionId,
+            );
 
         if (!collection) {
-          throw new Error("Collection not found");
+          throw new Error(
+            "Collection not found",
+          );
         }
 
-        useCollectionStore.getState().updateCollection(collectionId, {
-          name,
-        });
-
-        return {
+        const updatedCollection = {
           ...collection,
           name,
         };
+
+        useCollectionStore
+          .getState()
+          .updateCollection(
+            collectionId,
+            {
+              name,
+            },
+          );
+
+        return updatedCollection;
       },
     });
   },
 
   useDeleteCollection() {
     return useMutation({
-      mutationFn: async (collectionId: string) => {
-        useCollectionStore.getState().deleteCollection(collectionId);
+      mutationFn: async (
+        collectionId: string,
+      ) => {
+        const collection =
+          useCollectionStore
+            .getState()
+            .collections.find(
+              (item) =>
+                item.id ===
+                collectionId,
+            );
+
+        if (!collection) {
+          throw new Error(
+            "Collection not found",
+          );
+        }
+
+        useCollectionStore
+          .getState()
+          .deleteCollection(
+            collectionId,
+          );
       },
     });
   },

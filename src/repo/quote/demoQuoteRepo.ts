@@ -1,9 +1,30 @@
 import { useMutation } from "@tanstack/react-query";
+
 import { useBookStore } from "../../store/demoBookStore";
+
 import type { Quote, QuoteChanges, QuoteDraft } from "../../types/quote";
+
 import { useMemo } from "react";
 
 export const demoQuoteRepo = {
+  useBookQuotes(bookId: string | undefined, enabled = true) {
+    const books = useBookStore((state) => state.books);
+
+    const book = books.find(
+      (item) =>
+        item.id === bookId ||
+        item.catalogId === bookId ||
+        item.sourceId === bookId,
+    );
+
+    return {
+      data: enabled && book ? (book.quotes ?? []) : [],
+      isLoading: false,
+      isError: false,
+      error: null,
+    };
+  },
+
   useCreateQuote() {
     return useMutation({
       mutationFn: async ({
@@ -14,6 +35,7 @@ export const demoQuoteRepo = {
         quote: QuoteDraft;
       }) => {
         const now = new Date().toISOString();
+
         const newQuote: Quote = {
           id: crypto.randomUUID(),
           text: quote.text,
@@ -27,10 +49,19 @@ export const demoQuoteRepo = {
 
         const book = useBookStore
           .getState()
-          .books.find((item) => item.id === bookId);
+          .books.find(
+            (item) =>
+              item.id === bookId ||
+              item.catalogId === bookId ||
+              item.sourceId === bookId,
+          );
 
-        useBookStore.getState().updateBook(bookId, {
-          quotes: [...(book?.quotes ?? []), newQuote],
+        if (!book) {
+          throw new Error("Book not found");
+        }
+
+        useBookStore.getState().updateBook(book.id, {
+          quotes: [...(book.quotes ?? []), newQuote],
         });
 
         return newQuote;
@@ -51,13 +82,26 @@ export const demoQuoteRepo = {
       }) => {
         const book = useBookStore
           .getState()
-          .books.find((item) => item.id === bookId);
+          .books.find(
+            (item) =>
+              item.id === bookId ||
+              item.catalogId === bookId ||
+              item.sourceId === bookId,
+          );
 
-        if (!book) throw new Error("Book not found");
+        if (!book) {
+          throw new Error("Book not found");
+        }
 
-        useBookStore.getState().updateBook(bookId, {
+        useBookStore.getState().updateBook(book.id, {
           quotes: book.quotes.map((quote) =>
-            quote.id === quoteId ? { ...quote, ...changes } : quote,
+            quote.id === quoteId
+              ? {
+                  ...quote,
+                  ...changes,
+                  updatedAt: new Date().toISOString(),
+                }
+              : quote,
           ),
         });
       },
@@ -75,11 +119,18 @@ export const demoQuoteRepo = {
       }) => {
         const book = useBookStore
           .getState()
-          .books.find((item) => item.id === bookId);
+          .books.find(
+            (item) =>
+              item.id === bookId ||
+              item.catalogId === bookId ||
+              item.sourceId === bookId,
+          );
 
-        if (!book) throw new Error("Book not found");
+        if (!book) {
+          throw new Error("Book not found");
+        }
 
-        useBookStore.getState().updateBook(bookId, {
+        useBookStore.getState().updateBook(book.id, {
           quotes: book.quotes.filter((quote) => quote.id !== quoteId),
         });
       },
@@ -87,7 +138,7 @@ export const demoQuoteRepo = {
   },
 
   useAllQuotes() {
-    const books = useBookStore((s) => s.books); // subscribes — re-renders on store change
+    const books = useBookStore((state) => state.books);
 
     const data = useMemo(
       () =>
@@ -101,6 +152,9 @@ export const demoQuoteRepo = {
       [books],
     );
 
-    return { data, isLoading: false };
+    return {
+      data,
+      isLoading: false,
+    };
   },
 };

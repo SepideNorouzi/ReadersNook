@@ -1,5 +1,12 @@
 import { quoteRepository } from "../repo/quote/quoteRepo";
 
+export function useBookQuotes(
+  bookId: string | undefined,
+  enabled = true,
+) {
+  return quoteRepository.useBookQuotes(bookId, enabled);
+}
+
 export function useCreateQuote() {
   return quoteRepository.useCreateQuote();
 }

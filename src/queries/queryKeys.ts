@@ -1,12 +1,15 @@
 export const queryKeys = {
   books: (username: string) => ["books", username] as const,
 
-  book: (username: string, externalId: string) =>
-    ["books", username, externalId] as const,
+  book: (username: string, bookId: string) =>
+    ["books", username, bookId] as const,
 
   collections: (username: string) => ["collections", username] as const,
 
   quotes: (username: string) => ["quotes", username] as const,
+
+  bookQuotes: (username: string, bookId: string) =>
+    ["quotes", username, bookId] as const,
 
   currentReading: (username: string) => ["current-reading", username] as const,
 

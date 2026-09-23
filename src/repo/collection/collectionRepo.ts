@@ -12,7 +12,7 @@ export const collectionRepository = {
 
     const adminCollections = adminCollectionRepo.useCollections(isAdmin);
 
-    return isAdmin ? adminCollections : demoCollections;
+    return mode === "demo" ? demoCollections : adminCollections;
   },
 
   useCreateCollection() {
@@ -57,8 +57,11 @@ export const collectionRepository = {
 
   useDeleteCollection() {
     const mode = useModeStore((state) => state.mode);
+
     const demoMutation = demoCollectionRepo.useDeleteCollection();
+
     const adminMutation = adminCollectionRepo.useDeleteCollection();
+
     return mode === "demo" ? demoMutation : adminMutation;
   },
 };

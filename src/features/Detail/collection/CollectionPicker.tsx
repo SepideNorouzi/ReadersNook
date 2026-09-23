@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Check, ChevronDown, Plus } from "lucide-react";
+
 import type { Book } from "../../../types/book";
+
 import { useIsOwnedLibraryBook } from "../../../hooks/useBooks";
 import { useCollections } from "../../../hooks/useCollections";
 
@@ -10,6 +12,7 @@ interface Props {
 
 export default function CollectionPicker({ book }: Props) {
   const isSavedBook = useIsOwnedLibraryBook(book);
+
   const {
     collections,
     isLoading,
@@ -22,78 +25,128 @@ export default function CollectionPicker({ book }: Props) {
   } = useCollections();
 
   const [open, setOpen] = useState(false);
+
   const [creating, setCreating] = useState(false);
+
   const [name, setName] = useState("");
+
   const [busyId, setBusyId] = useState<string | null>(null);
 
-  const isInCollection = (collectionId: string) => {
-    const collection = collections.find(
-      (collection) => collection.id === collectionId,
-    );
+  /*
+   * Collections are attached to the backend catalog book.
+   *
+   * IMPORTANT:
+   * book.id = library-entry id
+   * book.catalogId = catalog/database book id
+   *
+   * Collection membership uses the catalog/database id.
+   */
+  const catalogBookId = book.catalogId;
 
-    return collection?.books.some(
-      (collectionBook: Book) => collectionBook.id === book.id,
-    );
-  };
-
-async function handleToggle(collectionId: string) {
-  if (!isSavedBook || !book.catalogId) return;
-
-  const alreadyIn = isInCollection(collectionId);
-
-  try {
-    setBusyId(collectionId);
-
-    if (alreadyIn) {
-      await removeBookFromCollection({
-        collectionId,
-        bookId: book.catalogId,
-      });
-    } else {
-      await addBookToCollection({
-        collectionId,
-        bookId: book.catalogId,
-      });
-      setOpen(false);
+  function isInCollection(collectionId: string) {
+    if (!catalogBookId) {
+      return false;
     }
-  } catch (error) {
-    console.error(
-      `Failed to ${alreadyIn ? "remove from" : "add to"} collection:`,
-      error,
+
+    const collection = collections.find((item) => item.id === collectionId);
+
+    if (!collection) {
+      return false;
+    }
+
+    return collection.books.some(
+      (collectionBook) =>
+        String(collectionBook.catalogId ?? collectionBook.id) ===
+        String(catalogBookId),
     );
-  } finally {
-    setBusyId(null);
   }
-}
 
-async function handleCreate() {
-  if (!isSavedBook || !book.catalogId) return;
+  async function handleToggle(collectionId: string) {
+    /*
+     * A collection membership request needs
+     * the catalog/database book id.
+     */
+    if (!isSavedBook || !catalogBookId) {
+      return;
+    }
 
-  const trimmedName = name.trim();
+    const alreadyIn = isInCollection(collectionId);
 
-  if (!trimmedName) return;
+    try {
+      setBusyId(collectionId);
 
-  try {
-    const collection = await createCollection(trimmedName);
+      if (alreadyIn) {
+        await removeBookFromCollection({
+          collectionId,
+          catalogBookId,
+        });
+      } else {
+        await addBookToCollection({
+          collectionId,
+          catalogBookId,
+        });
 
-    await addBookToCollection({
-      collectionId: collection.id,
-      bookId: book.catalogId,
-    });
-
-    setName("");
-    setCreating(false);
-    setOpen(false);
-  } catch (error) {
-    console.error("Failed to create collection:", error);
+        /*
+         * Adding a book closes the menu.
+         * Removing keeps it open so the user can
+         * continue editing collection membership.
+         */
+        setOpen(false);
+      }
+    } catch (error) {
+      console.error(
+        `Failed to ${alreadyIn ? "remove from" : "add to"} collection:`,
+        error,
+      );
+    } finally {
+      setBusyId(null);
+    }
   }
-}
+
+  async function handleCreate() {
+    if (!isSavedBook || !catalogBookId) {
+      return;
+    }
+
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
+      return;
+    }
+
+    try {
+      /*
+       * First create the collection.
+       */
+      const collection = await createCollection(trimmedName);
+
+      /*
+       * Then add THIS catalog book to
+       * the newly-created collection.
+       */
+      await addBookToCollection({
+        collectionId: collection.id,
+        catalogBookId,
+      });
+
+      setName("");
+      setCreating(false);
+      setOpen(false);
+    } catch (error) {
+      console.error("Failed to create collection:", error);
+    }
+  }
+
+  const hasAnyMutation = isAddingBook || isRemovingBook;
 
   return (
     <div className="relative">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
+        disabled={!isSavedBook || !catalogBookId}
+        aria-expanded={open}
+        aria-haspopup="menu"
         className="
           inline-flex
           items-center
@@ -109,6 +162,8 @@ async function handleCreate() {
           transition-all
           hover:border-[#C9B39A]
           hover:bg-white
+          disabled:cursor-not-allowed
+          disabled:opacity-50
         "
       >
         <span className="text-stone-600">Add to collection</span>
@@ -126,6 +181,7 @@ async function handleCreate() {
 
       {open && (
         <div
+          role="menu"
           className="
             absolute
             right-0
@@ -154,31 +210,32 @@ async function handleCreate() {
                 ) : (
                   collections.map((collection) => {
                     const selected = isInCollection(collection.id);
-                    const busy =
-                      (isAddingBook || isRemovingBook) &&
-                      busyId === collection.id;
+
+                    const busy = hasAnyMutation && busyId === collection.id;
 
                     return (
                       <button
                         key={collection.id}
                         type="button"
-                        disabled={isAddingBook || isRemovingBook}
+                        role="menuitemcheckbox"
+                        aria-checked={selected}
+                        disabled={hasAnyMutation}
                         onClick={() => handleToggle(collection.id)}
                         className="
-        flex
-        w-full
-        items-center
-        justify-between
-        gap-3
-        px-4
-        py-3
-        text-left
-        text-sm
-        transition-colors
-        hover:bg-stone-100
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-      "
+                            flex
+                            w-full
+                            items-center
+                            justify-between
+                            gap-3
+                            px-4
+                            py-3
+                            text-left
+                            text-sm
+                            transition-colors
+                            hover:bg-stone-100
+                            disabled:cursor-not-allowed
+                            disabled:opacity-50
+                          "
                       >
                         <span
                           className={
@@ -199,7 +256,6 @@ async function handleCreate() {
                             {selected ? "Removing..." : "Adding..."}
                           </span>
                         )}
-
                       </button>
                     );
                   })
@@ -210,6 +266,7 @@ async function handleCreate() {
                 <button
                   type="button"
                   onClick={() => setCreating(true)}
+                  disabled={hasAnyMutation}
                   className="
                     flex
                     w-full
@@ -223,6 +280,8 @@ async function handleCreate() {
                     text-stone-700
                     transition-colors
                     hover:bg-stone-100
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
                   "
                 >
                   <Plus size={16} />
@@ -245,6 +304,7 @@ async function handleCreate() {
                     handleCreate();
                   }
                 }}
+                disabled={isCreating || isAddingBook}
                 placeholder="Collection name"
                 className="
                   w-full
@@ -256,6 +316,8 @@ async function handleCreate() {
                   text-sm
                   outline-none
                   focus:border-stone-400
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
                 "
               />
 
@@ -266,6 +328,7 @@ async function handleCreate() {
                     setCreating(false);
                     setName("");
                   }}
+                  disabled={isCreating || isAddingBook}
                   className="
                     rounded-full
                     px-3
@@ -273,6 +336,8 @@ async function handleCreate() {
                     text-xs
                     text-stone-500
                     hover:bg-stone-100
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
                   "
                 >
                   Cancel
@@ -280,7 +345,9 @@ async function handleCreate() {
 
                 <button
                   type="button"
-                  disabled={!name.trim() || isCreating || isAddingBook}
+                  disabled={
+                    !name.trim() || isCreating || isAddingBook || !catalogBookId
+                  }
                   onClick={handleCreate}
                   className="
                     rounded-full
