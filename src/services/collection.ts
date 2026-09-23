@@ -57,30 +57,27 @@ export async function renameCollection(
   );
 }
 
-// ─────────────────────────────────────────────
-// ADD BOOK TO COLLECTION
-// ─────────────────────────────────────────────
-
 // POST /collections/{id}/books/{book_pk}/ — id in URL, no body
+// `book_pk` is the catalog/database book id — a Collection's `books`
+// relation is on the catalog Book model (see ApiCollectionDetail.books:
+// ApiCatalogBook[]), NOT the library entry.
 export async function addBookToCollection(
   collectionId: string,
-  bookId: string,
+  catalogBookId: string,
 ): Promise<ApiCollectionAddBookResponse> {
   return apiFetch<ApiCollectionAddBookResponse>(
-    `/collections/${collectionId}/books/${bookId}/`,
+    `/collections/${collectionId}/books/${catalogBookId}/`,
     { method: "POST" },
   );
 }
 
-// ─────────────────────────────────────────────
-// REMOVE BOOK FROM COLLECTION
-// ─────────────────────────────────────────────
 // DELETE /collections/{id}/books/{book_pk}/ — 204, no body
+// `book_pk` is the catalog/database book id — same as addBookToCollection.
 export async function removeBookFromCollection(
   collectionId: string,
-  bookId: string,
+  catalogBookId: string,
 ): Promise<void> {
-  await apiFetch<void>(`/collections/${collectionId}/books/${bookId}/`, {
+  await apiFetch<void>(`/collections/${collectionId}/books/${catalogBookId}/`, {
     method: "DELETE",
   });
 }

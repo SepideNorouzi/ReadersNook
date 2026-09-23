@@ -120,12 +120,14 @@ export async function createBook(
 /**
  * PATCH /books/{id}/update/
  *
- * `id` is the library-entry id, NOT the catalog/book id.
+ * `id` is the catalog/database book id — same id family as every other
+ * `/books/{id}/*` route (GET detail, quotes, aesthetic_photos).
+ * It is NOT the library-entry id.
  *
  * Only status and current_page are sent
  */
 export async function updateReadingProgress(
-  id: string,
+  catalogBookId: string,
   changes: UpdateReadingProgressChanges,
 ): Promise<ApiLibraryBookUpdatePayload> {
   const payload: ApiLibraryBookUpdatePayload = {};
@@ -135,9 +137,7 @@ export async function updateReadingProgress(
   }
 
   if (changes.currentPage !== undefined) {
-    const currentPage = Math.max(0, Math.round(changes.currentPage));
-
-    payload.current_page = currentPage;
+    payload.current_page = Math.max(0, Math.round(changes.currentPage));
   }
 
   if (Object.keys(payload).length === 0) {
@@ -145,11 +145,8 @@ export async function updateReadingProgress(
   }
 
   return apiFetch<ApiLibraryBookUpdatePayload>(
-    `/books/${encodeURIComponent(id)}/update/`,
-    {
-      method: "PATCH",
-      body: payload,
-    },
+    `/books/${encodeURIComponent(catalogBookId)}/update/`,
+    { method: "PATCH", body: payload },
   );
 }
 

@@ -62,11 +62,11 @@ export const adminCollectionRepo = {
     return useMutation({
       mutationFn: ({
         collectionId,
-        bookId,
+        catalogBookId,
       }: {
         collectionId: string;
-        bookId: string;
-      }) => addBookToCollection(collectionId, bookId),
+        catalogBookId: string;
+      }) => addBookToCollection(collectionId, catalogBookId),
 
       onSuccess: () => {
         queryClient.invalidateQueries({
@@ -82,11 +82,11 @@ export const adminCollectionRepo = {
     return useMutation({
       mutationFn: ({
         collectionId,
-        bookId,
+        catalogBookId,
       }: {
         collectionId: string;
-        bookId: string;
-      }) => removeBookFromCollection(collectionId, bookId),
+        catalogBookId: string;
+      }) => removeBookFromCollection(collectionId, catalogBookId),
 
       onSuccess: () => {
         queryClient.invalidateQueries({
