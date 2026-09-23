@@ -126,20 +126,28 @@ export const adminBookRepo = {
       mutationFn: async ({ id, changes }: UpdateBookInput) => {
         const username = useAuthStore.getState().username;
 
-        if (username) {
-          const books = await queryClient.ensureQueryData({
-            queryKey: queryKeys.books(username),
-            queryFn: getBooks,
-          });
-
-          if (!books.some((book) => book.id === id)) {
-            throw new Error(
-              "Cannot update a book that is not in the library.",
-            );
-          }
+        if (!username) {
+          throw new Error("Cannot update reading progress: not authenticated.");
         }
 
-        return updateReadingProgress(id, {
+        const books = await queryClient.ensureQueryData({
+          queryKey: queryKeys.books(username),
+          queryFn: getBooks,
+        });
+
+        const book = books.find((b) => b.id === id);
+
+        if (!book) {
+          throw new Error("Cannot update a book that is not in the library.");
+        }
+
+        if (!book.catalogId) {
+          throw new Error(
+            "Cannot update reading progress: missing catalog id.",
+          );
+        }
+
+        return updateReadingProgress(book.catalogId, {
           status: changes.status,
           currentPage: changes.currentPage,
         });
@@ -219,9 +227,7 @@ export const adminBookRepo = {
           });
 
           if (!books.some((book) => book.id === id)) {
-            throw new Error(
-              "Cannot delete a book that is not in the library.",
-            );
+            throw new Error("Cannot delete a book that is not in the library.");
           }
         }
 
