@@ -19,6 +19,7 @@ from .views import (
     QuoteCreateAPIView,
     QuoteListAPIView,
     QuoteUpdateAPIView,
+    QuoteDeleteAPIView
 )
 
 app_name = "books"
@@ -58,6 +59,11 @@ urlpatterns = [
         QuoteUpdateAPIView.as_view(),
         name="quote-update",
     ),
+    path(
+        "books/<int:pk>/quotes/<int:quote_pk>/delete" ,
+        QuoteDeleteAPIView.as_view(),
+        name="quote-delete",
+         ),
     # Aesthetic photos
     path(
         "books/<int:pk>/aesthetic_photos/create/",

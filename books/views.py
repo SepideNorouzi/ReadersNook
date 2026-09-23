@@ -428,6 +428,23 @@ class QuoteUpdateAPIView(generics.UpdateAPIView):
             book_id=self.kwargs["pk"],
         )
 
+@extend_schema_view(
+    delete=extend_schema(
+        tags=["Quotes"] ,
+        summary="Delete a quote"
+        ),
+)
+class QuoteDeleteAPIView(generics.DestroyAPIView):
+    serializer_class = QuoteSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_url_kwarg = "quote_pk"
+
+    def get_queryset(self):
+        return Quote.objects.filter(
+            created_by=self.request.user,
+            book_id=self.kwargs["pk"],
+        )
+
 
 # ---------------------------------------------------------------------------
 # Aesthetic photos
