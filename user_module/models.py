@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser, UserManager
-
+from django.db import models
 
 # ---------------------------------------------------------------------------
 # Managers
@@ -47,6 +47,12 @@ class User(AbstractUser):
     """Username-based user model without an email field."""
 
     email = None
+
+    avatar = models.ImageField(
+        upload_to="avatars/",
+        null=True,
+        blank=True,
+    )
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []
