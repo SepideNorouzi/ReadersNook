@@ -1,10 +1,18 @@
-import { useReadingGoalStore } from "../store/readingGoalStore";
 import { useBooks } from "./useBooks";
 
-export function useReadingGoal() {
-  const { data: books = [], isLoading: booksLoading } = useBooks();
+import { readingGoalRepository } from "../repo/goal/readingGoalRepo";
 
-  const yearlyGoal = useReadingGoalStore((state) => state.readingGoal);
+import { DEFAULT_READING_GOAL } from "../store/readingGoalStore";
+
+export function useReadingGoal() {
+  const {
+    data: yearlyGoal = DEFAULT_READING_GOAL,
+    isLoading: goalLoading,
+    isError: goalError,
+    error,
+  } = readingGoalRepository.useReadingGoal();
+
+  const { data: books = [], isLoading: booksLoading } = useBooks();
 
   const booksRead = books.filter((book) => book.status === "read").length;
 
@@ -15,6 +23,14 @@ export function useReadingGoal() {
     booksRead,
     yearlyGoal,
     progress,
-    isLoading: booksLoading,
+
+    isLoading: goalLoading || booksLoading,
+
+    isError: goalError,
+    error,
   };
+}
+
+export function useUpdateReadingGoal() {
+  return readingGoalRepository.useUpdateReadingGoal();
 }

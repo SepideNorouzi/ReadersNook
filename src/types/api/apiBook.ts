@@ -102,8 +102,13 @@ export type ApiLibraryCollectionSummary = {
 /**
  * GET /library/
  */
+export type ApiLibraryGoalUpdatePayload = {
+  reading_goal: number;
+};
+
 export type ApiLibrary = {
   id: number;
+  reading_goal: number;
   books: ApiLibraryEntry[];
   collections: ApiLibraryCollectionSummary[];
   created_at: string;

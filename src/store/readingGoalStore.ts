@@ -6,7 +6,7 @@ interface ReadingGoalState {
   resetReadingGoal: () => void;
 }
 
-const DEFAULT_READING_GOAL = 12;
+export const DEFAULT_READING_GOAL = 12;
 
 export const useReadingGoalStore = create<ReadingGoalState>((set) => ({
   readingGoal: DEFAULT_READING_GOAL,

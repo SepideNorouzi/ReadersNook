@@ -1,15 +1,23 @@
 import { BookOpen, Minus, Plus } from "lucide-react";
 
 import Card from "../../ui/Card";
-import { useReadingGoalStore } from "../../store/readingGoalStore";
+
+import {
+  useReadingGoal,
+  useUpdateReadingGoal,
+} from "../../hooks/useReadingGoal";
 
 export default function ReadingGoalSettings() {
-  const readingGoal = useReadingGoalStore((state) => state.readingGoal);
-  const setReadingGoal = useReadingGoalStore((state) => state.setReadingGoal);
+  const { yearlyGoal } = useReadingGoal();
+
+  const updateReadingGoal = useUpdateReadingGoal();
+
+  const readingGoal = yearlyGoal;
 
   const updateGoal = (value: number) => {
     const nextGoal = Math.max(1, Math.min(365, value));
-    setReadingGoal(nextGoal);
+
+    updateReadingGoal.mutate(nextGoal);
   };
 
   return (
