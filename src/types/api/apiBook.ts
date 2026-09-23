@@ -76,7 +76,7 @@ export type ApiBookCreateResponse = ApiLibraryEntry;
 /**
  * PATCH /books/{id}/update/
  *
- * `id` is the library-entry id.
+ * `id` is the catalog/database book id (see services/books.ts).
  */
 export type ApiLibraryBookUpdatePayload = Partial<{
   status: ApiBookStatus;
