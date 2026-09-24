@@ -63,7 +63,7 @@ export default function CollectionModal({ collection, onClose }: Props) {
         removedBooks.map((book) =>
           removeBookFromCollection({
             collectionId: collection.id,
-            bookId: book.id,
+            catalogBookId: book.catalogId ?? book.id,
           }),
         ),
       );
