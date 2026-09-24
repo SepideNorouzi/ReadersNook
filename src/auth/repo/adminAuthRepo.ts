@@ -27,6 +27,22 @@ let refreshInFlight: {
   promise: Promise<TokenResponse>;
 } | null = null;
 
+// Extract the 401, refresh, retry pattern
+async function withAuthRetry<T>(
+  request: (accessToken: string) => Promise<T>,
+): Promise<T> {
+  const token = useAuthStore.getState().accessToken;
+  if (!token) throw new AuthHttpError("Not authenticated.", 401);
+
+  try {
+    return await request(token); // ← the `await` matters
+  } catch (error) {
+    if (!(error instanceof AuthHttpError) || error.status !== 401) throw error;
+    const tokens = await refreshSession();
+    return request(tokens.access);
+  }
+}
+
 async function refreshSession(): Promise<TokenResponse> {
   const currentVersion = getAuthTransportVersion();
 
@@ -77,35 +93,9 @@ export const adminAuthRepo = {
       queryKey: authKeys.me("admin", username ?? "anonymous"),
 
       queryFn: async () => {
-        const token = useAuthStore.getState().accessToken;
-
-        if (!token) {
-          throw new AuthHttpError("Not authenticated.", 401);
-        }
-
-        try {
-          const rawUser = await getMe(token);
-
-          const user = toProfile(rawUser);
-
-          useAuthStore.getState().setUsername(user.username);
-
-          return user;
-        } catch (error) {
-          if (!(error instanceof AuthHttpError) || error.status !== 401) {
-            throw error;
-          }
-
-          const tokens = await refreshSession();
-
-          const rawUser = await getMe(tokens.access);
-
-          const user = toProfile(rawUser);
-
-          useAuthStore.getState().setUsername(user.username);
-
-          return user;
-        }
+        const user = toProfile(await withAuthRetry(getMe));
+        useAuthStore.getState().setUsername(user.username);
+        return user;
       },
 
       enabled: enabled && Boolean(accessToken),
@@ -154,19 +144,10 @@ export const adminAuthRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: async (avatarUrl: string) => {
-        const token = useAuthStore.getState().accessToken;
-        if (!token) throw new AuthHttpError("Not authenticated.", 401);
-
-        try {
-          return toProfile(await updateAvatar(token, avatarUrl));
-        } catch (error) {
-          if (!(error instanceof AuthHttpError) || error.status !== 401)
-            throw error;
-          const tokens = await refreshSession();
-          return toProfile(await updateAvatar(tokens.access, avatarUrl));
-        }
-      },
+      mutationFn: async (avatarUrl: string) =>
+        toProfile(
+          await withAuthRetry((token) => updateAvatar(token, avatarUrl)),
+        ),
       onSuccess: (user) => {
         queryClient.setQueryData(authKeys.me("admin", user.username), user);
       },
@@ -177,19 +158,8 @@ export const adminAuthRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: async (name: string) => {
-        const token = useAuthStore.getState().accessToken;
-        if (!token) throw new AuthHttpError("Not authenticated.", 401);
-
-        try {
-          return toProfile(await updateName(token, name));
-        } catch (error) {
-          if (!(error instanceof AuthHttpError) || error.status !== 401)
-            throw error;
-          const tokens = await refreshSession();
-          return toProfile(await updateName(tokens.access, name));
-        }
-      },
+      mutationFn: async (name: string) =>
+        toProfile(await withAuthRetry((token) => updateName(token, name))),
       onSuccess: (user) => {
         queryClient.setQueryData(authKeys.me("admin", user.username), user);
       },

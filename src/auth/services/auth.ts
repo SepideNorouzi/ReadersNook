@@ -2,6 +2,7 @@ import type {
   AuthUser,
   LoginCredentials,
   Profile,
+  ProfilePatch,
   RegisterData,
   TokenResponse,
 } from "../types/auth";
@@ -61,10 +62,10 @@ export function toProfile(user: AuthUser): Profile {
   const name = `${user.first_name} ${user.last_name}`.trim();
 
   return {
-    id: user.username,
+    id: String(user.id),
     name: name || user.username,
     username: user.username,
-    avatarUrl: user.avatar,
+    avatarUrl: user.avatar || null,
   };
 }
 
@@ -76,10 +77,10 @@ function splitName(fullName: string): {
   return { first_name: first_name ?? "", last_name: rest.join(" ") };
 }
 
-// Mirrors updateAvatar() exactly — same endpoint, different field.
-export async function updateName(
+async function patchMe(
   accessToken: string,
-  name: string,
+  patch: ProfilePatch,
+  fallback: string,
 ): Promise<AuthUser> {
   const response = await fetch(`${API_URL}/auth/me/`, {
     method: "PATCH",
@@ -87,15 +88,18 @@ export async function updateName(
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(splitName(name)),
+    body: JSON.stringify(patch),
   });
 
-  if (!response.ok) {
-    await throwApiError(response, "Failed to update name.");
-  }
-
+  if (!response.ok) await throwApiError(response, fallback);
   return response.json();
 }
+
+export const updateAvatar = (accessToken: string, avatar: string) =>
+  patchMe(accessToken, { avatar }, "Failed to update avatar.");
+
+export const updateName = (accessToken: string, name: string) =>
+  patchMe(accessToken, splitName(name), "Failed to update name.");
 
 export async function login(
   credentials: LoginCredentials,
@@ -142,26 +146,6 @@ export async function getMe(accessToken: string): Promise<AuthUser> {
 
   if (!response.ok) {
     await throwApiError(response, "Failed to fetch authenticated user.");
-  }
-
-  return response.json();
-}
-
-export async function updateAvatar(
-  accessToken: string,
-  avatarUrl: string,
-): Promise<AuthUser> {
-  const response = await fetch(`${API_URL}/auth/me/`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ avatar: avatarUrl }),
-  });
-
-  if (!response.ok) {
-    await throwApiError(response, "Failed to update avatar.");
   }
 
   return response.json();

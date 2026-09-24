@@ -9,16 +9,16 @@ import {
 
 export default function ReadingGoalSettings() {
   const { yearlyGoal } = useReadingGoal();
-
   const updateReadingGoal = useUpdateReadingGoal();
 
-  const readingGoal = yearlyGoal;
+const updateGoal = (value: number) => {
+  console.log("BUTTON CLICKED", value);
+  console.log("MUTATION", updateReadingGoal);
 
-  const updateGoal = (value: number) => {
-    const nextGoal = Math.max(1, Math.min(365, value));
+  const nextGoal = Math.max(1, Math.min(365, value));
 
-    updateReadingGoal.mutate(nextGoal);
-  };
+  updateReadingGoal.mutate(nextGoal);
+};
 
   return (
     <Card
@@ -83,7 +83,7 @@ export default function ReadingGoalSettings() {
       >
         <button
           type="button"
-          onClick={() => updateGoal(readingGoal - 1)}
+          onClick={() => updateGoal(yearlyGoal - 1)}
           aria-label="Decrease reading goal"
           className="
             flex h-8 w-8
@@ -99,7 +99,7 @@ export default function ReadingGoalSettings() {
 
         <div className="text-center">
           <p className="font-heading text-3xl font-semibold text-[var(--brown-800)] dark:text-[var(--text)]">
-            {readingGoal}
+            {yearlyGoal}
           </p>
 
           <p className="text-[9px] uppercase tracking-[0.1em] text-[var(--text-muted)]">
@@ -109,7 +109,7 @@ export default function ReadingGoalSettings() {
 
         <button
           type="button"
-          onClick={() => updateGoal(readingGoal + 1)}
+          onClick={() => updateGoal(yearlyGoal + 1)}
           aria-label="Increase reading goal"
           className="
             flex h-8 w-8

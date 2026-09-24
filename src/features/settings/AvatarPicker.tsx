@@ -44,14 +44,16 @@ export const avatarOptions: AvatarOption[] = [
 
 interface Props {
   currentAvatar?: string | null;
-  onSelect: (avatarId: string) => void;
+  onSelect: (avatarSrc: string) => void;
   onClose?: () => void;
+  isSaving?: boolean;
 }
 
 export default function AvatarPicker({
   currentAvatar,
   onSelect,
   onClose,
+  isSaving = false,
 }: Props) {
   const initialIndex = Math.max(
     avatarOptions.findIndex((avatar) => avatar.src === currentAvatar),
@@ -81,6 +83,7 @@ export default function AvatarPicker({
   };
 
   const selectAvatar = () => {
+    if (isSaving) return;
     onSelect(selectedAvatar.src);
   };
 
@@ -113,29 +116,23 @@ export default function AvatarPicker({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") {
-        goNext();
-      }
+      const target = event.target instanceof HTMLElement ? event.target : null;
 
-      if (event.key === "ArrowLeft") {
-        goPrevious();
-      }
+      // Don't hijack keys while the user is typing (e.g. editing their name).
+      if (target?.closest("input, textarea, [contenteditable='true']")) return;
 
-      if (event.key === "Enter") {
-        selectAvatar();
-      }
+      // Enter on a focused <button> already produces its own click.
+      if (event.key === "Enter" && target?.closest("button")) return;
 
-      if (event.key === "Escape") {
-        onClose?.();
-      }
+      if (event.key === "ArrowRight") goNext();
+      if (event.key === "ArrowLeft") goPrevious();
+      if (event.key === "Enter") selectAvatar();
+      if (event.key === "Escape") onClose?.();
     };
 
     window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedIndex]);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, isSaving, onSelect, onClose]);
 
   const previousIndex = getWrappedIndex(selectedIndex - 1);
   const nextIndex = getWrappedIndex(selectedIndex + 1);
@@ -242,9 +239,10 @@ export default function AvatarPicker({
           type="button"
           className="avatar-confirm-button"
           onClick={selectAvatar}
+          disabled={isSaving}
         >
           <Check size={17} strokeWidth={2.5} />
-          Use this avatar
+          {isSaving ? "Saving…" : "Use this avatar"}
         </button>
 
         {onClose && (
@@ -252,6 +250,7 @@ export default function AvatarPicker({
             type="button"
             className="avatar-cancel-button"
             onClick={onClose}
+            disabled={isSaving}
           >
             Cancel
           </button>

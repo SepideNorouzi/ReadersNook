@@ -20,7 +20,8 @@ export default function ProfileHeader({
   const account =
     user.id === "guest" ? "Browsing in demo mode" : "Reader's Nook Member";
 
-  const { updateAvatar, updateName, isUpdatingName } = useProfileEditor();
+  const { updateAvatar, updateName, isUpdatingAvatar, isUpdatingName } =
+    useProfileEditor();
 
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameDraft, setNameDraft] = useState(user.name);
@@ -295,6 +296,7 @@ export default function ProfileHeader({
             currentAvatar={user.avatarUrl}
             onSelect={handleAvatarSelect}
             onClose={() => onAvatarPickerChange(false)}
+            isSaving={isUpdatingAvatar}
           />
         </div>
       )}

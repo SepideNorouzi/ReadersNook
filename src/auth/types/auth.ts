@@ -1,9 +1,10 @@
 // Raw shape returned by the backend's /auth/me/ endpoint.
 export interface AuthUser {
+  id: number; // backend primary key
   first_name: string;
   last_name: string;
   username: string;
-  avatar: string | null;
+  avatar: string | null; // "" or null until the user picks one
 }
 
 // Canonical, UI-facing user shape — everything in the app (components,
@@ -14,6 +15,11 @@ export interface Profile {
   username: string;
   avatarUrl: string | null;
 }
+
+// Derived from AuthUser so the contract has a single source of truth.
+export type ProfilePatch = Partial<
+  Pick<AuthUser, "first_name" | "last_name" | "username" | "avatar">
+>;
 
 export interface LoginCredentials {
   username: string;
