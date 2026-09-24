@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useDemoProfileStore } from "../store/demoProfileStore";
 import type { LoginCredentials, RegisterData } from "../types/auth";
+import { resolveAvatarSrc } from "../../lib/avatars";
 
 export const demoAuthRepo = {
   useMe() {
@@ -25,8 +26,9 @@ export const demoAuthRepo = {
   useUpdateAvatar() {
     const setAvatar = useDemoProfileStore((state) => state.setAvatar);
     return useMutation({
-      mutationFn: async (avatarUrl: string) => {
-        setAvatar(avatarUrl);
+      mutationFn: async (avatarId: string) => {
+        const src = resolveAvatarSrc(avatarId);
+        if (src) setAvatar(src);
         return useDemoProfileStore.getState().profile;
       },
     });

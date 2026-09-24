@@ -28,10 +28,10 @@ export default function ProfileHeader({
   const [nameError, setNameError] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
 
-  const handleAvatarSelect = async (avatarUrl: string) => {
+  const handleAvatarSelect = async (avatarId: string) => {
     try {
       setAvatarError(null);
-      await updateAvatar(avatarUrl);
+      await updateAvatar(avatarId);
       onAvatarPickerChange(false);
     } catch (error) {
       console.error("Failed to update avatar:", error);

@@ -144,9 +144,9 @@ export const adminAuthRepo = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: async (avatarUrl: string) =>
+      mutationFn: async (avatarId: string) =>
         toProfile(
-          await withAuthRetry((token) => updateAvatar(token, avatarUrl)),
+          await withAuthRetry((token) => updateAvatar(token, avatarId)),
         ),
       onSuccess: (user) => {
         queryClient.setQueryData(authKeys.me("admin", user.username), user);

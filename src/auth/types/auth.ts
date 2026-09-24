@@ -4,7 +4,7 @@ export interface AuthUser {
   first_name: string;
   last_name: string;
   username: string;
-  avatar: string | null; // "" or null until the user picks one
+  avatar: string | null; // avatar *id* (e.g. "dreamer"), not a URL. "" until chosen.
 }
 
 // Canonical, UI-facing user shape — everything in the app (components,

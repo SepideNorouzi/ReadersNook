@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router";
@@ -7,7 +13,7 @@ import { delay, http, HttpResponse } from "msw";
 import type { ReactNode } from "react";
 
 import Settings from "../../pages/Settings";
-import { avatarOptions } from "./AvatarPicker";
+import { avatarOptions } from "../../lib/avatars";
 
 import { server } from "../../data/server";
 import { books as demoBooks } from "../../data/book";
@@ -44,6 +50,7 @@ function goalValue() {
 function mockLibrary(books: ApiLibraryEntry[] = []): ApiLibrary {
   return {
     id: 1,
+    reading_goal: 12,
     books,
     collections: [],
     created_at: "2026-01-01T00:00:00Z",
@@ -51,12 +58,25 @@ function mockLibrary(books: ApiLibraryEntry[] = []): ApiLibrary {
   };
 }
 
+// Independent copy of the backend's AVATAR_CHOICES. Deliberately NOT derived
+// from avatarOptions, so a renamed or drifted id makes a test fail.
+// Keep it identical to your Django choices.
+const BACKEND_AVATAR_IDS = [
+  "dreamer",
+  "curious-reader",
+  "adventurer",
+  "scholar",
+  "storyteller",
+  "bookworm",
+];
+
 function seedAdmin(options?: {
   user?: Partial<AuthUser>;
   libraryBooks?: ApiLibraryEntry[];
   delayMeMs?: number;
 }) {
   let currentUser: AuthUser = mockAuthUser(options?.user);
+  const patches: Partial<AuthUser>[] = [];
 
   useModeStore.getState().setMode("admin");
   useAuthStore
@@ -65,13 +85,21 @@ function seedAdmin(options?: {
 
   server.use(
     http.get(`${API_URL}/auth/me/`, async () => {
-      if (options?.delayMeMs) {
-        await delay(options.delayMeMs);
-      }
+      if (options?.delayMeMs) await delay(options.delayMeMs);
       return HttpResponse.json(currentUser);
     }),
     http.patch(`${API_URL}/auth/me/`, async ({ request }) => {
       const body = (await request.json()) as Partial<AuthUser>;
+      patches.push(body);
+
+      // mimic DRF's ChoiceField
+      if (body.avatar && !BACKEND_AVATAR_IDS.includes(body.avatar)) {
+        return HttpResponse.json(
+          { avatar: [`"${body.avatar}" is not a valid choice.`] },
+          { status: 400 },
+        );
+      }
+
       currentUser = { ...currentUser, ...body };
       return HttpResponse.json(currentUser);
     }),
@@ -82,6 +110,7 @@ function seedAdmin(options?: {
 
   return {
     getUser: () => currentUser,
+    patches, // ← new
   };
 }
 
@@ -94,7 +123,9 @@ function renderSettings(path = "/settings") {
   });
 
   function wrapper({ children }: { children: ReactNode }) {
-    return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+    return (
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    );
   }
 
   return render(
@@ -151,7 +182,9 @@ describe("settings page — demo mode", () => {
 
     expect(screen.getByText("Browsing in demo mode")).toBeInTheDocument();
     expect(screen.getByText("Your reading space")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Preferences" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Preferences" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByText("Customize your reading experience."),
     ).toBeInTheDocument();
@@ -280,7 +313,9 @@ describe("settings page — demo mode", () => {
     await user.click(screen.getByRole("button", { name: "Save name" }));
 
     expect(
-      await screen.findByRole("heading", { name: "Welcome back, Reader Guest" }),
+      await screen.findByRole("heading", {
+        name: "Welcome back, Reader Guest",
+      }),
     ).toBeInTheDocument();
     expect(useDemoProfileStore.getState().profile).toMatchObject({
       id: "guest",
@@ -302,10 +337,16 @@ describe("settings page — demo mode", () => {
     expect(screen.getByText("Name can't be empty.")).toBeInTheDocument();
     expect(useDemoProfileStore.getState().profile.name).toBe(demoProfile.name);
 
-    await user.click(screen.getByRole("button", { name: "Cancel editing name" }));
-    expect(screen.queryByDisplayValue(demoProfile.name)).not.toBeInTheDocument();
+    await user.click(
+      screen.getByRole("button", { name: "Cancel editing name" }),
+    );
     expect(
-      screen.getByRole("heading", { name: `Welcome back, ${demoProfile.name}` }),
+      screen.queryByDisplayValue(demoProfile.name),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: `Welcome back, ${demoProfile.name}`,
+      }),
     ).toBeInTheDocument();
   });
 
@@ -316,7 +357,9 @@ describe("settings page — demo mode", () => {
     await user.click(await screen.findByRole("button", { name: "Edit name" }));
     await user.keyboard("{Enter}");
 
-    expect(screen.queryByDisplayValue(demoProfile.name)).not.toBeInTheDocument();
+    expect(
+      screen.queryByDisplayValue(demoProfile.name),
+    ).not.toBeInTheDocument();
     expect(useDemoProfileStore.getState().profile.name).toBe(demoProfile.name);
   });
 
@@ -431,7 +474,7 @@ describe("settings page — admin mode", () => {
         first_name: "Sepide",
         last_name: "Norouzi",
         username: "sepide",
-        avatar: "/avatars/03.png",
+        avatar: avatarOptions[3].id,
       }),
       libraryBooks,
     });
@@ -439,12 +482,14 @@ describe("settings page — admin mode", () => {
     renderSettings();
 
     expect(
-      await screen.findByRole("heading", { name: "Welcome back, Sepide Norouzi" }),
+      await screen.findByRole("heading", {
+        name: "Welcome back, Sepide Norouzi",
+      }),
     ).toBeInTheDocument();
     expect(screen.getByText("Reader's Nook Member")).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Sepide Norouzi" })).toHaveAttribute(
       "src",
-      "/avatars/03.png",
+      avatarOptions[3].src,
     );
     expect(
       screen.queryByRole("heading", { name: /Make your profile yours/ }),
@@ -486,9 +531,7 @@ describe("settings page — admin mode", () => {
     const user = userEvent.setup();
     renderSettings();
 
-    await user.click(
-      await screen.findByRole("button", { name: "Edit name" }),
-    );
+    await user.click(await screen.findByRole("button", { name: "Edit name" }));
 
     const input = screen.getByDisplayValue("Sepide Norouzi");
     await user.clear(input);
@@ -507,10 +550,8 @@ describe("settings page — admin mode", () => {
     });
   });
 
-  it("patches avatar on the AuthUser and shows the mapped avatarUrl", async () => {
-    const admin = seedAdmin({
-      user: mockAuthUser({ avatar: null }),
-    });
+  it("patches the avatar id on the AuthUser and shows the resolved image", async () => {
+    const admin = seedAdmin({ user: mockAuthUser({ avatar: null }) });
     const user = userEvent.setup();
     renderSettings();
 
@@ -520,16 +561,35 @@ describe("settings page — admin mode", () => {
     await user.click(
       screen.getByRole("button", { name: `Choose ${avatarOptions[4].name}` }),
     );
-    await user.keyboard("{Enter}");
+    await user.click(screen.getByRole("button", { name: "Use this avatar" }));
 
     await waitFor(() => {
-      expect(admin.getUser().avatar).toBe(avatarOptions[4].src);
+      expect(admin.getUser().avatar).toBe(avatarOptions[4].id);
     });
+    // The exact wire payload: one request, id only, no path and no extra fields.
+    expect(admin.patches).toEqual([{ avatar: avatarOptions[4].id }]);
 
-    expect(screen.getByRole("img", { name: "Sepide Norouzi" })).toHaveAttribute(
-      "src",
-      avatarOptions[4].src,
+    // findBy: the server changes before React re-renders.
+    expect(
+      await screen.findByRole("img", { name: "Sepide Norouzi" }),
+    ).toHaveAttribute("src", avatarOptions[4].src);
+  });
+
+  it("sends exactly one PATCH when Enter is pressed on the focused confirm button", async () => {
+    const admin = seedAdmin();
+    const user = userEvent.setup();
+    renderSettings();
+
+    await user.click(
+      await screen.findByRole("button", { name: "Change profile avatar" }),
     );
+    screen.getByRole("button", { name: "Use this avatar" }).focus();
+    await user.keyboard("{Enter}");
+
+    await waitFor(() =>
+      expect(screen.queryByText("Pick your avatar")).not.toBeInTheDocument(),
+    );
+    expect(admin.patches).toHaveLength(1); // two would mean keydown + click both fired
   });
 
   it("shows a loading state while the admin profile query is in flight", async () => {
@@ -539,7 +599,9 @@ describe("settings page — admin mode", () => {
     expect(screen.getByText("Loading your profile...")).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("heading", { name: "Welcome back, Sepide Norouzi" }),
+      await screen.findByRole("heading", {
+        name: "Welcome back, Sepide Norouzi",
+      }),
     ).toBeInTheDocument();
   });
 

@@ -1,13 +1,11 @@
 import { useAuth } from "./useAuth";
 
 export function useProfileEditor() {
-  const {
-    updateAvatar: updateAvatarMutation,
-    updateName: updateNameMutation,
-  } = useAuth();
+  const { updateAvatar: updateAvatarMutation, updateName: updateNameMutation } =
+    useAuth();
 
-  const updateAvatar = async (avatarUrl: string) => {
-    await updateAvatarMutation.mutateAsync(avatarUrl);
+  const updateAvatar = async (avatarId: string) => {
+    await updateAvatarMutation.mutateAsync(avatarId);
   };
 
   const updateName = async (name: string) => {

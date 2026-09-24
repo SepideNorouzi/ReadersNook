@@ -7,6 +7,7 @@ import type {
   TokenResponse,
 } from "../types/auth";
 import { API_URL } from "../../lib/env";
+import { resolveAvatarSrc } from "../../lib/avatars";
 
 export class AuthHttpError extends Error {
   status: number;
@@ -65,7 +66,7 @@ export function toProfile(user: AuthUser): Profile {
     id: String(user.id),
     name: name || user.username,
     username: user.username,
-    avatarUrl: user.avatar || null,
+    avatarUrl: resolveAvatarSrc(user.avatar),
   };
 }
 
@@ -95,8 +96,8 @@ async function patchMe(
   return response.json();
 }
 
-export const updateAvatar = (accessToken: string, avatar: string) =>
-  patchMe(accessToken, { avatar }, "Failed to update avatar.");
+export const updateAvatar = (accessToken: string, avatarId: string) =>
+  patchMe(accessToken, { avatar: avatarId }, "Failed to update avatar.");
 
 export const updateName = (accessToken: string, name: string) =>
   patchMe(accessToken, splitName(name), "Failed to update name.");

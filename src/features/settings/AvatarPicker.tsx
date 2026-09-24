@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
 import "../../styles/avatarPicker.css";
+import { avatarOptions } from "../../lib/avatars";
 
 export type AvatarOption = {
   id: string;
@@ -9,42 +10,9 @@ export type AvatarOption = {
   name: string;
 };
 
-export const avatarOptions: AvatarOption[] = [
-  {
-    id: "avatar-01",
-    src: "/avatars/00.png",
-    name: "The Dreamer",
-  },
-  {
-    id: "avatar-02",
-    src: "/avatars/01.png",
-    name: "The Curious Reader",
-  },
-  {
-    id: "avatar-03",
-    src: "/avatars/02.png",
-    name: "The Adventurer",
-  },
-  {
-    id: "avatar-04",
-    src: "/avatars/03.png",
-    name: "The Scholar",
-  },
-  {
-    id: "avatar-05",
-    src: "/avatars/04.png",
-    name: "The Storyteller",
-  },
-  {
-    id: "avatar-06",
-    src: "/avatars/05.png",
-    name: "The Bookworm",
-  },
-];
-
 interface Props {
   currentAvatar?: string | null;
-  onSelect: (avatarSrc: string) => void;
+  onSelect: (avatarId: string) => void;
   onClose?: () => void;
   isSaving?: boolean;
 }
@@ -84,7 +52,7 @@ export default function AvatarPicker({
 
   const selectAvatar = () => {
     if (isSaving) return;
-    onSelect(selectedAvatar.src);
+    onSelect(selectedAvatar.id);
   };
 
   const handleTouchStart = (event: React.TouchEvent) => {
