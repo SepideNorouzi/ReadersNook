@@ -3,6 +3,7 @@ import Card from "../../../ui/Card";
 import QuoteItem from "./QuoteItem";
 import Loading from "../../../shared/Loading";
 import { useAllQuotes } from "../../../hooks/useQuotes";
+import { useEffect, useState } from "react";
 
 interface Props {
   className?: string;
@@ -10,6 +11,27 @@ interface Props {
 
 export default function QuoteCard({ className }: Props) {
   const { data: quotes = [], isLoading } = useAllQuotes();
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // chnage quotes every 2 seconds
+  useEffect(() => {
+    if (quotes.length <= 1) return;
+
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        let nextIndex = Math.floor(Math.random() * quotes.length);
+
+        while (nextIndex === prevIndex) {
+          nextIndex = Math.floor(Math.random() * quotes.length);
+        }
+
+        return nextIndex;
+      });
+    }, 2000);
+
+    return () => clearInterval(intervalId);
+  }, [quotes.length]);
 
   if (isLoading) {
     return (
@@ -25,8 +47,8 @@ export default function QuoteCard({ className }: Props) {
     );
   }
 
-  const today = new Date().getDate();
-  const quote = quotes[today % quotes.length];
+  const safeIndex = quotes.length > 0 ? currentIndex % quotes.length : 0;
+  const quote = quotes[safeIndex];
 
   if (!quotes.length) {
     return (
