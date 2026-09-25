@@ -1,43 +1,39 @@
 import { Sparkles } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 
 import SearchBar from "../features/searchBooks/SearchBar";
 import SearchResults from "../features/searchBooks/SearchResults";
+import { useDebounce } from "../hooks/useDebounce"; // adjust path
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get("q") ?? "";
+  const urlQuery = searchParams.get("q") ?? "";
+  const [inputValue, setInputValue] = useState(urlQuery); // instant, drives the box
+  const debouncedQuery = useDebounce(inputValue, 200); // lagging, drives the URL/fetch
 
   const pageParam = Number(searchParams.get("page") ?? "1");
   const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
 
-  const handleSearch = useCallback(
-    (newQuery: string) => {
-      if (!newQuery.trim()) {
-        setSearchParams({});
-        return;
-      }
+  // Only commit to the URL (and therefore trigger the API call) once typing pauses
+  useEffect(() => {
+    const trimmed = debouncedQuery.trim();
 
-      setSearchParams({
-        q: newQuery, // store the raw value, not the trimmed one
-        page: "1",
-      });
-    },
-    [setSearchParams],
-  );
+    if (!trimmed) {
+      setSearchParams({}, { replace: true });
+      return;
+    }
+
+    setSearchParams({ q: trimmed, page: "1" }, { replace: true });
+  }, [debouncedQuery, setSearchParams]);
 
   const handlePageChange = useCallback(
     (newPage: number) => {
       if (newPage < 1) return;
-
-      setSearchParams({
-        q: query,
-        page: String(newPage),
-      });
+      setSearchParams({ q: urlQuery, page: String(newPage) });
     },
-    [query, setSearchParams],
+    [urlQuery, setSearchParams],
   );
 
   return (
@@ -88,12 +84,12 @@ export default function Search() {
           </p>
         </div>
 
-        <SearchBar value={query} onChange={handleSearch} />
+        <SearchBar value={inputValue} onChange={setInputValue} />
       </section>
 
       <section className="mx-auto w-full max-w-6xl">
         <SearchResults
-          query={query}
+          query={urlQuery}
           page={page}
           onPageChange={handlePageChange}
         />
