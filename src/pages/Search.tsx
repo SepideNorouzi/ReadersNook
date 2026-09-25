@@ -15,15 +15,13 @@ export default function Search() {
 
   const handleSearch = useCallback(
     (newQuery: string) => {
-      const trimmed = newQuery.trim();
-
-      if (!trimmed) {
+      if (!newQuery.trim()) {
         setSearchParams({});
         return;
       }
 
       setSearchParams({
-        q: trimmed,
+        q: newQuery, // store the raw value, not the trimmed one
         page: "1",
       });
     },
