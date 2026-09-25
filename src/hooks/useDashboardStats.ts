@@ -1,40 +1,22 @@
 import { useMemo } from "react";
 import { useBooks } from "./useBooks";
 import { useCollections } from "./useCollections";
-
+import { useAllQuotes } from "./useQuotes";
 
 export function useDashboardStats() {
-
   const { data: books = [] } = useBooks();
+  const { data: quotes = [] } = useAllQuotes();
 
-  const {
-    collections = [],
-  } = useCollections();
-
+  const { collections = [] } = useCollections();
 
   const stats = useMemo(() => {
-
-    const quotes = books.reduce(
-      (total, book) =>
-        total + (book.quotes?.length ?? 0),
-      0
-    );
-
-
     return {
-
       totalBooks: books.length,
-
       streak: 0,
-
-      quotes,
-
+      quotes: quotes.length,
       collections: collections.length,
-
     };
-
-  }, [books, collections]);
-
+  }, [books.length, quotes.length, collections.length]);
 
   return stats;
 }
