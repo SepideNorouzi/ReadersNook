@@ -1,12 +1,5 @@
-import io
-import shutil
-import tempfile
-
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import override_settings
 from django.urls import reverse
-from PIL import Image
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -234,44 +227,29 @@ class AvatarAPITests(APITestCase):
         )
         self.client.force_authenticate(user=self.user)
 
-        # Keep uploads out of the real media directory.
-        media_root = tempfile.mkdtemp()
-        self.enterContext(override_settings(MEDIA_ROOT=media_root))
-        self.addCleanup(shutil.rmtree, media_root, ignore_errors=True)
-
-    def _image_file(self, name="avatar.png"):
-        buffer = io.BytesIO()
-        Image.new("RGB", (10, 10), (200, 30, 30)).save(buffer, format="PNG")
-        buffer.seek(0)
-        return SimpleUploadedFile(name, buffer.read(), content_type="image/png")
-
     def test_profile_avatar_defaults_to_null(self):
         response = self.client.get(reverse("user_module:current-user"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("avatar", response.data)
         self.assertIsNone(response.data["avatar"])
 
-    def test_upload_avatar(self):
+    def test_set_avatar(self):
+        url = "https://example.com/avatars/me.png"
         response = self.client.patch(
             reverse("user_module:current-user"),
-            {"avatar": self._image_file()},
-            format="multipart",
+            {"avatar": url},
+            format="json",
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("/media/avatars/", response.data["avatar"])
-
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        self.assertEqual(response.data["avatar"], url)
         self.user.refresh_from_db()
-        self.assertTrue(self.user.avatar)
-        self.assertTrue(self.user.avatar.storage.exists(self.user.avatar.name))
+        self.assertEqual(self.user.avatar, url)
 
-    def test_avatar_rejects_non_image(self):
-        bad = SimpleUploadedFile(
-            "notes.txt", b"not an image", content_type="text/plain"
-        )
+    def test_avatar_rejects_too_long(self):
         response = self.client.patch(
             reverse("user_module:current-user"),
-            {"avatar": bad},
-            format="multipart",
+            {"avatar": "x" * 300},
+            format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("avatar", response.data)

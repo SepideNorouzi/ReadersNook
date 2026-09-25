@@ -60,10 +60,10 @@ urlpatterns = [
         name="quote-update",
     ),
     path(
-        "books/<int:pk>/quotes/<int:quote_pk>/delete" ,
+        "books/<int:pk>/quotes/<int:quote_pk>/delete/",
         QuoteDeleteAPIView.as_view(),
         name="quote-delete",
-         ),
+    ),
     # Aesthetic photos
     path(
         "books/<int:pk>/aesthetic_photos/create/",

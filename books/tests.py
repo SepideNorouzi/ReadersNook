@@ -283,6 +283,42 @@ class LibraryAPITests(APITestCase):
         self.assertEqual(quote.text, "Updated")
         self.assertEqual(quote.book_id, self.book.pk)
 
+    def test_delete_own_quote(self):
+        quote = Quote.objects.create(
+            book=self.book,
+            text="Delete me",
+            created_by=self.user,
+        )
+        self._auth(self.user)
+        response = self.client.delete(
+            reverse(
+                "books:quote-delete",
+                kwargs={"pk": self.book.pk, "quote_pk": quote.pk},
+            )
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Quote.objects.filter(pk=quote.pk).exists())
+
+    def test_cannot_delete_another_users_quote(self):
+        other = User.objects.create_user(
+            username="other",
+            password="Strong-Test-Password-947!",
+        )
+        quote = Quote.objects.create(
+            book=self.book,
+            text="Not yours",
+            created_by=other,
+        )
+        self._auth(self.user)
+        response = self.client.delete(
+            reverse(
+                "books:quote-delete",
+                kwargs={"pk": self.book.pk, "quote_pk": quote.pk},
+            )
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertTrue(Quote.objects.filter(pk=quote.pk).exists())
+
     def test_collection_unique_name_on_create_and_update(self):
         self._auth(self.user)
         first = self.client.post(
