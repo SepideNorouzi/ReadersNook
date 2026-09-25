@@ -5,6 +5,8 @@ import Loading from "../../../shared/Loading";
 import { useAllQuotes } from "../../../hooks/useQuotes";
 import { useEffect, useState } from "react";
 
+import "../../../styles/QuoteCard.css";
+
 interface Props {
   className?: string;
 }
@@ -13,25 +15,33 @@ export default function QuoteCard({ className }: Props) {
   const { data: quotes = [], isLoading } = useAllQuotes();
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
 
-  // chnage quotes every 2 seconds
+  // chnage quotes every 5 seconds
   useEffect(() => {
     if (quotes.length <= 1) return;
 
     const intervalId = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        let nextIndex = Math.floor(Math.random() * quotes.length);
-
-        while (nextIndex === prevIndex) {
-          nextIndex = Math.floor(Math.random() * quotes.length);
-        }
-
-        return nextIndex;
-      });
-    }, 2000);
+      setIsExiting(true); // just flag "start exiting" — the actual swap happens below
+    }, 5000);
 
     return () => clearInterval(intervalId);
   }, [quotes.length]);
+
+  // animate the quote disappearance
+  const handleExitAnimationEnd = () => {
+    if (!isExiting) return;
+
+    setCurrentIndex((prevIndex) => {
+      let nextIndex = Math.floor(Math.random() * quotes.length);
+      while (nextIndex === prevIndex) {
+        nextIndex = Math.floor(Math.random() * quotes.length);
+      }
+      return nextIndex;
+    });
+
+    setIsExiting(false); // reset — the newly-mounted element plays its own entrance animation
+  };
 
   if (isLoading) {
     return (
@@ -315,7 +325,11 @@ export default function QuoteCard({ className }: Props) {
           </span>
         </header>
 
-        <div className="min-h-0 flex-1">
+        <div
+          key={quote.id}
+          className={`quote-content min-h-0 flex-1 ${isExiting ? "quote-exiting" : ""}`}
+          onAnimationEnd={handleExitAnimationEnd}
+        >
           <QuoteItem quote={quote} />
         </div>
       </div>

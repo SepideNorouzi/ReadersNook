@@ -1,0 +1,29 @@
+.quote-content {
+  animation: quote-fade-in 500ms ease-out;
+}
+
+.quote-content.quote-exiting {
+  animation: quote-fade-out 400ms ease-in forwards;
+}
+
+@keyframes quote-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes quote-fade-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+}
